@@ -6,15 +6,36 @@ import pandas as pd
 
 class LiveData:
     def __init__(self):
-        self.results_df = None
+        self.live_dataset = None
 
         self.get_data_using_api()
         self.remove_duplicate_data()
-        print(self.results_df)
+        self.remove_null_data()
+        self.write_dataset_to_excel()
+
+        #print(self.live_dataset)
+
+    def write_dataset_to_excel(self):
+        self.live_dataset.to_excel('CleanedLiveData.xlsx', index=False)
+
+    def split_data_to_smaller_new_list_based_on__type_of_pollutant(self, name):
+        return self.live_dataset.loc[self.live_dataset['measurements_parameter'] == name]
 
     def remove_duplicate_data(self):
-        # Check and drop the duplicate based on having the same pollutant, country, and city name
-        self.results_df = self.results_df.drop_duplicates(subset=['measurements_parameter', 'country_name_en', 'city'], keep="first")
+        # Check and drop the duplicate based on having the same type pollutant, country name, and city name
+        self.live_dataset = self.live_dataset.drop_duplicates(subset=['measurements_parameter', 'country_name_en', 'city'],
+                                                              keep="first")
+
+    def remove_null_data(self):
+        self.live_dataset[self.live_dataset == 'N/A'] = np.NaN
+        print(self.live_dataset.isnull().sum())
+
+        column_header = list(self.live_dataset.columns.values)
+        for header in column_header:
+            self.live_dataset = self.live_dataset[~self.live_dataset[[header]].isnull().all(axis=1)]
+        print(self.live_dataset.isnull().sum())
+
+
 
         # Get API Data
     def get_data_using_api(self):
@@ -34,10 +55,15 @@ class LiveData:
             record_fields.append(records[i]['fields'])
 
         # Put the data that is going to be used into a data frame
-        self.results_df = pd.DataFrame(record_fields,
-                                       columns=['measurements_unit', 'measurements_value', 'coordinates',
-                                                'measurements_sourcename', 'measurements_lastupdated',
-                                                'measurements_parameter', 'country_name_en', 'city'])
+        self.live_dataset = pd.DataFrame(record_fields,
+                                         columns=['measurements_unit', 'measurements_value', 'coordinates',
+                                            'measurements_sourcename', 'measurements_lastupdated',
+                                            'measurements_parameter', 'country_name_en', 'city'])
+
+        # Change the coordinates to latitude and longitude, first coordinate is latitude and second is longitude
+        self.live_dataset['latitude'] = self.live_dataset['coordinates'].str.get(0)
+        self.live_dataset['longitude'] = self.live_dataset['coordinates'].str.get(1)
+        self.live_dataset = self.live_dataset.drop(['coordinates'], axis=1)
 
 
 if __name__ == '__main__':
