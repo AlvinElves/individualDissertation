@@ -16,26 +16,22 @@ class LiveData:
         #print(self.live_dataset)
 
     def write_dataset_to_excel(self):
-        self.live_dataset.to_excel('CleanedLiveData.xlsx', index=False)
+        self.live_dataset.to_excel('CleanedDataset/CleanedLiveData.xlsx', index=False)
 
-    def split_data_to_smaller_new_list_based_on__type_of_pollutant(self, name):
-        return self.live_dataset.loc[self.live_dataset['measurements_parameter'] == name]
+    def split_data_based_on_pollutant(self, name):
+        return self.live_dataset.loc[self.live_dataset['measurements_parameter'] == name].reset_index(drop=True)
 
     def remove_duplicate_data(self):
         # Check and drop the duplicate based on having the same type pollutant, country name, and city name
         self.live_dataset = self.live_dataset.drop_duplicates(subset=['measurements_parameter', 'country_name_en', 'city'],
-                                                              keep="first")
+                                                              keep="first").reset_index(drop=True)
 
     def remove_null_data(self):
         self.live_dataset[self.live_dataset == 'N/A'] = np.NaN
-        print(self.live_dataset.isnull().sum())
+        #print(self.live_dataset.isnull().sum())
 
-        column_header = list(self.live_dataset.columns.values)
-        for header in column_header:
-            self.live_dataset = self.live_dataset[~self.live_dataset[[header]].isnull().all(axis=1)]
-        print(self.live_dataset.isnull().sum())
-
-
+        self.live_dataset = self.live_dataset.dropna(axis=0, how='any').reset_index(drop=True)
+        #print(self.live_dataset.isnull().sum())
 
         # Get API Data
     def get_data_using_api(self):

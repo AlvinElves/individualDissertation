@@ -27,7 +27,7 @@ class HistoricalData:
         print(self.historical_dataset.isnull().sum())
 
         # Put it into an Excel file to visualise using tableau or excel
-        self.historical_dataset.to_excel('CleanedHistoricalData.xlsx', index=False)
+        self.historical_dataset.to_excel('CleanedDataset/CleanedHistoricalData.xlsx', index=False)
 
     def get_data_from_excel(self):
         self.historical_dataset = pd.read_excel("Dataset/AirQualityUCI.xlsx")
