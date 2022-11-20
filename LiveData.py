@@ -9,11 +9,29 @@ class LiveData:
         self.live_dataset = None
 
         self.get_data_using_api()
+        print("Unique country in the dataset: " + str(self.live_dataset['country_name_en'].unique().size))
+        self.split_date()
         self.remove_duplicate_data()
         self.remove_null_data()
         self.write_dataset_to_excel()
 
-        #print(self.live_dataset)
+    def split_date(self):
+        # Split the last_updated date and time into day, month, year, time and timezone column
+        self.live_dataset[["Date", "Timezone"]] = self.live_dataset["measurements_lastupdated"].str.split("+", expand=True)
+        self.live_dataset[["Date", "Time"]] = self.live_dataset["Date"].str.split("T", expand=True)
+        self.live_dataset['Date'] = pd.to_datetime(self.live_dataset.Date, format='%Y-%m-%d')
+        self.live_dataset['Day'] = self.live_dataset['Date'].dt.day
+        self.live_dataset['Month'] = self.live_dataset['Date'].dt.month
+        self.live_dataset['Year'] = self.live_dataset['Date'].dt.year
+
+        # Drop the unused column
+        self.live_dataset = self.live_dataset.drop(columns=['measurements_lastupdated', 'Date'])
+
+        # Rearrange the column to have the date in front
+        date = ['Timezone', 'Time', 'Year', 'Month', 'Day']
+        for i in date:
+            column = self.live_dataset.pop(i)
+            self.live_dataset.insert(0, i, column)
 
     def write_dataset_to_excel(self):
         self.live_dataset.to_excel('CleanedDataset/CleanedLiveData.xlsx', index=False)
@@ -28,10 +46,8 @@ class LiveData:
 
     def remove_null_data(self):
         self.live_dataset[self.live_dataset == 'N/A'] = np.NaN
-        #print(self.live_dataset.isnull().sum())
 
         self.live_dataset = self.live_dataset.dropna(axis=0, how='any').reset_index(drop=True)
-        #print(self.live_dataset.isnull().sum())
 
         # Get API Data
     def get_data_using_api(self):
