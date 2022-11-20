@@ -5,10 +5,13 @@ import numpy as np
 class HistoricalData:
     def __init__(self):
         self.historical_dataset = None
+        self.merged_date_dataset = None
 
         self.get_data_from_excel()
         self.data_cleaning()
-        print(self.historical_dataset)
+
+    def grouping(self, group_by_column):
+        return self.historical_dataset.groupby(group_by_column, as_index=False).mean(numeric_only=True).reset_index(drop=True)
 
     def split_date(self):
         # Split the date into day month and year column and drop the Date column
@@ -23,24 +26,34 @@ class HistoricalData:
             self.historical_dataset.insert(0, i, column)
         self.historical_dataset = self.historical_dataset.drop(columns=['Date'])
 
+    def merge_date(self):
+        self.merged_date_dataset['Date'] = pd.to_datetime(self.merged_date_dataset['Date']).dt.date
+
     def data_cleaning(self):
 
         # Change the -200 value to null, -200 is null based on the sheet
         self.historical_dataset[self.historical_dataset == -200] = np.NaN
+        self.merged_date_dataset[self.merged_date_dataset == -200] = np.NaN
 
         # Drop the column NMHC(GT) since almost 90% of the data is null
         self.historical_dataset = self.historical_dataset.drop(columns=['NMHC(GT)'])
+        self.merged_date_dataset = self.merged_date_dataset.drop(columns=['NMHC(GT)'])
 
         # Delete the other rows that contains null
         self.historical_dataset = self.historical_dataset.dropna(axis=0, how='any').reset_index(drop=True)
+        self.merged_date_dataset = self.merged_date_dataset.dropna(axis=0, how='any').reset_index(drop=True)
+
+        self.merge_date()
 
         self.split_date()
 
         # Put it into an Excel file to visualise using tableau or excel
         self.historical_dataset.to_excel('CleanedDataset/CleanedHistoricalData.xlsx', index=False)
+        self.merged_date_dataset.to_excel('CleanedDataset/MergedHistoricalData.xlsx', index=False)
 
     def get_data_from_excel(self):
         self.historical_dataset = pd.read_excel("Dataset/AirQualityUCI.xlsx")
+        self.merged_date_dataset = pd.read_excel("Dataset/AirQualityUCI.xlsx")
 
 
 if __name__ == '__main__':
