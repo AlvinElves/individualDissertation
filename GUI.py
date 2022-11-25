@@ -1,6 +1,4 @@
 import tkinter as tk
-import tkintermapview
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 class GUI(tk.Tk):
