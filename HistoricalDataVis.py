@@ -5,8 +5,8 @@ import plotly.express as px
 class HistoricalDataVisualisation:
     def __init__(self):
         self.historical_data = HistoricalData()
-        #self.plot_Bar_by_Month_average(self.historical_data)
-        #self.plot_Bar_by_Day_average(self.historical_data)
+        # self.plot_Bar_by_Month_average(self.historical_data)
+        # self.plot_Bar_by_Day_average(self.historical_data)
         self.plot_normal_line_all(self.historical_data, ['T', 'AH', 'RH'])
 
     @staticmethod
@@ -36,11 +36,12 @@ class HistoricalDataVisualisation:
             ]
         )
 
-        button_list = [dict(label='All', method='update', args=[{'visible': [True, True]}, {'title': 'Date VS Multiple Attributes'}])]
+        button_list = [dict(label='All', method='update',
+                            args=[{'visible': [True, True]}, {'title': 'Date VS Multiple Attributes'}])]
         for i in range(0, len(y_Value)):
             visible = [j == i for j in list(range(0, len(y_Value)))]
             button_list.append(dict(label=y_Value[i], method='update',
-                                args=[{'visible': visible}, {'title': 'Date VS ' + str(y_Value[i])}]))
+                                    args=[{'visible': visible}, {'title': 'Date VS ' + str(y_Value[i])}]))
 
         fig.update_layout(
             updatemenus=[
@@ -54,7 +55,7 @@ class HistoricalDataVisualisation:
             )
         )
         fig.write_html("test.html")
-        #fig.show()
+        # fig.show()
 
     @staticmethod
     def plot_Bar_by_Month_average(historical_data):

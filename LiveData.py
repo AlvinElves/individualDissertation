@@ -7,9 +7,9 @@ import pandas as pd
 class LiveData:
     def __init__(self):
         self.live_dataset = None
+        self.all_live_dataset = None
 
         self.get_data_using_api()
-        print("Unique country in the dataset: " + str(self.live_dataset['country_name_en'].unique().size))
         self.split_date()
         self.remove_duplicate_data()
         self.remove_null_data()
@@ -33,8 +33,12 @@ class LiveData:
             column = self.live_dataset.pop(i)
             self.live_dataset.insert(0, i, column)
 
+        self.all_live_dataset = self.live_dataset
+        self.all_live_dataset = self.all_live_dataset.loc[self.all_live_dataset['measurements_unit'] == 'µg/m³'].reset_index(drop=True)
+
     def write_dataset_to_excel(self):
         self.live_dataset.to_excel('CleanedDataset/CleanedLiveData.xlsx', index=False)
+        self.all_live_dataset.to_excel('CleanedDataset/CleanedAllLiveData.xlsx', index=False)
 
     def split_data_based_on_pollutant(self, name):
         return self.live_dataset.loc[self.live_dataset['measurements_parameter'] == name].reset_index(drop=True)
@@ -48,6 +52,7 @@ class LiveData:
         self.live_dataset[self.live_dataset == 'N/A'] = np.NaN
 
         self.live_dataset = self.live_dataset.dropna(axis=0, how='any').reset_index(drop=True)
+        self.all_live_dataset = self.all_live_dataset.dropna(axis=0, how='any').reset_index(drop=True)
 
         # Get API Data
     def get_data_using_api(self):
