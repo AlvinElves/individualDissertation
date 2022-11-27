@@ -8,7 +8,7 @@ class LiveData:
     def __init__(self):
         self.live_dataset = None
         self.all_live_dataset = None
-
+        print('test')
         self.get_data_using_api()
         self.split_date()
         self.remove_duplicate_data()
@@ -17,7 +17,8 @@ class LiveData:
 
     def split_date(self):
         # Split the last_updated date and time into day, month, year, time and timezone column
-        self.live_dataset[["Date", "Timezone"]] = self.live_dataset["measurements_lastupdated"].str.split("+", expand=True)
+        self.live_dataset[["Date", "Timezone"]] = self.live_dataset["measurements_lastupdated"].str.split("+",
+                                                                                                          expand=True)
         self.live_dataset[["Date", "Time"]] = self.live_dataset["Date"].str.split("T", expand=True)
         self.live_dataset['Date'] = pd.to_datetime(self.live_dataset.Date, format='%Y-%m-%d')
         self.live_dataset['Day'] = self.live_dataset['Date'].dt.day
@@ -34,7 +35,8 @@ class LiveData:
             self.live_dataset.insert(0, i, column)
 
         self.all_live_dataset = self.live_dataset
-        self.all_live_dataset = self.all_live_dataset.loc[self.all_live_dataset['measurements_unit'] == 'µg/m³'].reset_index(drop=True)
+        self.all_live_dataset = self.all_live_dataset.loc[
+            self.all_live_dataset['measurements_unit'] == 'µg/m³'].reset_index(drop=True)
 
     def write_dataset_to_excel(self):
         self.live_dataset.to_excel('CleanedDataset/CleanedLiveData.xlsx', index=False)
@@ -45,8 +47,9 @@ class LiveData:
 
     def remove_duplicate_data(self):
         # Check and drop the duplicate based on having the same type pollutant, country name, and city name
-        self.live_dataset = self.live_dataset.drop_duplicates(subset=['measurements_parameter', 'country_name_en', 'city'],
-                                                              keep="first").reset_index(drop=True)
+        self.live_dataset = self.live_dataset.drop_duplicates(
+            subset=['measurements_parameter', 'country_name_en', 'city'],
+            keep="first").reset_index(drop=True)
 
     def remove_null_data(self):
         self.live_dataset[self.live_dataset == 'N/A'] = np.NaN
@@ -55,6 +58,7 @@ class LiveData:
         self.all_live_dataset = self.all_live_dataset.dropna(axis=0, how='any').reset_index(drop=True)
 
         # Get API Data
+
     def get_data_using_api(self):
         record_fields = []
 
@@ -74,8 +78,8 @@ class LiveData:
         # Put the data that is going to be used into a data frame
         self.live_dataset = pd.DataFrame(record_fields,
                                          columns=['measurements_unit', 'measurements_value', 'coordinates',
-                                            'measurements_sourcename', 'measurements_lastupdated',
-                                            'measurements_parameter', 'country_name_en', 'city'])
+                                                  'measurements_sourcename', 'measurements_lastupdated',
+                                                  'measurements_parameter', 'country_name_en', 'city'])
 
         # Change the coordinates to latitude and longitude, first coordinate is latitude and second is longitude
         self.live_dataset['latitude'] = self.live_dataset['coordinates'].str.get(0)

@@ -1,4 +1,6 @@
 import tkinter as tk
+from LiveDataVis import *
+from HistoricalDataVis import *
 
 
 class GUI(tk.Tk):
@@ -198,6 +200,8 @@ class HistoricalDataPage(tk.Frame):
 class LiveDataPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg='black')
+        #
+        # live_Data = LiveData()
 
         def left_frame_widget_building():
             # Create function for button hovers
