@@ -13,7 +13,7 @@ class LiveDataVisualisation:
         self.map_CO = None
         self.map_O3 = None
         self.map_PM10 = None
-        self.map_PM2_dot_5 = None
+        self.map_PM2 = None
         self.map_enhanced = None
         self.path = None
         self.live_path = None
@@ -23,10 +23,10 @@ class LiveDataVisualisation:
 
         live_data = LiveData()
 
-        self.createFolder()
+        self.create_Folder()
 
         self.pop_up_graph(live_data)
-        self.createMap(live_data)
+        self.create_Map(live_data)
 
 
     # Create the graph that will be shown when clicked on enhanced map
@@ -80,7 +80,7 @@ class LiveDataVisualisation:
             self.pop_up_df.loc[len(self.pop_up_df)] = [unique_country[a], text, median_latitude, median_longitude]
 
     @staticmethod
-    def inputBasicMarker(live_data, header_name, folium_Map):
+    def input_Basic_Marker(live_data, header_name, folium_Map):
         # Split data into variable based on header_name of pollutant
         data = live_data.split_data_based_on_pollutant(header_name)
 
@@ -105,7 +105,7 @@ class LiveDataVisualisation:
                 icon=folium.Icon(icon='info-sign')
             ).add_to(folium_Map)
 
-    def inputEnhancedMarker(self, folium_Map):
+    def input_Enhanced_Marker(self, folium_Map):
         for i in range(0, len(self.pop_up_df)):
             html = """
             <iframe src=\"""" + "EnhancedLiveMapPopUp/" + self.pop_up_df['html_file'][i] + """\" width="1000" height="750"  frameborder="0">    
@@ -114,13 +114,13 @@ class LiveDataVisualisation:
             folium.Marker([self.pop_up_df['Latitude'].iloc[i], self.pop_up_df['Longitude'].iloc[i]],
                           popup=popup, icon=folium.Icon(icon='home', prefix='fa')).add_to(folium_Map)
 
-    def displayMap(self, filename):
+    def display_Map(self, filename):
         webbrowser.open(self.live_path + "/" + filename)
 
-    def saveMap(self, map_name, filename):
+    def save_Map(self, map_name, filename):
         map_name.save(self.live_path + "/" + filename)
 
-    def createMap(self, live_data):
+    def create_Map(self, live_data):
         pollutant_name = ['PM2.5', 'PM10', 'O3', 'NO2', 'SO2', 'CO', 'BC']
         location = []
         self.update_text = ''
@@ -136,57 +136,57 @@ class LiveDataVisualisation:
 
         # Display the map
         if location[0] and location[1] is not np.nan:
-            self.map_PM2_dot_5 = folium.Map(location=(location[0], location[1]), tiles="openstreetmap", min_zoom=2)
-            self.inputBasicMarker(live_data, 'PM2.5', self.map_PM2_dot_5)
-            self.saveMap(self.map_PM2_dot_5, "PM2_dot_5.html")
+            self.map_PM2 = folium.Map(location=(location[0], location[1]), tiles="openstreetmap", min_zoom=2)
+            self.input_Basic_Marker(live_data, 'PM2.5', self.map_PM2)
+            self.save_Map(self.map_PM2, "PM2_dot_5.html")
         else:
             print("PM2.5 is empty")
             self.update_text = self.update_text + 'PM2.5 Map is not updated.\n'
 
         if location[2] and location[3] is not np.nan:
             self.map_PM10 = folium.Map(location=(location[2], location[3]), tiles="openstreetmap", min_zoom=2)
-            self.inputBasicMarker(live_data, 'PM10', self.map_PM10)
-            self.saveMap(self.map_PM10, "PM10.html")
+            self.input_Basic_Marker(live_data, 'PM10', self.map_PM10)
+            self.save_Map(self.map_PM10, "PM10.html")
         else:
             print("PM10 is empty")
             self.update_text = self.update_text + 'PM10 Map is not updated.\n'
 
         if location[4] and location[5] is not np.nan:
             self.map_O3 = folium.Map(location=(location[4], location[5]), tiles="openstreetmap", min_zoom=2)
-            self.inputBasicMarker(live_data, 'O3', self.map_O3)
-            self.saveMap(self.map_O3, "O3.html")
+            self.input_Basic_Marker(live_data, 'O3', self.map_O3)
+            self.save_Map(self.map_O3, "O3.html")
         else:
             print("O3 is empty")
             self.update_text = self.update_text + 'O3 Map is not updated.\n'
 
         if location[6] and location[7] is not np.nan:
             self.map_NO2 = folium.Map(location=(location[6], location[7]), tiles="openstreetmap", min_zoom=2)
-            self.inputBasicMarker(live_data, 'NO2', self.map_NO2)
-            self.saveMap(self.map_NO2, "NO2.html")
+            self.input_Basic_Marker(live_data, 'NO2', self.map_NO2)
+            self.save_Map(self.map_NO2, "NO2.html")
         else:
             print("NO2 is empty")
             self.update_text = self.update_text + 'NO2 Map is not updated.\n'
 
         if location[8] and location[9] is not np.nan:
             self.map_SO2 = folium.Map(location=(location[8], location[9]), tiles="openstreetmap", min_zoom=2)
-            self.inputBasicMarker(live_data, 'SO2', self.map_SO2)
-            self.saveMap(self.map_SO2, "SO2.html")
+            self.input_Basic_Marker(live_data, 'SO2', self.map_SO2)
+            self.save_Map(self.map_SO2, "SO2.html")
         else:
             print("SO2 is empty")
             self.update_text = self.update_text + 'SO2 Map is not updated.\n'
 
         if location[10] and location[11] is not np.nan:
             self.map_CO = folium.Map(location=(location[10], location[11]), tiles="openstreetmap", min_zoom=2)
-            self.inputBasicMarker(live_data, 'CO', self.map_CO)
-            self.saveMap(self.map_CO, "CO.html")
+            self.input_Basic_Marker(live_data, 'CO', self.map_CO)
+            self.save_Map(self.map_CO, "CO.html")
         else:
             print("CO is empty")
             self.update_text = self.update_text + 'CO Map is not updated.\n'
 
         if location[12] and location[13] is not np.nan:
             self.map_BC = folium.Map(location=(location[12], location[13]), tiles="openstreetmap", min_zoom=2)
-            self.inputBasicMarker(live_data, 'BC', self.map_BC)
-            self.saveMap(self.map_BC, "BC.html")
+            self.input_Basic_Marker(live_data, 'BC', self.map_BC)
+            self.save_Map(self.map_BC, "BC.html")
         else:
             print("BC is empty")
             self.update_text = self.update_text + 'BC Map is not updated.\n'
@@ -194,12 +194,12 @@ class LiveDataVisualisation:
         if self.pop_up_df['Latitude'][0] and self.pop_up_df['Longitude'][0] is not np.nan:
             self.map_enhanced = folium.Map(location=(self.pop_up_df['Latitude'][0], self.pop_up_df['Longitude'][0]),
                                            tiles="openstreetmap", min_zoom=2)
-            self.inputEnhancedMarker(self.map_enhanced)
-            self.saveMap(self.map_enhanced, "Enhanced.html")
+            self.input_Enhanced_Marker(self.map_enhanced)
+            self.save_Map(self.map_enhanced, "Enhanced.html")
         else:
             self.update_text = self.update_text + 'Enhanced Map is not updated.\n'
 
-    def createFolder(self):
+    def create_Folder(self):
         new_directory = "LiveMapHTML"  # New folder name
         current_path = os.getcwd()  # Get current file path
         self.live_path = os.path.join(current_path, new_directory)

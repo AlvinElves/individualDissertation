@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_f3a771f1b19c2780ca485255b01e5811 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_f3a771f1b19c2780ca485255b01e5811" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_f3a771f1b19c2780ca485255b01e5811 = L.map(
+                "map_f3a771f1b19c2780ca485255b01e5811",
+                {
+                    center: [51.129378, 18.620274],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 10,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_6f52a706e6cb13dc8b266db84d2d917a = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 2, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var marker_4723dffe35e30422497399f33cd01c0a = L.marker(
+                [50.329111, 19.231222],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_bbfd96d554ee39db571afb53a7869a99 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_4723dffe35e30422497399f33cd01c0a.setIcon(icon_bbfd96d554ee39db571afb53a7869a99);
+        
+    
+            marker_4723dffe35e30422497399f33cd01c0a.bindTooltip(
+                `<div>
+                     Value: 1.33145 µg/m³<br>Country: Poland<br>City: Dąbrowa Górnicza<br>Latitude: 50.329111<br>Longitude: 19.231222<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_b6e7003af1c11815d94408ba4bdbc767 = L.marker(
+                [50.111181, 18.516139],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_44179181f66596a07d411f63a0d05791 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_b6e7003af1c11815d94408ba4bdbc767.setIcon(icon_44179181f66596a07d411f63a0d05791);
+        
+    
+            marker_b6e7003af1c11815d94408ba4bdbc767.bindTooltip(
+                `<div>
+                     Value: 2.2111 µg/m³<br>Country: Poland<br>City: Rybnik<br>Latitude: 50.111181<br>Longitude: 18.516139<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_5f653741997a6a47e60fd431607c0018 = L.marker(
+                [50.676856, 17.950278],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_cc10bfdb9c342eb263ba6a330773e98f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_5f653741997a6a47e60fd431607c0018.setIcon(icon_cc10bfdb9c342eb263ba6a330773e98f);
+        
+    
+            marker_5f653741997a6a47e60fd431607c0018.bindTooltip(
+                `<div>
+                     Value: 0.2088 µg/m³<br>Country: Poland<br>City: Opole<br>Latitude: 50.676856<br>Longitude: 17.950278<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_f43d2016025b12adc88e4cad0943392d = L.marker(
+                [53.559739, 21.002121],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_639281fad29b23eb10f687b87b0028e7 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_f43d2016025b12adc88e4cad0943392d.setIcon(icon_639281fad29b23eb10f687b87b0028e7);
+        
+    
+            marker_f43d2016025b12adc88e4cad0943392d.bindTooltip(
+                `<div>
+                     Value: 6.57972 µg/m³<br>Country: Poland<br>City: Szczytno<br>Latitude: 53.559739<br>Longitude: 21.002121<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_72a56f361674fdcad436c0e4e46da193 = L.marker(
+                [52.738214, 15.228667],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_1491ae3bd434bec1e2c9c62db3927ae4 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_72a56f361674fdcad436c0e4e46da193.setIcon(icon_1491ae3bd434bec1e2c9c62db3927ae4);
+        
+    
+            marker_72a56f361674fdcad436c0e4e46da193.bindTooltip(
+                `<div>
+                     Value: 0.1296 µg/m³<br>Country: Poland<br>City: Gorzów Wielkopolski<br>Latitude: 52.738214<br>Longitude: 15.228667<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_552233bde2088cc09d58be6ec17dd2ac = L.marker(
+                [51.204503, 16.180513],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_427af93259c07b424abcd81e2e0b88e9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_552233bde2088cc09d58be6ec17dd2ac.setIcon(icon_427af93259c07b424abcd81e2e0b88e9);
+        
+    
+            marker_552233bde2088cc09d58be6ec17dd2ac.bindTooltip(
+                `<div>
+                     Value: 2.31231 µg/m³<br>Country: Poland<br>City: Legnica<br>Latitude: 51.204503<br>Longitude: 16.180513<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_70342326032013181b7aead87b840df9 = L.marker(
+                [53.126689, 23.155869],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_a694835fb7899e3f45edf7feb39c711d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_70342326032013181b7aead87b840df9.setIcon(icon_a694835fb7899e3f45edf7feb39c711d);
+        
+    
+            marker_70342326032013181b7aead87b840df9.bindTooltip(
+                `<div>
+                     Value: 1.4 µg/m³<br>Country: Poland<br>City: Białystok<br>Latitude: 53.126689<br>Longitude: 23.155869<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_60295e00ce1d826c6e8830103f528a6d = L.marker(
+                [52.029194, 23.149389],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_c842ae194fa934af47775a7655e29882 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_60295e00ce1d826c6e8830103f528a6d.setIcon(icon_c842ae194fa934af47775a7655e29882);
+        
+    
+            marker_60295e00ce1d826c6e8830103f528a6d.bindTooltip(
+                `<div>
+                     Value: 2.4 µg/m³<br>Country: Poland<br>City: Biała Podlaska<br>Latitude: 52.029194<br>Longitude: 23.149389<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e111ea16cd0af6ea6accb69511ca56d4 = L.marker(
+                [50.486194, 17.97477],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_ff85fbf95c1660470c862f053e6de123 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_e111ea16cd0af6ea6accb69511ca56d4.setIcon(icon_ff85fbf95c1660470c862f053e6de123);
+        
+    
+            marker_e111ea16cd0af6ea6accb69511ca56d4.bindTooltip(
+                `<div>
+                     Value: 0.67266 µg/m³<br>Country: Poland<br>City: Krapkowice<br>Latitude: 50.486194<br>Longitude: 17.97477<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_a8330aa58aac94f23a9d835e74524f15 = L.marker(
+                [50.423533, 18.120739],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_7417c42708d39c738fd9bb1809ce9087 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_a8330aa58aac94f23a9d835e74524f15.setIcon(icon_7417c42708d39c738fd9bb1809ce9087);
+        
+    
+            marker_a8330aa58aac94f23a9d835e74524f15.bindTooltip(
+                `<div>
+                     Value: 2.58894 µg/m³<br>Country: Poland<br>City: Zdzieszowice<br>Latitude: 50.423533<br>Longitude: 18.120739<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_1a7cee88c27342e0501c312a23747de0 = L.marker(
+                [53.432169, 14.5539],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_7f0f5a403d3df79d19ff6084e22c0239 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_1a7cee88c27342e0501c312a23747de0.setIcon(icon_7f0f5a403d3df79d19ff6084e22c0239);
+        
+    
+            marker_1a7cee88c27342e0501c312a23747de0.bindTooltip(
+                `<div>
+                     Value: 0.25938 µg/m³<br>Country: Poland<br>City: Szczecin<br>Latitude: 53.432169<br>Longitude: 14.5539<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_b1590342c6e9d13986c2e171f56b0842 = L.marker(
+                [52.420319, 16.877289],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_8184f56fe215f53ab1102796e0a61082 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_b1590342c6e9d13986c2e171f56b0842.setIcon(icon_8184f56fe215f53ab1102796e0a61082);
+        
+    
+            marker_b1590342c6e9d13986c2e171f56b0842.bindTooltip(
+                `<div>
+                     Value: 0.30291 µg/m³<br>Country: Poland<br>City: Poznań<br>Latitude: 52.420319<br>Longitude: 16.877289<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_5b712f1b26a3189cd9057ac9116ae8ac = L.marker(
+                [53.789233, 20.486075],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_6d7f0966feb4364dccd25c671ca1822f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_5b712f1b26a3189cd9057ac9116ae8ac.setIcon(icon_6d7f0966feb4364dccd25c671ca1822f);
+        
+    
+            marker_5b712f1b26a3189cd9057ac9116ae8ac.bindTooltip(
+                `<div>
+                     Value: 9.20224 µg/m³<br>Country: Poland<br>City: Olsztyn<br>Latitude: 53.789233<br>Longitude: 20.486075<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_45625a9fdaf2b543dad8c54ec6c7be96 = L.marker(
+                [50.279481, 18.655736],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_2ec4955d382304e09336e1a93de67af4 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_45625a9fdaf2b543dad8c54ec6c7be96.setIcon(icon_2ec4955d382304e09336e1a93de67af4);
+        
+    
+            marker_45625a9fdaf2b543dad8c54ec6c7be96.bindTooltip(
+                `<div>
+                     Value: 3.26574 µg/m³<br>Country: Poland<br>City: Gliwice<br>Latitude: 50.279481<br>Longitude: 18.655736<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_ccab5eb396913b271bd43038a5dadd3d = L.marker(
+                [51.129378, 17.02925],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_73a9852b78ef596ddc1c06159c6bcac2 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_ccab5eb396913b271bd43038a5dadd3d.setIcon(icon_73a9852b78ef596ddc1c06159c6bcac2);
+        
+    
+            marker_ccab5eb396913b271bd43038a5dadd3d.bindTooltip(
+                `<div>
+                     Value: 2.66436 µg/m³<br>Country: Poland<br>City: Wrocław<br>Latitude: 51.129378<br>Longitude: 17.02925<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_382121cc2d647bf0f692827e65b65e7d = L.marker(
+                [51.642656, 15.127808],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_05c2027a19ef4799e1fe2a4b579a995f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_382121cc2d647bf0f692827e65b65e7d.setIcon(icon_05c2027a19ef4799e1fe2a4b579a995f);
+        
+    
+            marker_382121cc2d647bf0f692827e65b65e7d.bindTooltip(
+                `<div>
+                     Value: 0.27675 µg/m³<br>Country: Poland<br>City: Żary<br>Latitude: 51.642656<br>Longitude: 15.127808<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_7f4110b8a030747dad845203718fae61 = L.marker(
+                [49.971047, 19.830422],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_8ee16395c5379fdf8dc2627bc0fbe908 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_7f4110b8a030747dad845203718fae61.setIcon(icon_8ee16395c5379fdf8dc2627bc0fbe908);
+        
+    
+            marker_7f4110b8a030747dad845203718fae61.bindTooltip(
+                `<div>
+                     Value: 0.60086 µg/m³<br>Country: Poland<br>City: Skawina<br>Latitude: 49.971047<br>Longitude: 19.830422<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_55c8e5070ed48571ff1cdc93c17e3db1 = L.marker(
+                [49.93785, 18.975594],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_64689d24656c9ce4218ce4f43daee8fe = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_55c8e5070ed48571ff1cdc93c17e3db1.setIcon(icon_64689d24656c9ce4218ce4f43daee8fe);
+        
+    
+            marker_55c8e5070ed48571ff1cdc93c17e3db1.bindTooltip(
+                `<div>
+                     Value: 1.07684 µg/m³<br>Country: Poland<br>City: Goczałkowice-Zdrój<br>Latitude: 49.93785<br>Longitude: 18.975594<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_7e9fb0bdf6483a56f3312f4200621acf = L.marker(
+                [52.191728, 20.837489],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_e7cd626964c5f5d65e80c4374c7166e3 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_7e9fb0bdf6483a56f3312f4200621acf.setIcon(icon_e7cd626964c5f5d65e80c4374c7166e3);
+        
+    
+            marker_7e9fb0bdf6483a56f3312f4200621acf.bindTooltip(
+                `<div>
+                     Value: 2.8 µg/m³<br>Country: Poland<br>City: Piastów<br>Latitude: 52.191728<br>Longitude: 20.837489<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_5a1d386e14a53c7ab4c398e2cead993c = L.marker(
+                [50.010575, 19.949189],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_53296a64a72d61d63be4d27e31dfce0a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_5a1d386e14a53c7ab4c398e2cead993c.setIcon(icon_53296a64a72d61d63be4d27e31dfce0a);
+        
+    
+            marker_5a1d386e14a53c7ab4c398e2cead993c.bindTooltip(
+                `<div>
+                     Value: 0.92609 µg/m³<br>Country: Poland<br>City: Kraków<br>Latitude: 50.010575<br>Longitude: 19.949189<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_7a923d21697a75031ec0a8646ccee3fb = L.marker(
+                [50.710889, 19.458797],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_bea2b30cdf6ec51b6fa3d22d617b56d8 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_7a923d21697a75031ec0a8646ccee3fb.setIcon(icon_bea2b30cdf6ec51b6fa3d22d617b56d8);
+        
+    
+            marker_7a923d21697a75031ec0a8646ccee3fb.bindTooltip(
+                `<div>
+                     Value: 1.81555 µg/m³<br>Country: Poland<br>City: Złoty Potok<br>Latitude: 50.710889<br>Longitude: 19.458797<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_82d7003ab832411ebbfaffdfca1309ce = L.marker(
+                [50.024242, 22.010575],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_fdc679842b39bec82f9acaab21d14012 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_82d7003ab832411ebbfaffdfca1309ce.setIcon(icon_fdc679842b39bec82f9acaab21d14012);
+        
+    
+            marker_82d7003ab832411ebbfaffdfca1309ce.bindTooltip(
+                `<div>
+                     Value: 1.50236 µg/m³<br>Country: Poland<br>City: Rzeszów<br>Latitude: 50.024242<br>Longitude: 22.010575<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_342e345031669518e94c5915ae9b9f93 = L.marker(
+                [52.449331, 16.999683],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_7776fe346efbf7e0e86ec4261484353c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_342e345031669518e94c5915ae9b9f93.setIcon(icon_7776fe346efbf7e0e86ec4261484353c);
+        
+    
+            marker_342e345031669518e94c5915ae9b9f93.bindTooltip(
+                `<div>
+                     Value: 3.53099 µg/m³<br>Country: Poland<br>City: Koziegłowy<br>Latitude: 52.449331<br>Longitude: 16.999683<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_b2f9e976c42a13dafc8d41bf01d806e7 = L.marker(
+                [49.784339, 22.756239],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_a75c31fb2d678ca636a2e44859a5d341 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_b2f9e976c42a13dafc8d41bf01d806e7.setIcon(icon_a75c31fb2d678ca636a2e44859a5d341);
+        
+    
+            marker_b2f9e976c42a13dafc8d41bf01d806e7.bindTooltip(
+                `<div>
+                     Value: 1.9251 µg/m³<br>Country: Poland<br>City: Przemyśl<br>Latitude: 49.784339<br>Longitude: 22.756239<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_efa07a6b07aed47bd1f1803878c37449 = L.marker(
+                [51.050611, 21.084175],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_596bcc7dd7eaef3f288c68c0e7bf8f12 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_efa07a6b07aed47bd1f1803878c37449.setIcon(icon_596bcc7dd7eaef3f288c68c0e7bf8f12);
+        
+    
+            marker_efa07a6b07aed47bd1f1803878c37449.bindTooltip(
+                `<div>
+                     Value: 1.82 µg/m³<br>Country: Poland<br>City: Starachowice<br>Latitude: 51.050611<br>Longitude: 21.084175<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_2370c1a99cbbb3f0e92809435589e29a = L.marker(
+                [50.768729, 16.269677],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_b8be784070a99f14a7b4ea5dfa663b91 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_2370c1a99cbbb3f0e92809435589e29a.setIcon(icon_b8be784070a99f14a7b4ea5dfa663b91);
+        
+    
+            marker_2370c1a99cbbb3f0e92809435589e29a.bindTooltip(
+                `<div>
+                     Value: 1.07856 µg/m³<br>Country: Poland<br>City: Wałbrzych<br>Latitude: 50.768729<br>Longitude: 16.269677<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_c6d119d01b4a508d68c64d8ad84a8618 = L.marker(
+                [51.748103, 18.04931],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_f319ff7edebf0c7e8fb4d11b9ea24bcd = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_c6d119d01b4a508d68c64d8ad84a8618.setIcon(icon_f319ff7edebf0c7e8fb4d11b9ea24bcd);
+        
+    
+            marker_c6d119d01b4a508d68c64d8ad84a8618.bindTooltip(
+                `<div>
+                     Value: 1.34892 µg/m³<br>Country: Poland<br>City: Kalisz<br>Latitude: 51.748103<br>Longitude: 18.04931<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_c26a74ae0242a76df953e8590c97e125 = L.marker(
+                [54.193986, 16.172544],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_bca238dca51a14106a68156d6b77611f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_c26a74ae0242a76df953e8590c97e125.setIcon(icon_bca238dca51a14106a68156d6b77611f);
+        
+    
+            marker_c26a74ae0242a76df953e8590c97e125.bindTooltip(
+                `<div>
+                     Value: 0.0 µg/m³<br>Country: Poland<br>City: Koszalin<br>Latitude: 54.193986<br>Longitude: 16.172544<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_58561bbd5ddb919a115e1d0ac9f4e683 = L.marker(
+                [52.276794, 17.074114],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_41ddfdcc288cf846f186610daffef1f5 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_58561bbd5ddb919a115e1d0ac9f4e683.setIcon(icon_41ddfdcc288cf846f186610daffef1f5);
+        
+    
+            marker_58561bbd5ddb919a115e1d0ac9f4e683.bindTooltip(
+                `<div>
+                     Value: 7.17738 µg/m³<br>Country: Poland<br>City: Borówiec<br>Latitude: 52.276794<br>Longitude: 17.074114<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_910a1d8bec8e6b07941ffb22f9596639 = L.marker(
+                [51.259431, 22.569133],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_aafb750df544cfb73f380025b0024091 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_910a1d8bec8e6b07941ffb22f9596639.setIcon(icon_aafb750df544cfb73f380025b0024091);
+        
+    
+            marker_910a1d8bec8e6b07941ffb22f9596639.bindTooltip(
+                `<div>
+                     Value: 0.28 µg/m³<br>Country: Poland<br>City: Lublin<br>Latitude: 51.259431<br>Longitude: 22.569133<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_2b612cc09313d635eb9541cd8240e3e7 = L.marker(
+                [52.658467, 19.059314],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_d9d6fa3345195d003b6f6f74c9bf96b0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_2b612cc09313d635eb9541cd8240e3e7.setIcon(icon_d9d6fa3345195d003b6f6f74c9bf96b0);
+        
+    
+            marker_2b612cc09313d635eb9541cd8240e3e7.bindTooltip(
+                `<div>
+                     Value: 5.94 µg/m³<br>Country: Poland<br>City: Włocławek<br>Latitude: 52.658467<br>Longitude: 19.059314<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_0d8f6706732dd0c852e44aac5cd086fe = L.marker(
+                [49.813464, 19.027318],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_1cd13b9fcc940505d479febfd5884b32 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_0d8f6706732dd0c852e44aac5cd086fe.setIcon(icon_1cd13b9fcc940505d479febfd5884b32);
+        
+    
+            marker_0d8f6706732dd0c852e44aac5cd086fe.bindTooltip(
+                `<div>
+                     Value: 1.95588 µg/m³<br>Country: Poland<br>City: Bielsko-Biała<br>Latitude: 49.813464<br>Longitude: 19.027318<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_11c59581a0ba368a31114cae90aa2c27 = L.marker(
+                [52.219298, 21.004724],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_26d8a3c2ce8b4376c3d22a8d29121814 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_11c59581a0ba368a31114cae90aa2c27.setIcon(icon_26d8a3c2ce8b4376c3d22a8d29121814);
+        
+    
+            marker_11c59581a0ba368a31114cae90aa2c27.bindTooltip(
+                `<div>
+                     Value: 2.0 µg/m³<br>Country: Poland<br>City: Warszawa<br>Latitude: 52.219298<br>Longitude: 21.004724<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_904e72011f8cfcdae1e70808b2836c79 = L.marker(
+                [51.589208, 19.131433],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_452ee2e9c07c6a94afc85d806833c1ef = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_904e72011f8cfcdae1e70808b2836c79.setIcon(icon_452ee2e9c07c6a94afc85d806833c1ef);
+        
+    
+            marker_904e72011f8cfcdae1e70808b2836c79.bindTooltip(
+                `<div>
+                     Value: 2.55 µg/m³<br>Country: Poland<br>City: Łask<br>Latitude: 51.589208<br>Longitude: 19.131433<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_67440bd12845327e98f8420c57239d76 = L.marker(
+                [52.115725, 21.237297],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_cd6c7334b2fe7dbc2785d40575766e4f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_67440bd12845327e98f8420c57239d76.setIcon(icon_cd6c7334b2fe7dbc2785d40575766e4f);
+        
+    
+            marker_67440bd12845327e98f8420c57239d76.bindTooltip(
+                `<div>
+                     Value: 2.5 µg/m³<br>Country: Poland<br>City: Otwock<br>Latitude: 52.115725<br>Longitude: 21.237297<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_a9461be77bd06668e89b3b1bdb1d41aa = L.marker(
+                [51.399084, 21.147474],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_ea7a281f1577b790a3a56c22b0b296c6 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_a9461be77bd06668e89b3b1bdb1d41aa.setIcon(icon_ea7a281f1577b790a3a56c22b0b296c6);
+        
+    
+            marker_a9461be77bd06668e89b3b1bdb1d41aa.bindTooltip(
+                `<div>
+                     Value: 2.2 µg/m³<br>Country: Poland<br>City: Radom<br>Latitude: 51.399084<br>Longitude: 21.147474<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_4963825260efe0baf15a1fc7a0bcf97d = L.marker(
+                [50.349608, 18.236575],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_33fb5f9f3c467408a19a5f0b2896842d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_4963825260efe0baf15a1fc7a0bcf97d.setIcon(icon_33fb5f9f3c467408a19a5f0b2896842d);
+        
+    
+            marker_4963825260efe0baf15a1fc7a0bcf97d.bindTooltip(
+                `<div>
+                     Value: 2.4897 µg/m³<br>Country: Poland<br>City: Kędzierzyn-Koźle<br>Latitude: 50.349608<br>Longitude: 18.236575<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_63392db022e70363e0cbb2df509a23ca = L.marker(
+                [53.079618, 18.2279],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_82a7b9ab286463191e82451cb97f8516 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_63392db022e70363e0cbb2df509a23ca.setIcon(icon_82a7b9ab286463191e82451cb97f8516);
+        
+    
+            marker_63392db022e70363e0cbb2df509a23ca.bindTooltip(
+                `<div>
+                     Value: 7.58 µg/m³<br>Country: Poland<br>City: Solec Kujawski<br>Latitude: 53.079618<br>Longitude: 18.2279<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_046f5d2cbd8ba0dc14df4a33e704bde4 = L.marker(
+                [51.775378, 19.450992],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_bab5f0bd2d71c8d99d41b5a67b78f314 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_046f5d2cbd8ba0dc14df4a33e704bde4.setIcon(icon_bab5f0bd2d71c8d99d41b5a67b78f314);
+        
+    
+            marker_046f5d2cbd8ba0dc14df4a33e704bde4.bindTooltip(
+                `<div>
+                     Value: 3.21 µg/m³<br>Country: Poland<br>City: Łódź<br>Latitude: 51.775378<br>Longitude: 19.450992<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_d9d75df905f3f40572db8a927521810f = L.marker(
+                [52.556279, 19.687672],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_1295a5b5f39242919d3105c3ae55f73b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_d9d75df905f3f40572db8a927521810f.setIcon(icon_1295a5b5f39242919d3105c3ae55f73b);
+        
+    
+            marker_d9d75df905f3f40572db8a927521810f.bindTooltip(
+                `<div>
+                     Value: 4.94 µg/m³<br>Country: Poland<br>City: Płock<br>Latitude: 52.556279<br>Longitude: 19.687672<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_0711eaa705a2a51ab5e7f17ba6874203 = L.marker(
+                [50.836389, 19.130111],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_aa04c31910520013c357f80722acdafd = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_0711eaa705a2a51ab5e7f17ba6874203.setIcon(icon_aa04c31910520013c357f80722acdafd);
+        
+    
+            marker_0711eaa705a2a51ab5e7f17ba6874203.bindTooltip(
+                `<div>
+                     Value: 4.26798 µg/m³<br>Country: Poland<br>City: Częstochowa<br>Latitude: 50.836389<br>Longitude: 19.130111<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_982c86d41f7f6260ddfd5d278b8f831e = L.marker(
+                [49.671602, 19.234446],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_13553cf901abb3e5257cdb87474f7661 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_982c86d41f7f6260ddfd5d278b8f831e.setIcon(icon_13553cf901abb3e5257cdb87474f7661);
+        
+    
+            marker_982c86d41f7f6260ddfd5d278b8f831e.bindTooltip(
+                `<div>
+                     Value: 2.91654 µg/m³<br>Country: Poland<br>City: Żywiec<br>Latitude: 49.671602<br>Longitude: 19.234446<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_cedaf6268d56c6080817a683f1929798 = L.marker(
+                [50.299128, 21.440942],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_5958454ebbd3892c6a5c9987e906aa14 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_cedaf6268d56c6080817a683f1929798.setIcon(icon_5958454ebbd3892c6a5c9987e906aa14);
+        
+    
+            marker_cedaf6268d56c6080817a683f1929798.bindTooltip(
+                `<div>
+                     Value: 1.70676 µg/m³<br>Country: Poland<br>City: Mielec<br>Latitude: 50.299128<br>Longitude: 21.440942<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_d8866eeca0463b08e3f6d0e9e017e446 = L.marker(
+                [50.159406, 19.477464],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_c160bfe3fc17eb6912d2f52b61b9540b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_d8866eeca0463b08e3f6d0e9e017e446.setIcon(icon_c160bfe3fc17eb6912d2f52b61b9540b);
+        
+    
+            marker_d8866eeca0463b08e3f6d0e9e017e446.bindTooltip(
+                `<div>
+                     Value: 0.5172 µg/m³<br>Country: Poland<br>City: Trzebinia<br>Latitude: 50.159406<br>Longitude: 19.477464<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_31f3cadbcbd749e1a7f1cd0b2b5983a0 = L.marker(
+                [54.463611, 17.046722],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_a16c4f904041f5e9d608bf7542bae1a5 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_31f3cadbcbd749e1a7f1cd0b2b5983a0.setIcon(icon_a16c4f904041f5e9d608bf7542bae1a5);
+        
+    
+            marker_31f3cadbcbd749e1a7f1cd0b2b5983a0.bindTooltip(
+                `<div>
+                     Value: 2.39346 µg/m³<br>Country: Poland<br>City: Słupsk<br>Latitude: 54.463611<br>Longitude: 17.046722<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_0ee891e4bd34b3160dc765d0870d4506 = L.marker(
+                [50.716628, 23.290247],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_72199a6528f2c37a6f5a8b6dedb19be5 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_0ee891e4bd34b3160dc765d0870d4506.setIcon(icon_72199a6528f2c37a6f5a8b6dedb19be5);
+        
+    
+            marker_0ee891e4bd34b3160dc765d0870d4506.bindTooltip(
+                `<div>
+                     Value: 1.68 µg/m³<br>Country: Poland<br>City: Zamość<br>Latitude: 50.716628<br>Longitude: 23.290247<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_705ab12333111a9e535484cf0e559e43 = L.marker(
+                [50.886014, 20.642858],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_6ce93c3c7e80ca2d50122dc8f5662ab8 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_705ab12333111a9e535484cf0e559e43.setIcon(icon_6ce93c3c7e80ca2d50122dc8f5662ab8);
+        
+    
+            marker_705ab12333111a9e535484cf0e559e43.bindTooltip(
+                `<div>
+                     Value: 1.16 µg/m³<br>Country: Poland<br>City: Kielce<br>Latitude: 50.886014<br>Longitude: 20.642858<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_84dda93fb40a721ea71205d9d8d0f8ec = L.marker(
+                [53.017628, 18.612808],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_3a0793425f5461b7ace8ae1b4edd9b7b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_84dda93fb40a721ea71205d9d8d0f8ec.setIcon(icon_3a0793425f5461b7ace8ae1b4edd9b7b);
+        
+    
+            marker_84dda93fb40a721ea71205d9d8d0f8ec.bindTooltip(
+                `<div>
+                     Value: 3.82 µg/m³<br>Country: Poland<br>City: Toruń<br>Latitude: 53.017628<br>Longitude: 18.612808<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_a332884ef2d785ecf30d5fc625b142df = L.marker(
+                [53.121764, 17.987906],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_5c579d6f8d6d687babe181580672922d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_a332884ef2d785ecf30d5fc625b142df.setIcon(icon_5c579d6f8d6d687babe181580672922d);
+        
+    
+            marker_a332884ef2d785ecf30d5fc625b142df.bindTooltip(
+                `<div>
+                     Value: 3.37 µg/m³<br>Country: Poland<br>City: Bydgoszcz<br>Latitude: 53.121764<br>Longitude: 17.987906<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_6bf49d2c50d1f9030ab41e88df9b73fe = L.marker(
+                [50.033083, 19.245275],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_470546efa1b554403b9520227d93ca96 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_6bf49d2c50d1f9030ab41e88df9b73fe.setIcon(icon_470546efa1b554403b9520227d93ca96);
+        
+    
+            marker_6bf49d2c50d1f9030ab41e88df9b73fe.bindTooltip(
+                `<div>
+                     Value: 1.26774 µg/m³<br>Country: Poland<br>City: Oświęcim<br>Latitude: 50.033083<br>Longitude: 19.245275<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_7eae1263792e14e0df549115e38f607b = L.marker(
+                [54.120694, 17.975861],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_77eb0428b998f3425f868ed66e2f52d0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_7eae1263792e14e0df549115e38f607b.setIcon(icon_77eb0428b998f3425f868ed66e2f52d0);
+        
+    
+            marker_7eae1263792e14e0df549115e38f607b.bindTooltip(
+                `<div>
+                     Value: 3.32018 µg/m³<br>Country: Poland<br>City: Kościerzyna<br>Latitude: 54.120694<br>Longitude: 17.975861<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e60e61f83e2d244b188111e5f3477ac6 = L.marker(
+                [54.167847, 19.410942],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_d57579fbc0177da86897089d98a5f6a2 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_e60e61f83e2d244b188111e5f3477ac6.setIcon(icon_d57579fbc0177da86897089d98a5f6a2);
+        
+    
+            marker_e60e61f83e2d244b188111e5f3477ac6.bindTooltip(
+                `<div>
+                     Value: 3.99133 µg/m³<br>Country: Poland<br>City: Elbląg<br>Latitude: 54.167847<br>Longitude: 19.410942<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_66d9d7dd8b55e176dbed4ce27bc55463 = L.marker(
+                [51.150391, 15.008175],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_012937bcb32db6d5fec51b4e0c1e8ea0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_66d9d7dd8b55e176dbed4ce27bc55463.setIcon(icon_012937bcb32db6d5fec51b4e0c1e8ea0);
+        
+    
+            marker_66d9d7dd8b55e176dbed4ce27bc55463.bindTooltip(
+                `<div>
+                     Value: 0.57294 µg/m³<br>Country: Poland<br>City: Zgorzelec<br>Latitude: 51.150391<br>Longitude: 15.008175<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_beb457b8988ead8bebc5ac64a52a1d1f = L.marker(
+                [53.698902, 16.704556],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_382e636e716526b40106951462df7ad4 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_beb457b8988ead8bebc5ac64a52a1d1f.setIcon(icon_382e636e716526b40106951462df7ad4);
+        
+    
+            marker_beb457b8988ead8bebc5ac64a52a1d1f.bindTooltip(
+                `<div>
+                     Value: 0.0 µg/m³<br>Country: Poland<br>City: Szczecinek<br>Latitude: 53.698902<br>Longitude: 16.704556<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_7bbca234135bf1d8c1ec69a48f71a898 = L.marker(
+                [51.799722, 16.3175],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_9fa95341d06e6694044866f51eb7eb04 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_7bbca234135bf1d8c1ec69a48f71a898.setIcon(icon_9fa95341d06e6694044866f51eb7eb04);
+        
+    
+            marker_7bbca234135bf1d8c1ec69a48f71a898.bindTooltip(
+                `<div>
+                     Value: 0.20283 µg/m³<br>Country: Poland<br>City: Wschowa<br>Latitude: 51.799722<br>Longitude: 16.3175<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_f972925db294652bf858a40ef85abb50 = L.marker(
+                [52.602534, 19.6451],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_8d5c34f72b2b6f3b8cf81248c60dff90 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_f972925db294652bf858a40ef85abb50.setIcon(icon_8d5c34f72b2b6f3b8cf81248c60dff90);
+        
+    
+            marker_f972925db294652bf858a40ef85abb50.bindTooltip(
+                `<div>
+                     Value: 2.8 µg/m³<br>Country: Poland<br>City: Biała<br>Latitude: 52.602534<br>Longitude: 19.6451<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_66d568840431fae79f2a5868e52e4f1d = L.marker(
+                [50.018253, 20.992578],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_4617e04079c88796ab48b7cac361511a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_66d568840431fae79f2a5868e52e4f1d.setIcon(icon_4617e04079c88796ab48b7cac361511a);
+        
+    
+            marker_66d568840431fae79f2a5868e52e4f1d.bindTooltip(
+                `<div>
+                     Value: 1.40074 µg/m³<br>Country: Poland<br>City: Tarnów<br>Latitude: 50.018253<br>Longitude: 20.992578<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_5983b1c7e294189bf3d75d533bc807b7 = L.marker(
+                [53.136681, 17.591539],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_b6cb1dc12acf3400a6216cfe17a79209 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_5983b1c7e294189bf3d75d533bc807b7.setIcon(icon_b6cb1dc12acf3400a6216cfe17a79209);
+        
+    
+            marker_5983b1c7e294189bf3d75d533bc807b7.bindTooltip(
+                `<div>
+                     Value: 2.15 µg/m³<br>Country: Poland<br>City: Nakło nad Notecią<br>Latitude: 53.136681<br>Longitude: 17.591539<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_17209b586a51ec1c90c5b4017a7cc0bb = L.marker(
+                [53.662117, 17.934017],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_e032397241ebe2c4807769febad9ccbe = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_17209b586a51ec1c90c5b4017a7cc0bb.setIcon(icon_e032397241ebe2c4807769febad9ccbe);
+        
+    
+            marker_17209b586a51ec1c90c5b4017a7cc0bb.bindTooltip(
+                `<div>
+                     Value: 1.99 µg/m³<br>Country: Poland<br>City: Zielonka<br>Latitude: 53.662117<br>Longitude: 17.934017<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_a1fad795100d93296b63b6fa9fe7489c = L.marker(
+                [50.675693, 18.682065],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_440b1c79850ad4235ff91c30c8d99e17 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_a1fad795100d93296b63b6fa9fe7489c.setIcon(icon_440b1c79850ad4235ff91c30c8d99e17);
+        
+    
+            marker_a1fad795100d93296b63b6fa9fe7489c.bindTooltip(
+                `<div>
+                     Value: 4.28508 µg/m³<br>Country: Poland<br>City: Lubliniec<br>Latitude: 50.675693<br>Longitude: 18.682065<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_1ab2ca47050553d17082dc18b930d4a1 = L.marker(
+                [50.913433, 15.765608],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_7632a8ada3dd34c8e9c33bff1b98a20e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_1ab2ca47050553d17082dc18b930d4a1.setIcon(icon_7632a8ada3dd34c8e9c33bff1b98a20e);
+        
+    
+            marker_1ab2ca47050553d17082dc18b930d4a1.bindTooltip(
+                `<div>
+                     Value: 0.89967 µg/m³<br>Country: Poland<br>City: Jelenia Góra<br>Latitude: 50.913433<br>Longitude: 15.765608<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_610b825d3307bed148d4c1598751e317 = L.marker(
+                [53.639793, 22.470274],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_ea1e51515fa62b98590175d6e25fa420 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_610b825d3307bed148d4c1598751e317.setIcon(icon_ea1e51515fa62b98590175d6e25fa420);
+        
+    
+            marker_610b825d3307bed148d4c1598751e317.bindTooltip(
+                `<div>
+                     Value: 0.0 µg/m³<br>Country: Poland<br>City: Grajewo<br>Latitude: 53.639793<br>Longitude: 22.470274<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_f5d8316a2c5dbbdaf9f64cc03cd263b0 = L.marker(
+                [50.16385, 18.659977],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_cebe037a8ef01ff2591134e694d54bb6 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_f5d8316a2c5dbbdaf9f64cc03cd263b0.setIcon(icon_cebe037a8ef01ff2591134e694d54bb6);
+        
+    
+            marker_f5d8316a2c5dbbdaf9f64cc03cd263b0.bindTooltip(
+                `<div>
+                     Value: 2.77913 µg/m³<br>Country: Poland<br>City: Czerwionka-Leszczyny<br>Latitude: 50.16385<br>Longitude: 18.659977<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_39e4a304e023fd86f7899d17ad3e1916 = L.marker(
+                [47.597222, -122.319722],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_ed83ff045a1430a45a0d950585f77ece = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_39e4a304e023fd86f7899d17ad3e1916.setIcon(icon_ed83ff045a1430a45a0d950585f77ece);
+        
+    
+            marker_39e4a304e023fd86f7899d17ad3e1916.bindTooltip(
+                `<div>
+                     Value: 0.0 µg/m³<br>Country: United States<br>City: Seattle-Tacoma-Bellevue<br>Latitude: 47.597222<br>Longitude: -122.319722<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_80360d77d10152f8aa619670f3ce07a0 = L.marker(
+                [43.4981, -87.81],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_ec4f81055d2dd47079636dcd1bb2f9e1 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_80360d77d10152f8aa619670f3ce07a0.setIcon(icon_ec4f81055d2dd47079636dcd1bb2f9e1);
+        
+    
+            marker_80360d77d10152f8aa619670f3ce07a0.bindTooltip(
+                `<div>
+                     Value: 0.42 µg/m³<br>Country: United States<br>City: Milwaukee-Waukesha-West Allis<br>Latitude: 43.4981<br>Longitude: -87.81<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_b78f145b59d0dc289fa6350a53f1138f = L.marker(
+                [45.562203, -122.575624],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_891dbd0d980a9d08e63265694d7db19e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_b78f145b59d0dc289fa6350a53f1138f.setIcon(icon_891dbd0d980a9d08e63265694d7db19e);
+        
+    
+            marker_b78f145b59d0dc289fa6350a53f1138f.bindTooltip(
+                `<div>
+                     Value: 0.57 µg/m³<br>Country: United States<br>City: Portland-Vancouver-Beaverton<br>Latitude: 45.562203<br>Longitude: -122.575624<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_45600bb286a45b0518afd0602fc360b0 = L.marker(
+                [37.793624, -122.263376],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_206dc1a975cab7e4585512689bdc49b6 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_45600bb286a45b0518afd0602fc360b0.setIcon(icon_206dc1a975cab7e4585512689bdc49b6);
+        
+    
+            marker_45600bb286a45b0518afd0602fc360b0.bindTooltip(
+                `<div>
+                     Value: 2.73 µg/m³<br>Country: United States<br>City: San Francisco-Oakland-Fremont<br>Latitude: 37.793624<br>Longitude: -122.263376<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_64d5843b6fec7b37a2873ecdf5d7d711 = L.marker(
+                [35.502968, -97.577674],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_95b7eefebd66fbc7ca387230946852f3 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_64d5843b6fec7b37a2873ecdf5d7d711.setIcon(icon_95b7eefebd66fbc7ca387230946852f3);
+        
+    
+            marker_64d5843b6fec7b37a2873ecdf5d7d711.bindTooltip(
+                `<div>
+                     Value: 0.1 µg/m³<br>Country: United States<br>City: Oklahoma City<br>Latitude: 35.502968<br>Longitude: -97.577674<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_f0907008c258cfad680f1e959f7c07ad = L.marker(
+                [41.807523, -71.41392],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_83e13ffa678770c7b52c179b2a1286b7 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_f0907008c258cfad680f1e959f7c07ad.setIcon(icon_83e13ffa678770c7b52c179b2a1286b7);
+        
+    
+            marker_f0907008c258cfad680f1e959f7c07ad.bindTooltip(
+                `<div>
+                     Value: 0.47 µg/m³<br>Country: United States<br>City: Providence-New Bedford-Fall River<br>Latitude: 41.807523<br>Longitude: -71.41392<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_66967b4ee1f1ef56c52435474e602d3e = L.marker(
+                [54.380279, 18.620274],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_13619c1f7e93df06e2980e21c8564aad = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_66967b4ee1f1ef56c52435474e602d3e.setIcon(icon_13619c1f7e93df06e2980e21c8564aad);
+        
+    
+            marker_66967b4ee1f1ef56c52435474e602d3e.bindTooltip(
+                `<div>
+                     Value: 758.252 µg/m³<br>Country: Poland<br>City: Gdańsk<br>Latitude: 54.380279<br>Longitude: 18.620274<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_fdac2e310261be232198103dde5ee57d = L.marker(
+                [38.921848, -77.013176],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_7850148b304a25dfe379bd113fda3144 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_fdac2e310261be232198103dde5ee57d.setIcon(icon_7850148b304a25dfe379bd113fda3144);
+        
+    
+            marker_fdac2e310261be232198103dde5ee57d.bindTooltip(
+                `<div>
+                     Value: 0.46 µg/m³<br>Country: United States<br>City: Washington-Arlington-Alexandria<br>Latitude: 38.921848<br>Longitude: -77.013176<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_86e5cc3918383bf709015549fdd149d6 = L.marker(
+                [38.613804, -121.368007],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_09f6dcf651c3d605f28cf9facf3f585e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_86e5cc3918383bf709015549fdd149d6.setIcon(icon_09f6dcf651c3d605f28cf9facf3f585e);
+        
+    
+            marker_86e5cc3918383bf709015549fdd149d6.bindTooltip(
+                `<div>
+                     Value: 9.0 µg/m³<br>Country: United States<br>City: Sacramento--Arden-Arcade--Roseville<br>Latitude: 38.613804<br>Longitude: -121.368007<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_b4bef576bd004871d0b8c1d5949b4f00 = L.marker(
+                [39.143197, -76.846192],
+                {}
+            ).addTo(map_f3a771f1b19c2780ca485255b01e5811);
+        
+    
+            var icon_9a24c2f444ebd23d23be66933794cf1f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_b4bef576bd004871d0b8c1d5949b4f00.setIcon(icon_9a24c2f444ebd23d23be66933794cf1f);
+        
+    
+            marker_b4bef576bd004871d0b8c1d5949b4f00.bindTooltip(
+                `<div>
+                     Value: 2.1 µg/m³<br>Country: United States<br>City: HOWARD<br>Latitude: 39.143197<br>Longitude: -76.846192<br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
+</html>

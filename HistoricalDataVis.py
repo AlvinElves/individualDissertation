@@ -5,13 +5,13 @@ import plotly.express as px
 class HistoricalDataVisualisation:
     def __init__(self):
         self.historical_data = HistoricalData()
-        # self.plot_Bar_by_Month_average(self.historical_data)
-        # self.plot_Bar_by_Day_average(self.historical_data)
-        self.plot_normal_line_all(self.historical_data, ['T', 'AH', 'RH'])
+        # self.plot_Bar_by_Month(self.historical_data)
+        # self.plot_Bar_by_Day(self.historical_data)
+        self.plot_line_all(self.historical_data, ['T', 'AH', 'RH'])
 
     @staticmethod
-    def plot_normal_line_all(historical_data, y_Value):
-        df = historical_data.merged_date_dataset
+    def plot_line_all(historical_data, y_Value):
+        df = historical_data.merged_date_dataset.copy()
         df['Date'] = pd.to_datetime(df.Date.astype(str) + ' ' + df.Time.astype(str))
         fig = px.line(df, x='Date', y=y_Value, title='Date VS Multiple Attributes', render_mode='webg1')
         fig.update_xaxes(
@@ -58,7 +58,7 @@ class HistoricalDataVisualisation:
         # fig.show()
 
     @staticmethod
-    def plot_Bar_by_Month_average(historical_data):
+    def plot_Bar_by_Month(historical_data):
         month_year_data = historical_data.grouping(['Month', 'Year'])
         month_year_data['Year'] = month_year_data['Year'].astype(str)
 
@@ -68,7 +68,7 @@ class HistoricalDataVisualisation:
         fig.show()
 
     @staticmethod
-    def plot_Bar_by_Day_average(historical_data):
+    def plot_Bar_by_Day(historical_data):
         month_year_data = historical_data.grouping(['Day', 'Month', 'Year'])
         month_year_data['Year'] = month_year_data['Year'].astype(str)
 

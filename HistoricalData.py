@@ -3,6 +3,7 @@ import numpy as np
 
 
 class HistoricalData:
+
     def __init__(self):
         self.historical_dataset = None
         self.merged_date_dataset = None
@@ -33,15 +34,15 @@ class HistoricalData:
 
         # Change the -200 value to null, -200 is null based on the sheet
         self.historical_dataset[self.historical_dataset == -200] = np.NaN
-        self.merged_date_dataset[self.merged_date_dataset == -200] = np.NaN
 
         # Drop the column NMHC(GT) since almost 90% of the data is null
         self.historical_dataset = self.historical_dataset.drop(columns=['NMHC(GT)'])
-        self.merged_date_dataset = self.merged_date_dataset.drop(columns=['NMHC(GT)'])
 
         # Delete the other rows that contains null
         self.historical_dataset = self.historical_dataset.dropna(axis=0, how='any').reset_index(drop=True)
-        self.merged_date_dataset = self.merged_date_dataset.dropna(axis=0, how='any').reset_index(drop=True)
+
+        # Copy to another dataset
+        self.merged_date_dataset = self.historical_dataset.copy()
 
         self.merge_date()
 
@@ -53,7 +54,6 @@ class HistoricalData:
 
     def get_data_from_excel(self):
         self.historical_dataset = pd.read_excel("Dataset/AirQualityUCI.xlsx")
-        self.merged_date_dataset = pd.read_excel("Dataset/AirQualityUCI.xlsx")
 
 
 if __name__ == '__main__':

@@ -54,7 +54,7 @@ class HomePage(tk.Frame):
         tk.Frame.__init__(self, parent, bg='black')
 
         # Function for Left Frame Widgets
-        def left_frame_widget_building():
+        def left_frame_widget():
             # Create function for button hovers
             def on_enter(e):
                 e.widget['background'] = 'slateblue'
@@ -100,7 +100,7 @@ class HomePage(tk.Frame):
             predict_button.bind("<Enter>", on_enter)
             predict_button.bind("<Leave>", on_leave)
 
-        def right_frame_widget_building():
+        def right_frame_widget():
             title_label = tk.Label(right_frame, text="Home (Introduction)", width=26, font=('Raleway', 35, 'bold'),
                                    bg='deepskyblue')
             title_label.grid(row=0, column=0, padx=51, pady=15)
@@ -114,12 +114,12 @@ class HomePage(tk.Frame):
                                highlightthickness=5)
         right_frame.grid(row=0, column=1, padx=(0, 2), pady=3)
 
-        right_inside_frame = tk.Frame(right_frame, width=767, height=584, bg='lightskyblue')
+        right_inside_frame = tk.Frame(right_frame, width=767, height=583, bg='lightskyblue')
         right_inside_frame.grid(row=1, column=0, pady=5, padx=50)
 
         # Create widgets that is in Left_Frame, Right Frame and Inner Right Frame
-        left_frame_widget_building()
-        right_frame_widget_building()
+        left_frame_widget()
+        right_frame_widget()
 
 
 # Historical Data window frame
@@ -128,7 +128,7 @@ class HistoricalDataPage(tk.Frame):
         tk.Frame.__init__(self, parent, bg='black')
 
         # Function for Left Frame Widgets
-        def left_frame_widget_building():
+        def left_frame_widget():
             # Create function for button hovers
             def on_enter(e):
                 e.widget['background'] = 'slateblue'
@@ -173,7 +173,7 @@ class HistoricalDataPage(tk.Frame):
             predict_button.bind("<Enter>", on_enter)
             predict_button.bind("<Leave>", on_leave)
 
-        def right_frame_widget_building():
+        def right_frame_widget():
             title_label = tk.Label(right_frame, text="Historical Data Visualisation", width=26,
                                    font=('Raleway', 35, 'bold'),
                                    bg='deepskyblue')
@@ -188,12 +188,12 @@ class HistoricalDataPage(tk.Frame):
                                highlightthickness=5)
         right_frame.grid(row=0, column=1, padx=(0, 2), pady=3)
 
-        right_inside_frame = tk.Frame(right_frame, width=767, height=584, bg='lightskyblue')
+        right_inside_frame = tk.Frame(right_frame, width=767, height=583, bg='lightskyblue')
         right_inside_frame.grid(row=1, column=0, pady=5, padx=50)
 
         # Create widgets that is in Left_Frame, Right Frame and Inner Right Frame
-        left_frame_widget_building()
-        right_frame_widget_building()
+        left_frame_widget()
+        right_frame_widget()
 
 
 # Live Data window frame
@@ -202,8 +202,16 @@ class LiveDataPage(tk.Frame):
         tk.Frame.__init__(self, parent, bg='black')
         #
         # live_Data = LiveData()
+        self.map_type = ""
+        self.pollutant_type = ""
+        self.last_updated = ""
+        self.data_website = ""
+        self.map_type_label = tk.StringVar()
+        self.pollutant_type_label = tk.StringVar()
+        self.last_updated_label = tk.StringVar()
+        self.data_website_label = tk.StringVar()
 
-        def left_frame_widget_building():
+        def left_frame_widget():
             # Create function for button hovers
             def on_enter(e):
                 e.widget['background'] = 'slateblue'
@@ -249,10 +257,80 @@ class LiveDataPage(tk.Frame):
             predict_button.bind("<Enter>", on_enter)
             predict_button.bind("<Leave>", on_leave)
 
-        def right_frame_widget_building():
+        def right_frame_widget():
             title_label = tk.Label(right_frame, text="Live Data Visualisation", width=26,
                                    font=('Raleway', 35, 'bold'), bg='deepskyblue')
             title_label.grid(row=0, column=0, padx=51, pady=15)
+
+        def right_inner_frame_widget():
+            basic_button = tk.Button(right_inside_frame, text="BASIC MAP", width=25, height=3, font=('Raleway', 10, 'bold'))
+            basic_button.grid(row=0, column=0, columnspan=3, pady=(10, 5), padx=(0, 80))
+
+            advanced_button = tk.Button(right_inside_frame, text="ADVANCED MAP", width=25, height=3, font=('Raleway', 10, 'bold'))
+            advanced_button.grid(row=0, column=3, columnspan=2, pady=(10, 5))
+
+            top_canvas = tk.Canvas(right_inside_frame, width=767, height=30, bg='lightskyblue', highlightthickness=0)
+            top_canvas.grid(row=1, columnspan=5, pady=6)
+            top_canvas.create_line(5, 15, 762, 15, fill="black", width=10)
+
+            pm2_dot_5_button = tk.Button(right_inside_frame, text="PM2.5", width=15, height=3, font=('Raleway', 10, 'bold'))
+            pm2_dot_5_button.grid(row=2, column=0, columnspan=2, pady=(5, 3), padx=(20, 0))
+
+            pm10_button = tk.Button(right_inside_frame, text="PM10", width=15, height=3, font=('Raleway', 10, 'bold'))
+            pm10_button.grid(row=3, column=0, columnspan=2, pady=3, padx=(20, 0))
+
+            o3_button = tk.Button(right_inside_frame, text="O3", width=15, height=3, font=('Raleway', 10, 'bold'))
+            o3_button.grid(row=4, column=0, columnspan=2, pady=3, padx=(20, 0))
+
+            no2_button = tk.Button(right_inside_frame, text="NO2", width=15, height=3, font=('Raleway', 10, 'bold'))
+            no2_button.grid(row=5, column=0, columnspan=2, pady=3, padx=(20, 0))
+
+            so2_button = tk.Button(right_inside_frame, text="SO2", width=15, height=3, font=('Raleway', 10, 'bold'))
+            so2_button.grid(row=6, column=0, columnspan=2, pady=3, padx=(20, 0))
+
+            co_button = tk.Button(right_inside_frame, text="CO", width=15, height=3, font=('Raleway', 10, 'bold'))
+            co_button.grid(row=7, column=0, columnspan=2, pady=3, padx=(20, 0))
+
+            bc_button = tk.Button(right_inside_frame, text="BC", width=15, height=3, font=('Raleway', 10, 'bold'))
+            bc_button.grid(row=8, column=0, columnspan=2, pady=(3, 5), padx=(20, 0))
+
+            map_type_text = tk.Label(right_inside_frame, text="Selected Map Type: ", width=21, height=3, font=('Raleway', 10, 'bold'), bg='royalblue')
+            map_type_text.grid(row=2, column=2, padx=(0, 40))
+
+            map_type_label = tk.Label(right_inside_frame, textvariable=self.map_type_label, width=40, height=3, font=('Raleway', 10, 'bold'), bg='royalblue')
+            map_type_label.grid(row=2, column=3, columnspan=2, padx=(0, 19))
+
+            button_text = tk.Label(right_inside_frame, text="Selected Pollutant:", width=21, height=3, font=('Raleway', 10, 'bold'), bg='royalblue')
+            button_text.grid(row=3, column=2, padx=(0, 40))
+
+            button_label = tk.Label(right_inside_frame, textvariable=self.pollutant_type_label, width=40, height=3, font=('Raleway', 10, 'bold'), bg='royalblue')
+            button_label.grid(row=3, column=3, columnspan=2, padx=(0, 19))
+
+            last_update_text = tk.Label(right_inside_frame, text="Last update: ", width=21, height=3,
+                                        font=('Raleway', 10, 'bold'), bg='royalblue')
+            last_update_text.grid(row=4, column=2, padx=(0, 40))
+
+            last_update_label = tk.Label(right_inside_frame, textvariable=self.last_updated_label, width=40, height=3,
+                                         font=('Raleway', 10, 'bold'), bg='royalblue')
+            last_update_label.grid(row=4, column=3, columnspan=2, padx=(0, 19))
+
+            data_url_text = tk.Label(right_inside_frame, text="Dataset website:", width=21, height=3, font=('Raleway', 10, 'bold'), bg='royalblue')
+            data_url_text.grid(row=5, column=2, padx=(0, 40))
+
+            data_url_label = tk.Label(right_inside_frame, textvariable=self.data_website_label, width=40, height=3, font=('Raleway', 10, 'bold'), bg='royalblue')
+            data_url_label.grid(row=5, column=3, columnspan=2, padx=(0, 19))
+
+            download_excel_button = tk.Button(right_inside_frame, text="Download", width=25, height=3, font=('Raleway', 10, 'bold'))
+            download_excel_button.grid(row=6, column=2, padx=(0, 5))
+
+            clear_button = tk.Button(right_inside_frame, text="Clear", width=25, height=3, font=('Raleway', 10, 'bold'))
+            clear_button.grid(row=6, column=3, columnspan=2)
+
+            refresh_button = tk.Button(right_inside_frame, text="Refresh", width=25, height=3, font=('Raleway', 10, 'bold'))
+            refresh_button.grid(row=7, column=2, padx=(0, 5))
+
+            visualise_button = tk.Button(right_inside_frame, text="Visualise", width=25, height=3, font=('Raleway', 10, 'bold'))
+            visualise_button.grid(row=7, column=3, columnspan=2)
 
         # Create left, right and inner right frames
         left_frame = tk.Frame(self, width=225, height=694, bg='royalblue', highlightbackground="darkblue",
@@ -263,12 +341,13 @@ class LiveDataPage(tk.Frame):
                                highlightthickness=5)
         right_frame.grid(row=0, column=1, padx=(0, 2), pady=3)
 
-        right_inside_frame = tk.Frame(right_frame, width=767, height=584, bg='lightskyblue')
+        right_inside_frame = tk.Frame(right_frame, width=767, height=583, bg='lightskyblue')
         right_inside_frame.grid(row=1, column=0, pady=5, padx=50)
 
         # Create widgets that is in Left_Frame, Right Frame and Inner Right Frame
-        left_frame_widget_building()
-        right_frame_widget_building()
+        left_frame_widget()
+        right_frame_widget()
+        right_inner_frame_widget()
 
 
 # Prediction window frame
@@ -276,7 +355,7 @@ class PredictionPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg='black')
 
-        def left_frame_widget_building():
+        def left_frame_widget():
             # Create function for button hovers
             def on_enter(e):
                 e.widget['background'] = 'slateblue'
@@ -322,7 +401,7 @@ class PredictionPage(tk.Frame):
                                        command=lambda: controller.show_frame(PredictionPage))
             predict_button.grid(row=4, column=0, pady=(3, 124))
 
-        def right_frame_widget_building():
+        def right_frame_widget():
             title_label = tk.Label(right_frame, text="Air Quality Prediction", width=26,
                                    font=('Raleway', 35, 'bold'), bg='deepskyblue')
             title_label.grid(row=0, column=0, padx=51, pady=15)
@@ -340,8 +419,8 @@ class PredictionPage(tk.Frame):
         right_inside_frame.grid(row=1, column=0, pady=5, padx=50)
 
         # Create widgets that is in Left_Frame, Right Frame and Inner Right Frame
-        left_frame_widget_building()
-        right_frame_widget_building()
+        left_frame_widget()
+        right_frame_widget()
 
 
 # Press the green button in the gutter to run the script.
