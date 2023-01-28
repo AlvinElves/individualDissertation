@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 
 
 class HistoricalData:
@@ -48,7 +49,15 @@ class HistoricalData:
 
         self.split_date()
 
-        # Put it into an Excel file to visualise using tableau or excel
+        new_directory = "CleanedDataset"  # New folder name
+        path = os.getcwd()  # Get current file path
+        data_path = os.path.join(path, new_directory)
+
+        # Create new folder
+        if not os.path.exists(data_path):
+            os.mkdir(data_path)
+
+            # Put it into an Excel file to visualise using tableau or excel
         self.historical_dataset.to_excel('CleanedDataset/CleanedHistoricalData.xlsx', index=False)
         self.merged_date_dataset.to_excel('CleanedDataset/MergedHistoricalData.xlsx', index=False)
 

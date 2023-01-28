@@ -2,13 +2,14 @@ import requests
 import json
 import numpy as np
 import pandas as pd
+import os
 
 
 class LiveData:
     def __init__(self):
         self.live_dataset = None
         self.all_live_dataset = None
-        print('test')
+
         self.get_data_using_api()
         self.split_date()
         self.remove_duplicate_data()
@@ -39,6 +40,14 @@ class LiveData:
             self.all_live_dataset['measurements_unit'] == 'µg/m³'].reset_index(drop=True)
 
     def write_dataset_to_excel(self):
+        new_directory = "CleanedDataset"  # New folder name
+        path = os.getcwd()  # Get current file path
+        data_path = os.path.join(path, new_directory)
+
+        # Create new folder
+        if not os.path.exists(data_path):
+            os.mkdir(data_path)
+
         self.live_dataset.to_excel('CleanedDataset/CleanedLiveData.xlsx', index=False)
         self.all_live_dataset.to_excel('CleanedDataset/CleanedAllLiveData.xlsx', index=False)
 
