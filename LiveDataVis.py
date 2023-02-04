@@ -3,6 +3,8 @@ import folium
 import webbrowser
 import plotly.graph_objects as go
 from LiveData import *
+import geopandas as gpd
+import matplotlib.pyplot as plt
 
 
 class LiveDataVisualisation:
@@ -23,10 +25,24 @@ class LiveDataVisualisation:
 
         live_data = LiveData()
 
-        self.create_Folder()
+        #self.create_Folder()
 
-        self.pop_up_graph(live_data)
-        self.create_Map(live_data)
+        #self.pop_up_graph(live_data)
+        #self.create_Map(live_data)
+        self.graph_on_map()
+
+    # Bar Graph on world map
+    def graph_on_map(self):
+        import mplcursors
+        np.random.seed(42)
+
+        fig, ax = plt.subplots()
+        ax.scatter(*np.random.random((2, 26)))
+        ax.set_title("Mouse over a point")
+
+        #mplcursors.cursor(hover=True)
+
+        plt.show()
 
 
     # Create the graph that will be shown when clicked on enhanced map
@@ -79,6 +95,7 @@ class LiveDataVisualisation:
 
             self.pop_up_df.loc[len(self.pop_up_df)] = [unique_country[a], text, median_latitude, median_longitude]
 
+    # Markers for each type basic map
     @staticmethod
     def input_Basic_Marker(live_data, header_name, folium_Map):
         # Split data into variable based on header_name of pollutant

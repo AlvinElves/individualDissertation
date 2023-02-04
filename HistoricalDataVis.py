@@ -37,9 +37,10 @@ class HistoricalDataVisualisation:
         )
 
         button_list = [dict(label='All', method='update',
-                            args=[{'visible': [True, True]}, {'title': 'Date VS Multiple Attributes'}])]
+                            args=[{'visible': [True, True, True]}, {'title': 'Date VS Multiple Attributes'}])]
         for i in range(0, len(y_Value)):
             visible = [j == i for j in list(range(0, len(y_Value)))]
+            print(visible)
             button_list.append(dict(label=y_Value[i], method='update',
                                     args=[{'visible': visible}, {'title': 'Date VS ' + str(y_Value[i])}]))
 
