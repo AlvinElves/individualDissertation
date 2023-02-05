@@ -15,14 +15,18 @@ class AIModel:
         self.dataset = None
         self.get_data_from_excel()
         T_dataset = self.feature_scaling('lasso', self.null_value('delete', self.outliers('delete', self.data_preprocessing('T'))), 'T')
-        AH_dataset = self.feature_scaling('lasso', self.null_value('delete', self.outliers('delete', self.data_preprocessing('AH'))), 'AH')
+        AH_dataset = self.feature_scaling('none', self.null_value('delete', self.outliers('delete', self.data_preprocessing('AH'))), 'AH')
         RH_dataset = self.feature_scaling('lasso', self.null_value('delete', self.outliers('none', self.data_preprocessing('RH'))), 'RH')
 
         self.T_model = RandomForestRegressor(n_estimators=242, max_features='log2', criterion='friedman_mse',
                                              random_state=5, n_jobs=5)
         self.T_model.fit(T_dataset.drop(['T'], axis=1), T_dataset['T'])
 
-        self.RH_model = RandomForestRegressor(n_estimators=487, max_features='auto', criterion='friedman_mse',
+        self.AH_model = RandomForestRegressor(n_estimators=255, max_features=1.0, criterion='squared_error',
+                                              random_state=5, n_jobs=5)
+        self.AH_model.fit(AH_dataset.drop(['AH'], axis=1), AH_dataset['AH'])
+
+        self.RH_model = RandomForestRegressor(n_estimators=487, max_features=1.0, criterion='friedman_mse',
                                               random_state=5, n_jobs=5)
         self.RH_model.fit(RH_dataset.drop(['RH'], axis=1), RH_dataset['RH'])
 
@@ -37,7 +41,7 @@ class AIModel:
         X = self.dataset.drop(['Date', 'Time', 'T', 'RH', 'AH'], axis=1)
         Y = self.dataset[variable]
 
-        normalise_train = pd.read_excel("CleanedDataset/TrainingData.xlsx")
+        normalise_train = pd.read_excel("CleanedDataset/NormalisedTrainingData.xlsx")
 
         # Normalise the dataset based on the training dataset from comparison
         features_list = list(normalise_train.columns)
@@ -73,14 +77,14 @@ class AIModel:
         else:
             print("No Outliers method found")
 
-    # Method to deal with null values
+    # Method to deal with null values, data imputation
     @staticmethod
     def null_value(method, dataset):
         if method == "delete":
             dataset = dataset.dropna(axis=0, how='any').reset_index(drop=True)
             return dataset
         else:
-            print("No Outliers method found")
+            print("No Imputation method found")
 
     # Feature Scaling Method
     @staticmethod
@@ -108,6 +112,9 @@ class AIModel:
             dataset = pd.concat([y_df, X_df], axis=1)
 
             return dataset
+
+        else:
+            print("No Feature Scaling method found")
 
 
 if __name__ == '__main__':
