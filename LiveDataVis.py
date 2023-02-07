@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 from LiveData import *
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import mplcursors
 
 
 class LiveDataVisualisation:
@@ -25,12 +26,45 @@ class LiveDataVisualisation:
 
         live_data = LiveData()
 
-        #self.create_Folder()
+        self.create_Folder()
 
-        #self.pop_up_graph(live_data)
-        #self.create_Map(live_data)
-        self.graph_on_map()
+        # self.pop_up_graph(live_data)
+        # self.create_Map(live_data)
 
+        # self.graph_on_map()
+
+        self.heat_map(live_data, 'PM2.5')
+
+    # Use scatter map to produce a heat map
+    def heat_map(self, live_data, header_name):
+        worldmap = gpd.read_file(gpd.datasets.get_path("naturalearth_lowres"))
+
+        # Creating axes and plotting world map
+        fig, ax = plt.subplots(figsize=(12, 6))
+        worldmap.plot(ax=ax)
+
+        data = live_data.split_data_based_on_pollutant(header_name)
+
+        # Plotting our Impact Energy data with a color map
+        x = data['longitude']
+        y = data['latitude']
+        z = data['measurements_value']
+
+        plt.scatter(x, y, c=z, alpha=0.6, vmin=min(z), vmax=max(z),
+                    cmap='autumn')
+        plt.colorbar(label='measurements_value')
+
+        # Creating axis limits and title
+        plt.xlim([-180, 180])
+        plt.ylim([-90, 90])
+
+        plt.title(header_name + " Pollutant Heatmap")
+        plt.xlabel("Longitude")
+        plt.ylabel("Latitude")
+        mplcursors.cursor(hover=True)
+        plt.show()
+
+    """
     # Bar Graph on world map
     def graph_on_map(self):
         import mplcursors
@@ -43,7 +77,7 @@ class LiveDataVisualisation:
         #mplcursors.cursor(hover=True)
 
         plt.show()
-
+    """
 
     # Create the graph that will be shown when clicked on enhanced map
     def pop_up_graph(self, live_data):
@@ -72,7 +106,8 @@ class LiveDataVisualisation:
                     time_data = individual_data.loc[individual_data['Time'] == time_parameter[j]].reset_index(drop=True)
                     fig.add_trace(go.Bar(x=time_data['city'], y=time_data['measurements_value'], name=time_parameter[j],
                                          hovertemplate='City: %{x} <br>Value: %{y} <br>Country: ' + unique_country[a] +
-                                                       '<br>Pollutant: ' + parameters[i] + '<br>' + 'Time: ' + time_parameter[j]))
+                                                       '<br>Pollutant: ' + parameters[i] + '<br>' + 'Time: ' +
+                                                       time_parameter[j]))
 
             minimum_total = 0
             maximum_total = 0
