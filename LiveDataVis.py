@@ -33,7 +33,7 @@ class LiveDataVisualisation:
 
         # self.graph_on_map()
 
-        self.heat_map(live_data, 'PM2.5')
+        self.heat_map(live_data, 'CO')
 
     # Use scatter map to produce a heat map
     def heat_map(self, live_data, header_name):
@@ -50,8 +50,7 @@ class LiveDataVisualisation:
         y = data['latitude']
         z = data['measurements_value']
 
-        plt.scatter(x, y, c=z, alpha=0.6, vmin=min(z), vmax=max(z),
-                    cmap='autumn')
+        plt.scatter(x, y, c=z, alpha=0.6, vmin=min(z), vmax=max(z), cmap='autumn_r')
         plt.colorbar(label='measurements_value')
 
         # Creating axis limits and title
