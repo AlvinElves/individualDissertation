@@ -24,8 +24,8 @@ class AIModelVis:
 
         feature_dataset = self.null_value('delete', self.outliers('delete', self.data_preprocessing('T')))
 
-        #self.visualise_normalised_data(original_dataset, normalised_dataset, ['CO(GT) (Original)', 'CO(GT) (Processed)'])
-        #self.visualise_outliers_data(original_normalised_dataset, outliers_dataset, ['T (Original)', 'T (Processed)'])
+        self.visualise_normalised_data(original_dataset, normalised_dataset, ['CO(GT) (Original)', 'CO(GT) (Processed)'])
+        self.visualise_outliers_data(original_normalised_dataset, outliers_dataset, ['T (Original)', 'T (Processed)'])
         self.visualise_feature_correlation(feature_dataset)
 
     def visualise_feature_correlation(self, dataset):
@@ -39,8 +39,9 @@ class AIModelVis:
         mask[np.triu_indices_from(mask)] = True
 
         # Set up the matplotlib figure
-        fig, ax = plt.subplots(figsize=(20, 12))
-        plt.title('Feature Correlation')
+        fig, ax = plt.subplots(figsize=(10, 8))
+        plt.title('Feature Correlation between all features')
+        fig.canvas.manager.set_window_title('Correlation Visualisation')
 
         # Generate a custom diverging colormap
         cmap = sns.diverging_palette(260, 10, as_cmap=True)
@@ -48,6 +49,7 @@ class AIModelVis:
         # Draw the heatmap with the mask and correct aspect ratio
         correlation_map = sns.heatmap(corrMatt, vmax=1.2, square=False, cmap=cmap, mask=mask, ax=ax, annot=True, fmt='.2g', linewidths=1)
         correlation_map.set_yticklabels(correlation_map.get_ymajorticklabels(), fontsize=7)
+        correlation_map.set_xticklabels(correlation_map.get_xmajorticklabels(), fontsize=7)
 
         plt.show()
 
@@ -67,7 +69,9 @@ class AIModelVis:
         combined_visualise_dataset = combined_visualise_dataset[column_name]
 
         combined_visualise_dataset.plot(kind='box', subplots=True, layout=(1, 2), sharex=False, sharey=False,
-                                        fontsize=12, figsize=(10, 10))
+                                        fontsize=12, figsize=(10, 6))
+
+        plt.get_current_fig_manager().canvas.manager.set_window_title('Outliers Visualisation')
         plt.show()
 
     def visualise_normalised_data(self, original_dataset, normalised_dataset, column_name):
@@ -99,7 +103,11 @@ class AIModelVis:
         visualise = visualise.head(400)
         maximum = max(visualise['CO(GT) (Original)'])
         minimum = min(visualise['CO(GT) (Processed)'])
-        visualise.plot(kind='line', fontsize=10, figsize=(30, 10), xlim=(-5, 400), ylim=(minimum - 1, maximum))
+
+        fig, ax = plt.subplots(figsize=(12, 7))
+        fig.canvas.manager.set_window_title('Normalisation Visualisation')
+
+        visualise.plot(kind='line', fontsize=10, ax=ax, xlim=(-5, 400), ylim=(minimum - 1, maximum))
         plt.show()
 
     def get_data_from_excel(self):

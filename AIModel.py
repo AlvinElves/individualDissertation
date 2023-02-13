@@ -9,9 +9,6 @@ class AIModel:
         AH_dataset = ai_Model_Vis.feature_scaling('none', ai_Model_Vis.null_value('delete', ai_Model_Vis.outliers('delete', ai_Model_Vis.data_preprocessing('AH'))), 'AH')
         RH_dataset = ai_Model_Vis.feature_scaling('lasso', ai_Model_Vis.null_value('delete', ai_Model_Vis.outliers('none', ai_Model_Vis.data_preprocessing('RH'))), 'RH')
 
-        print(T_dataset.shape)
-        print(AH_dataset.shape)
-        print(RH_dataset.shape)
         """
         self.T_model = RandomForestRegressor(n_estimators=242, max_features='log2', criterion='friedman_mse',
                                              random_state=5, n_jobs=5)

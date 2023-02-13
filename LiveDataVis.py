@@ -2,10 +2,11 @@ import os
 import folium
 import webbrowser
 import plotly.graph_objects as go
+
 from LiveData import *
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
-import mplcursors
 
 
 class LiveDataVisualisation:
@@ -33,15 +34,50 @@ class LiveDataVisualisation:
 
         # self.graph_on_map()
 
-        self.heat_map(live_data, 'CO')
+        self.bubble_map(live_data, 'CO')
 
     # Use scatter map to produce a heat map
-    def heat_map(self, live_data, header_name):
+    def bubble_map(self, live_data, header_name):
+        def zoom_factory(ax, base_scale=2.):
+            def zoom_fun(event):
+                # get the current x and y limits
+                cur_xlim = ax.get_xlim()
+                cur_ylim = ax.get_ylim()
+                cur_xrange = (cur_xlim[1] - cur_xlim[0]) * .5
+                cur_yrange = (cur_ylim[1] - cur_ylim[0]) * .5
+                xdata = event.xdata  # get event x location
+                ydata = event.ydata  # get event y location
+                if event.button == 'up':
+                    # deal with zoom in
+                    scale_factor = 1 / base_scale
+                elif event.button == 'down':
+                    # deal with zoom out
+                    scale_factor = base_scale
+                else:
+                    # deal with something that should never happen
+                    scale_factor = 1
+                    print(event.button)
+                # set new limits
+                ax.set_xlim([xdata - cur_xrange * scale_factor,
+                             xdata + cur_xrange * scale_factor])
+                ax.set_ylim([ydata - cur_yrange * scale_factor,
+                             ydata + cur_yrange * scale_factor])
+                plt.draw()  # force re-draw
+
+            fig = ax.get_figure()  # get the figure of interest
+            # attach the call back
+            fig.canvas.mpl_connect('scroll_event', zoom_fun)
+
+            # return the function
+            return zoom_fun
+
         worldmap = gpd.read_file(gpd.datasets.get_path("naturalearth_lowres"))
 
         # Creating axes and plotting world map
         fig, ax = plt.subplots(figsize=(12, 6))
         worldmap.plot(ax=ax)
+
+        zoom_factory(ax, base_scale=1.5)
 
         data = live_data.split_data_based_on_pollutant(header_name)
 
@@ -50,7 +86,10 @@ class LiveDataVisualisation:
         y = data['latitude']
         z = data['measurements_value']
 
-        plt.scatter(x, y, c=z, alpha=0.6, vmin=min(z), vmax=max(z), cmap='autumn_r')
+        s = 10 * z
+        s[s > 200] = 200
+
+        plt.scatter(x, y, s=s, c=z, alpha=0.6, vmin=min(z), vmax=max(z), cmap='autumn_r')
         plt.colorbar(label='measurements_value')
 
         # Creating axis limits and title
@@ -60,7 +99,7 @@ class LiveDataVisualisation:
         plt.title(header_name + " Pollutant Heatmap")
         plt.xlabel("Longitude")
         plt.ylabel("Latitude")
-        mplcursors.cursor(hover=True)
+        # mplcursors.cursor(hover=True)
         plt.show()
 
     """
