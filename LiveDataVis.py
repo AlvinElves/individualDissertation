@@ -1,4 +1,3 @@
-import os
 import folium
 import webbrowser
 import plotly.graph_objects as go
@@ -7,18 +6,12 @@ from LiveData import *
 
 import geopandas as gpd
 import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+from mpl_interactions import panhandler
 
 
 class LiveDataVisualisation:
     def __init__(self):
-        self.map_SO2 = None
-        self.map_NO2 = None
-        self.map_BC = None
-        self.map_CO = None
-        self.map_O3 = None
-        self.map_PM10 = None
-        self.map_PM2 = None
-        self.map_enhanced = None
         self.path = None
         self.live_path = None
         self.update_text = None
@@ -32,56 +25,63 @@ class LiveDataVisualisation:
         # self.pop_up_graph(live_data)
         # self.create_Map(live_data)
 
-        # self.graph_on_map()
-
         self.bubble_map(live_data, 'CO')
+        #self.bar_graph_on_map(live_data, 'CO')
+        #self.pie_chart_on_map(live_data, 'CO')
 
-    # Use scatter map to produce a heat map
-    def bubble_map(self, live_data, header_name):
-        def zoom_factory(ax, base_scale=2.):
-            def zoom_fun(event):
-                # get the current x and y limits
-                cur_xlim = ax.get_xlim()
-                cur_ylim = ax.get_ylim()
-                cur_xrange = (cur_xlim[1] - cur_xlim[0]) * .5
-                cur_yrange = (cur_ylim[1] - cur_ylim[0]) * .5
-                xdata = event.xdata  # get event x location
-                ydata = event.ydata  # get event y location
-                if event.button == 'up':
-                    # deal with zoom in
-                    scale_factor = 1 / base_scale
-                elif event.button == 'down':
-                    # deal with zoom out
-                    scale_factor = base_scale
-                else:
-                    # deal with something that should never happen
-                    scale_factor = 1
-                    print(event.button)
-                # set new limits
-                ax.set_xlim([xdata - cur_xrange * scale_factor,
-                             xdata + cur_xrange * scale_factor])
-                ax.set_ylim([ydata - cur_yrange * scale_factor,
-                             ydata + cur_yrange * scale_factor])
-                plt.draw()  # force re-draw
+    @staticmethod
+    def zoom_factory(ax, base_scale=2.):
+        def zoom_fun(event):
+            # get the current x and y limits
+            cur_xlim = ax.get_xlim()
+            cur_ylim = ax.get_ylim()
+            cur_xrange = (cur_xlim[1] - cur_xlim[0]) * .5
+            cur_yrange = (cur_ylim[1] - cur_ylim[0]) * .5
+            xdata = event.xdata  # get event x location
+            ydata = event.ydata  # get event y location
+            if event.button == 'up':
+                # deal with zoom in
+                scale_factor = 1 / base_scale
+            elif event.button == 'down':
+                # deal with zoom out
+                scale_factor = base_scale
+            else:
+                # deal with something that should never happen
+                scale_factor = 1
 
-            fig = ax.get_figure()  # get the figure of interest
-            # attach the call back
-            fig.canvas.mpl_connect('scroll_event', zoom_fun)
+            # set new limits
+            ax.set_xlim([xdata - cur_xrange * scale_factor,
+                         xdata + cur_xrange * scale_factor])
+            ax.set_ylim([ydata - cur_yrange * scale_factor,
+                         ydata + cur_yrange * scale_factor])
+            plt.draw()  # force re-draw
 
-            # return the function
-            return zoom_fun
+        fig = ax.get_figure()  # get the figure of interest
+        # attach the call back
+        fig.canvas.mpl_connect('scroll_event', zoom_fun)
 
+        # return the function
+        return zoom_fun
+
+    # Use scatter map to produce a bubble map
+    def bubble_map(self, live_data, polluant_type):
         worldmap = gpd.read_file(gpd.datasets.get_path("naturalearth_lowres"))
 
         # Creating axes and plotting world map
         fig, ax = plt.subplots(figsize=(12, 6))
+        fig.canvas.manager.set_window_title('Bubble Map Visualisation')
+
+        # Allow panning using a mouse
+        pan_handler = panhandler(fig, 1)
+
         worldmap.plot(ax=ax)
 
-        zoom_factory(ax, base_scale=1.5)
+        # Allow zooming using a mouse
+        self.zoom_factory(ax, base_scale=1.5)
 
-        data = live_data.split_data_based_on_pollutant(header_name)
+        data = live_data.split_data_based_on_pollutant(polluant_type)
 
-        # Plotting our Impact Energy data with a color map
+        # Plotting the measurements data with a color map
         x = data['longitude']
         y = data['latitude']
         z = data['measurements_value']
@@ -96,26 +96,151 @@ class LiveDataVisualisation:
         plt.xlim([-180, 180])
         plt.ylim([-90, 90])
 
-        plt.title(header_name + " Pollutant Heatmap")
+        plt.title(polluant_type + " Pollutant Bubblemap")
         plt.xlabel("Longitude")
         plt.ylabel("Latitude")
         # mplcursors.cursor(hover=True)
+
         plt.show()
 
-    """
     # Bar Graph on world map
-    def graph_on_map(self):
-        import mplcursors
-        np.random.seed(42)
+    def bar_graph_on_map(self, live_data, pollutant_type):
+        colours = []
+        time = []
+        colour_number = 0
 
-        fig, ax = plt.subplots()
-        ax.scatter(*np.random.random((2, 26)))
-        ax.set_title("Mouse over a point")
+        # Creating axes and plotting world map
+        world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+        fig, ax = plt.subplots(figsize=(12, 6))
+        fig.canvas.manager.set_window_title('Bar Graph on Map Visualisation')
 
-        #mplcursors.cursor(hover=True)
+        # Allow panning using a mouse
+        pan_handler = panhandler(fig, 1)
+
+        world.plot(ax=ax)
+
+        # Creating axis limits and title
+        plt.xlim([-180, 180])
+        plt.ylim([-90, 90])
+
+        plt.title("Bar graph on map for " + pollutant_type + " Pollutant")
+        plt.xlabel("Longitude")
+        plt.ylabel("Latitude")
+
+        # Allow zooming using a mouse
+        self.zoom_factory(ax, base_scale=1.5)
+
+        # Plotting the measurements data with a color map
+        data = live_data.split_data_based_on_pollutant(pollutant_type)
+        unique_city = data['city'].unique()
+        unique_time = data['Time'].unique()
+
+        unique_city = unique_city[:80]
+
+        for i in range(len(unique_time)):
+            colour_number += 1
+            time.append(unique_time[i])
+            colours.append("C" + str(colour_number))
+
+        colours_legend = dict(zip(time, colours))
+        labels = list(colours_legend.keys())
+        handles = [plt.Rectangle((0, 0), 1, 1, color=colours_legend[label]) for label in labels]
+        plt.legend(handles, labels)
+
+        for i in range(0, len(unique_city)):
+            measurements = []
+            city_data = data.loc[data['city'] == unique_city[i]].reset_index(drop=True)
+            city_data.to_excel('Checking.xlsx', index=False)
+
+            latitude = city_data['latitude'].median()
+            longitude = city_data['longitude'].median()
+
+            for j in unique_time:
+                for time in city_data['Time']:
+                    if time != j:
+                        measurements.append(0)
+                    else:
+                        values = city_data[city_data['Time'] == j]
+                        measurements_data = values['measurements_value'].values
+                        measurements.append(float(measurements_data))
+
+            x_axis = list(range(1, len(measurements) + 1))
+
+            ax_bar = inset_axes(ax, width=0.6, height=0.4, loc=10, bbox_to_anchor=(longitude, latitude),
+                                bbox_transform=ax.transData)
+            ax_bar.bar(x_axis, measurements, color=colours)
+            ax_bar.set_axis_off()
 
         plt.show()
-    """
+
+    # Pie Chart on world map
+    def pie_chart_on_map(self, live_data, pollutant_type):
+        colours = []
+        time = []
+        colour_number = 0
+
+        # Creating axes and plotting world map
+        world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+        fig, ax = plt.subplots(figsize=(12, 6))
+        fig.canvas.manager.set_window_title('Pie Chart on Map Visualisation')
+
+        # Allow panning using a mouse
+        pan_handler = panhandler(fig, 1)
+
+        world.plot(ax=ax)
+
+        # Creating axis limits and title
+        plt.xlim([-180, 180])
+        plt.ylim([-90, 90])
+
+        plt.title("Pie Chart on map for " + pollutant_type + " Pollutant")
+        plt.xlabel("Longitude")
+        plt.ylabel("Latitude")
+
+        # Allow zooming using a mouse
+        self.zoom_factory(ax, base_scale=1.5)
+
+        # Plotting the measurements data with a color map
+        data = live_data.split_data_based_on_pollutant(pollutant_type)
+        unique_city = data['city'].unique()
+        unique_time = data['Time'].unique()
+
+        unique_city = unique_city[:80]
+
+        for i in range(len(unique_time)):
+            colour_number += 1
+            time.append(unique_time[i])
+            colours.append("C" + str(colour_number))
+
+        colours_legend = dict(zip(time, colours))
+        labels = list(colours_legend.keys())
+        handles = [plt.Rectangle((0, 0), 1, 1, color=colours_legend[label]) for label in labels]
+        plt.legend(handles, labels)
+
+        for i in range(0, len(unique_city)):
+            measurements = []
+            city_data = data.loc[data['city'] == unique_city[i]].reset_index(drop=True)
+            city_data.to_excel('Checking.xlsx', index=False)
+
+            latitude = city_data['latitude'].median()
+            longitude = city_data['longitude'].median()
+
+            for j in unique_time:
+                for time in city_data['Time']:
+                    if time != j:
+                        measurements.append(0)
+                    else:
+                        values = city_data[city_data['Time'] == j]
+                        measurements_data = values['measurements_value'].values
+                        measurements.append(float(measurements_data))
+
+            ax_pie = inset_axes(ax, width=0.6, height=0.4, loc=10, bbox_to_anchor=(longitude, latitude),
+                                bbox_transform=ax.transData)
+
+            ax_pie.pie(measurements, colors=colours)
+            ax_pie.set_axis_off()
+
+        plt.show()
 
     # Create the graph that will be shown when clicked on enhanced map
     def pop_up_graph(self, live_data):
@@ -226,66 +351,66 @@ class LiveDataVisualisation:
 
         # Display the map
         if location[0] and location[1] is not np.nan:
-            self.map_PM2 = folium.Map(location=(location[0], location[1]), tiles="openstreetmap", min_zoom=2)
-            self.input_Basic_Marker(live_data, 'PM2.5', self.map_PM2)
-            self.save_Map(self.map_PM2, "PM2_dot_5.html")
+            map_PM2 = folium.Map(location=(location[0], location[1]), tiles="openstreetmap", min_zoom=2)
+            self.input_Basic_Marker(live_data, 'PM2.5', map_PM2)
+            self.save_Map(map_PM2, "PM2_dot_5.html")
         else:
             print("PM2.5 is empty")
             self.update_text = self.update_text + 'PM2.5 Map is not updated.\n'
 
         if location[2] and location[3] is not np.nan:
-            self.map_PM10 = folium.Map(location=(location[2], location[3]), tiles="openstreetmap", min_zoom=2)
-            self.input_Basic_Marker(live_data, 'PM10', self.map_PM10)
-            self.save_Map(self.map_PM10, "PM10.html")
+            map_PM10 = folium.Map(location=(location[2], location[3]), tiles="openstreetmap", min_zoom=2)
+            self.input_Basic_Marker(live_data, 'PM10', map_PM10)
+            self.save_Map(map_PM10, "PM10.html")
         else:
             print("PM10 is empty")
             self.update_text = self.update_text + 'PM10 Map is not updated.\n'
 
         if location[4] and location[5] is not np.nan:
-            self.map_O3 = folium.Map(location=(location[4], location[5]), tiles="openstreetmap", min_zoom=2)
-            self.input_Basic_Marker(live_data, 'O3', self.map_O3)
-            self.save_Map(self.map_O3, "O3.html")
+            map_O3 = folium.Map(location=(location[4], location[5]), tiles="openstreetmap", min_zoom=2)
+            self.input_Basic_Marker(live_data, 'O3', map_O3)
+            self.save_Map(map_O3, "O3.html")
         else:
             print("O3 is empty")
             self.update_text = self.update_text + 'O3 Map is not updated.\n'
 
         if location[6] and location[7] is not np.nan:
-            self.map_NO2 = folium.Map(location=(location[6], location[7]), tiles="openstreetmap", min_zoom=2)
-            self.input_Basic_Marker(live_data, 'NO2', self.map_NO2)
-            self.save_Map(self.map_NO2, "NO2.html")
+            map_NO2 = folium.Map(location=(location[6], location[7]), tiles="openstreetmap", min_zoom=2)
+            self.input_Basic_Marker(live_data, 'NO2', map_NO2)
+            self.save_Map(map_NO2, "NO2.html")
         else:
             print("NO2 is empty")
             self.update_text = self.update_text + 'NO2 Map is not updated.\n'
 
         if location[8] and location[9] is not np.nan:
-            self.map_SO2 = folium.Map(location=(location[8], location[9]), tiles="openstreetmap", min_zoom=2)
-            self.input_Basic_Marker(live_data, 'SO2', self.map_SO2)
-            self.save_Map(self.map_SO2, "SO2.html")
+            map_SO2 = folium.Map(location=(location[8], location[9]), tiles="openstreetmap", min_zoom=2)
+            self.input_Basic_Marker(live_data, 'SO2', map_SO2)
+            self.save_Map(map_SO2, "SO2.html")
         else:
             print("SO2 is empty")
             self.update_text = self.update_text + 'SO2 Map is not updated.\n'
 
         if location[10] and location[11] is not np.nan:
-            self.map_CO = folium.Map(location=(location[10], location[11]), tiles="openstreetmap", min_zoom=2)
-            self.input_Basic_Marker(live_data, 'CO', self.map_CO)
-            self.save_Map(self.map_CO, "CO.html")
+            map_CO = folium.Map(location=(location[10], location[11]), tiles="openstreetmap", min_zoom=2)
+            self.input_Basic_Marker(live_data, 'CO', map_CO)
+            self.save_Map(map_CO, "CO.html")
         else:
             print("CO is empty")
             self.update_text = self.update_text + 'CO Map is not updated.\n'
 
         if location[12] and location[13] is not np.nan:
-            self.map_BC = folium.Map(location=(location[12], location[13]), tiles="openstreetmap", min_zoom=2)
-            self.input_Basic_Marker(live_data, 'BC', self.map_BC)
-            self.save_Map(self.map_BC, "BC.html")
+            map_BC = folium.Map(location=(location[12], location[13]), tiles="openstreetmap", min_zoom=2)
+            self.input_Basic_Marker(live_data, 'BC', map_BC)
+            self.save_Map(map_BC, "BC.html")
         else:
             print("BC is empty")
             self.update_text = self.update_text + 'BC Map is not updated.\n'
 
         if self.pop_up_df['Latitude'][0] and self.pop_up_df['Longitude'][0] is not np.nan:
-            self.map_enhanced = folium.Map(location=(self.pop_up_df['Latitude'][0], self.pop_up_df['Longitude'][0]),
+            map_enhanced = folium.Map(location=(self.pop_up_df['Latitude'][0], self.pop_up_df['Longitude'][0]),
                                            tiles="openstreetmap", min_zoom=2)
-            self.input_Enhanced_Marker(self.map_enhanced)
-            self.save_Map(self.map_enhanced, "Enhanced.html")
+            self.input_Enhanced_Marker(map_enhanced)
+            self.save_Map(map_enhanced, "Enhanced.html")
         else:
             self.update_text = self.update_text + 'Enhanced Map is not updated.\n'
 

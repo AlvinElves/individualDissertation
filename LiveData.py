@@ -55,9 +55,9 @@ class LiveData:
         return self.live_dataset.loc[self.live_dataset['measurements_parameter'] == name].reset_index(drop=True)
 
     def remove_duplicate_data(self):
-        # Check and drop the duplicate based on having the same type pollutant, country name, and city name
+        # Check and drop the duplicate based on having the same type pollutant, country name, city name, and time
         self.live_dataset = self.live_dataset.drop_duplicates(
-            subset=['measurements_parameter', 'country_name_en', 'city'],
+            subset=['measurements_parameter', 'country_name_en', 'city', 'Time'],
             keep="first").reset_index(drop=True)
 
     def remove_null_data(self):
