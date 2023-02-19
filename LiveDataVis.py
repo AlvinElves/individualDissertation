@@ -1,5 +1,7 @@
 import folium
 import webbrowser
+
+import numpy as np
 import plotly.graph_objects as go
 
 from LiveData import *
@@ -22,12 +24,15 @@ class LiveDataVisualisation:
 
         self.create_Folder()
 
-        # self.pop_up_graph(live_data)
-        # self.create_Map(live_data)
+        #self.pop_up_graph(live_data)
+        #self.create_Map(live_data)
 
-        self.bubble_map(live_data, 'CO')
+        # Remove the matplotlib toolbar
+        plt.rcParams['toolbar'] = 'None'
+
+        #self.bubble_map(live_data, 'CO')
         #self.bar_graph_on_map(live_data, 'CO')
-        #self.pie_chart_on_map(live_data, 'CO')
+        self.pie_chart_on_map(live_data, 'CO')
 
     @staticmethod
     def zoom_factory(ax, base_scale=2.):
@@ -64,22 +69,20 @@ class LiveDataVisualisation:
         return zoom_fun
 
     # Use scatter map to produce a bubble map
-    def bubble_map(self, live_data, polluant_type):
+    def bubble_map(self, live_data, pollutant_type):
         worldmap = gpd.read_file(gpd.datasets.get_path("naturalearth_lowres"))
 
         # Creating axes and plotting world map
         fig, ax = plt.subplots(figsize=(12, 6))
         fig.canvas.manager.set_window_title('Bubble Map Visualisation')
 
-        # Allow panning using a mouse
+        # Allow panning and zooming using a mouse
         pan_handler = panhandler(fig, 1)
+        self.zoom_factory(ax, base_scale=1.2)
 
         worldmap.plot(ax=ax)
 
-        # Allow zooming using a mouse
-        self.zoom_factory(ax, base_scale=1.5)
-
-        data = live_data.split_data_based_on_pollutant(polluant_type)
+        data = live_data.split_data_based_on_pollutant(live_data.live_dataset, pollutant_type)
 
         # Plotting the measurements data with a color map
         x = data['longitude']
@@ -96,7 +99,7 @@ class LiveDataVisualisation:
         plt.xlim([-180, 180])
         plt.ylim([-90, 90])
 
-        plt.title(polluant_type + " Pollutant Bubblemap")
+        plt.title(pollutant_type + " Pollutant Bubblemap")
         plt.xlabel("Longitude")
         plt.ylabel("Latitude")
         # mplcursors.cursor(hover=True)
@@ -114,8 +117,9 @@ class LiveDataVisualisation:
         fig, ax = plt.subplots(figsize=(12, 6))
         fig.canvas.manager.set_window_title('Bar Graph on Map Visualisation')
 
-        # Allow panning using a mouse
+        # Allow panning and zooming using a mouse
         pan_handler = panhandler(fig, 1)
+        self.zoom_factory(ax, base_scale=1.2)
 
         world.plot(ax=ax)
 
@@ -127,13 +131,14 @@ class LiveDataVisualisation:
         plt.xlabel("Longitude")
         plt.ylabel("Latitude")
 
-        # Allow zooming using a mouse
-        self.zoom_factory(ax, base_scale=1.5)
-
         # Plotting the measurements data with a color map
-        data = live_data.split_data_based_on_pollutant(pollutant_type)
+        data = live_data.split_data_based_on_pollutant(live_data.all_live_dataset, pollutant_type)
+        unique_country = data['country_name_en'].unique()
         unique_city = data['city'].unique()
         unique_time = data['Time'].unique()
+
+        print(unique_country)
+        print(print(data['country_name_en'].value_counts()))
 
         unique_city = unique_city[:80]
 
@@ -150,7 +155,6 @@ class LiveDataVisualisation:
         for i in range(0, len(unique_city)):
             measurements = []
             city_data = data.loc[data['city'] == unique_city[i]].reset_index(drop=True)
-            city_data.to_excel('Checking.xlsx', index=False)
 
             latitude = city_data['latitude'].median()
             longitude = city_data['longitude'].median()
@@ -168,6 +172,10 @@ class LiveDataVisualisation:
 
             ax_bar = inset_axes(ax, width=0.6, height=0.4, loc=10, bbox_to_anchor=(longitude, latitude),
                                 bbox_transform=ax.transData)
+
+            if all(num == 0 for num in measurements) and len(measurements) > 0:
+                continue
+
             ax_bar.bar(x_axis, measurements, color=colours)
             ax_bar.set_axis_off()
 
@@ -184,8 +192,9 @@ class LiveDataVisualisation:
         fig, ax = plt.subplots(figsize=(12, 6))
         fig.canvas.manager.set_window_title('Pie Chart on Map Visualisation')
 
-        # Allow panning using a mouse
+        # Allow panning and zooming using a mouse
         pan_handler = panhandler(fig, 1)
+        self.zoom_factory(ax, base_scale=1.2)
 
         world.plot(ax=ax)
 
@@ -197,15 +206,12 @@ class LiveDataVisualisation:
         plt.xlabel("Longitude")
         plt.ylabel("Latitude")
 
-        # Allow zooming using a mouse
-        self.zoom_factory(ax, base_scale=1.5)
-
         # Plotting the measurements data with a color map
-        data = live_data.split_data_based_on_pollutant(pollutant_type)
+        data = live_data.split_data_based_on_pollutant(live_data.all_live_dataset, pollutant_type)
         unique_city = data['city'].unique()
         unique_time = data['Time'].unique()
 
-        unique_city = unique_city[:80]
+        #unique_city = unique_city[:80]
 
         for i in range(len(unique_time)):
             colour_number += 1
@@ -220,7 +226,6 @@ class LiveDataVisualisation:
         for i in range(0, len(unique_city)):
             measurements = []
             city_data = data.loc[data['city'] == unique_city[i]].reset_index(drop=True)
-            city_data.to_excel('Checking.xlsx', index=False)
 
             latitude = city_data['latitude'].median()
             longitude = city_data['longitude'].median()
@@ -236,6 +241,9 @@ class LiveDataVisualisation:
 
             ax_pie = inset_axes(ax, width=0.6, height=0.4, loc=10, bbox_to_anchor=(longitude, latitude),
                                 bbox_transform=ax.transData)
+
+            if all(num == 0 for num in measurements) and len(measurements) > 0:
+                continue
 
             ax_pie.pie(measurements, colors=colours)
             ax_pie.set_axis_off()
@@ -297,7 +305,7 @@ class LiveDataVisualisation:
     @staticmethod
     def input_Basic_Marker(live_data, header_name, folium_Map):
         # Split data into variable based on header_name of pollutant
-        data = live_data.split_data_based_on_pollutant(header_name)
+        data = live_data.split_data_based_on_pollutant(live_data.live_dataset, header_name)
 
         # Markers for pollutant based on header_name
         for i in range(0, len(data)):
@@ -342,7 +350,7 @@ class LiveDataVisualisation:
 
         for i in range(0, 7):
             # Rearrange the dataset based on the type of pollutant
-            data = live_data.split_data_based_on_pollutant(pollutant_name[i])
+            data = live_data.split_data_based_on_pollutant(live_data.live_dataset, pollutant_name[i])
             self.dataset_in_pollutant_order = pd.concat([self.dataset_in_pollutant_order, data], ignore_index=True,
                                                         sort=False)
             # Get the average location from the type of pollutant

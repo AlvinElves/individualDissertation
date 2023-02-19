@@ -7,12 +7,12 @@ import os
 
 class LiveData:
     def __init__(self):
-        self.live_dataset = None
-        self.all_live_dataset = None
+        self.live_dataset = pd.DataFrame()
+        self.all_live_dataset = pd.DataFrame()
 
         self.get_data_using_api()
         self.split_date()
-        self.remove_duplicate_data()
+        self.remove_unwanted_data()
         self.remove_null_data()
         self.write_dataset_to_excel()
 
@@ -35,9 +35,7 @@ class LiveData:
             column = self.live_dataset.pop(i)
             self.live_dataset.insert(0, i, column)
 
-        self.all_live_dataset = self.live_dataset
-        self.all_live_dataset = self.all_live_dataset.loc[
-            self.all_live_dataset['measurements_unit'] == 'µg/m³'].reset_index(drop=True)
+        self.all_live_dataset = self.live_dataset.copy()
 
     def write_dataset_to_excel(self):
         new_directory = "CleanedDataset"  # New folder name
@@ -51,12 +49,22 @@ class LiveData:
         self.live_dataset.to_excel('CleanedDataset/CleanedLiveData.xlsx', index=False)
         self.all_live_dataset.to_excel('CleanedDataset/CleanedAllLiveData.xlsx', index=False)
 
-    def split_data_based_on_pollutant(self, name):
-        return self.live_dataset.loc[self.live_dataset['measurements_parameter'] == name].reset_index(drop=True)
+    def split_data_based_on_pollutant(self, dataset, name):
+        return dataset.loc[dataset['measurements_parameter'] == name].reset_index(drop=True)
 
-    def remove_duplicate_data(self):
+    def remove_unwanted_data(self):
+        # Drop the ppm data, only focus on µg/m³
+        self.live_dataset = self.live_dataset.loc[
+            self.live_dataset['measurements_unit'] == 'µg/m³'].reset_index(drop=True)
+        self.all_live_dataset = self.all_live_dataset.loc[
+            self.all_live_dataset['measurements_unit'] == 'µg/m³'].reset_index(drop=True)
+
         # Check and drop the duplicate based on having the same type pollutant, country name, city name, and time
         self.live_dataset = self.live_dataset.drop_duplicates(
+            subset=['measurements_parameter', 'country_name_en', 'city', 'Time'],
+            keep="first").reset_index(drop=True)
+
+        self.all_live_dataset = self.all_live_dataset.drop_duplicates(
             subset=['measurements_parameter', 'country_name_en', 'city', 'Time'],
             keep="first").reset_index(drop=True)
 
