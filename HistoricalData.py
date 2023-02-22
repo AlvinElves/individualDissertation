@@ -6,8 +6,9 @@ import os
 class HistoricalData:
 
     def __init__(self):
-        self.historical_dataset = None
-        self.merged_date_dataset = None
+        self.historical_dataset = pd.DataFrame()
+        self.merged_date_dataset = pd.DataFrame()
+        self.original_dataset = pd.DataFrame()
 
         self.get_data_from_excel()
         self.data_cleaning()
@@ -63,7 +64,7 @@ class HistoricalData:
 
     def get_data_from_excel(self):
         self.historical_dataset = pd.read_excel("Dataset/AirQualityUCI.xlsx")
-
+        self.original_dataset = self.historical_dataset.copy()
 
 if __name__ == '__main__':
     historical_Data = HistoricalData()

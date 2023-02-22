@@ -1,16 +1,19 @@
-from HistoricalData import *
+from AIModelVis import *
 import plotly.express as px
 
 
 class HistoricalDataVisualisation:
     def __init__(self):
-        self.historical_data = HistoricalData()
+        self.model_vis = AIModelVis()
+        self.historical_data = self.model_vis.ai_model.historical_data
+
+        self.path = self.model_vis.create_Folder()
+
         # self.plot_Bar_by_Month(self.historical_data)
         # self.plot_Bar_by_Day(self.historical_data)
         self.plot_line_all(self.historical_data, ['T', 'AH', 'RH'])
 
-    @staticmethod
-    def plot_line_all(historical_data, y_Value):
+    def plot_line_all(self, historical_data, y_Value):
         df = historical_data.merged_date_dataset.copy()
         df['Date'] = pd.to_datetime(df.Date.astype(str) + ' ' + df.Time.astype(str))
         fig = px.line(df, x='Date', y=y_Value, title='Date VS Multiple Attributes', render_mode='webg1')
@@ -40,7 +43,7 @@ class HistoricalDataVisualisation:
                             args=[{'visible': [True, True, True]}, {'title': 'Date VS Multiple Attributes'}])]
         for i in range(0, len(y_Value)):
             visible = [j == i for j in list(range(0, len(y_Value)))]
-            print(visible)
+
             button_list.append(dict(label=y_Value[i], method='update',
                                     args=[{'visible': visible}, {'title': 'Date VS ' + str(y_Value[i])}]))
 
@@ -55,8 +58,8 @@ class HistoricalDataVisualisation:
                 title="Attributes"
             )
         )
-        fig.write_html("test.html")
-        # fig.show()
+        fig.write_html(self.path + "/" + "Graph.html")
+        fig.show()
 
     @staticmethod
     def plot_Bar_by_Month(historical_data):

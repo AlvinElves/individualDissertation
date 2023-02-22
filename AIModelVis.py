@@ -1,32 +1,45 @@
+from AIModel import *
+
 import pandas as pd
 import numpy as np
 import seaborn as sns
 
-# Feature Selection
-from sklearn import linear_model
-from sklearn.feature_selection import SelectFromModel
-from sklearn.preprocessing import StandardScaler
-
-import matplotlib.pyplot as plt
+from HandlingInteractions import *
+from sklearn import tree
+from PIL import Image
 
 
 class AIModelVis:
     def __init__(self):
-        self.dataset = pd.DataFrame()
-        self.get_data_from_excel()
+        self.interact = HandlingInteractions()
+        self.ai_model = AIModel()
 
-        original_dataset = self.dataset.copy()
-        original_dataset = original_dataset.drop(['Date', 'Time', 'T', 'RH', 'AH', 'NMHC(GT)'], axis=1)
-        normalised_dataset = self.data_preprocessing('T')
+        path = self.create_Folder()
+
+        # self.visualise_variable('feature', ['CO(GT) (Original)', 'CO(GT) (Processed)'], 'RH')
+
+        # self.visualise_feature_importance(self.ai_model.T_model, self.ai_model.T_dataset.drop(['T'], axis=1))
+        graph = self.generate_tree(path, self.ai_model.T_model, self.ai_model.T_dataset.drop(['T'], axis=1), 0)
+
+        self.show_Tree('graph', graph, path + "/" + 'tree.png')
+
+    def visualise_variable(self, method, column, variable):
+        original_dataset = self.ai_model.dataset.drop(['Date', 'Time', 'T', 'RH', 'AH', 'NMHC(GT)'], axis=1)
+        normalised_dataset = self.ai_model.data_preprocessing(variable)
 
         original_normalised_dataset = normalised_dataset.copy()
-        outliers_dataset = self.outliers('delete', self.data_preprocessing('T'))
+        outliers_dataset = self.ai_model.outliers('delete', self.ai_model.data_preprocessing(variable))
 
-        feature_dataset = self.null_value('delete', self.outliers('delete', self.data_preprocessing('T')))
+        feature_dataset = self.ai_model.null_value('delete', self.ai_model.outliers('delete',
+                                                                                    self.ai_model.data_preprocessing(
+                                                                                        variable)))
 
-        self.visualise_normalised_data(original_dataset, normalised_dataset, ['CO(GT) (Original)', 'CO(GT) (Processed)'])
-        self.visualise_outliers_data(original_normalised_dataset, outliers_dataset, ['T (Original)', 'T (Processed)'])
-        self.visualise_feature_correlation(feature_dataset)
+        if method == 'normalised':
+            self.visualise_normalised_data(original_dataset, normalised_dataset, column)
+        elif method == 'outliers':
+            self.visualise_outliers_data(original_normalised_dataset, outliers_dataset, column, variable)
+        elif method == 'feature':
+            self.visualise_feature_correlation(feature_dataset)
 
     def visualise_feature_correlation(self, dataset):
         # Correlation matrix for preprocessed data
@@ -47,24 +60,56 @@ class AIModelVis:
         cmap = sns.diverging_palette(260, 10, as_cmap=True)
 
         # Draw the heatmap with the mask and correct aspect ratio
-        correlation_map = sns.heatmap(corrMatt, vmax=1.2, square=False, cmap=cmap, mask=mask, ax=ax, annot=True, fmt='.2g', linewidths=1)
+        correlation_map = sns.heatmap(corrMatt, vmax=1.2, square=False, cmap=cmap, mask=mask, ax=ax, annot=True,
+                                      fmt='.2g', linewidths=1)
         correlation_map.set_yticklabels(correlation_map.get_ymajorticklabels(), fontsize=7)
         correlation_map.set_xticklabels(correlation_map.get_xmajorticklabels(), fontsize=7)
 
         plt.show()
 
-    def visualise_outliers_data(self, original_dataset, normalised_dataset, column_name):
+    def visualise_outliers_data(self, original_dataset, normalised_dataset, column_name, variable):
         # Combine the dataset to visualise more easily
         combined_visualise_dataset = pd.concat([original_dataset, normalised_dataset], axis=1)
 
         # Rename the dataset
-        combined_visualise_dataset.columns = ['T (Original)', 'CO(GT) (Original)', 'PT08.S1(CO) (Original)',
-                                              'C6H6(GT) (Original)', 'PT08.S2(NMHC) (Original)', 'NOx(GT) (Original)',
-                                              'PT08.S3(NOx) (Original)', 'NO2(GT) (Original)', 'PT08.S4(NO2) (Original)',
-                                              'PT08.S5(O3) (Original)', 'T (Processed)', 'CO(GT) (Processed)',
-                                              'PT08.S1(CO) (Processed)', 'C6H6(GT) (Processed)', 'PT08.S2(NMHC) (Processed)',
-                                              'NOx(GT) (Processed)', 'PT08.S3(NOx) (Processed)', 'NO2(GT) (Processed)',
-                                              'PT08.S4(NO2) (Processed)', 'PT08.S5(O3) (Processed)']
+        if variable == 'T':
+            combined_visualise_dataset.columns = ['T (Original)', 'CO(GT) (Original)', 'PT08.S1(CO) (Original)',
+                                                  'C6H6(GT) (Original)', 'PT08.S2(NMHC) (Original)',
+                                                  'NOx(GT) (Original)',
+                                                  'PT08.S3(NOx) (Original)', 'NO2(GT) (Original)',
+                                                  'PT08.S4(NO2) (Original)',
+                                                  'PT08.S5(O3) (Original)', 'T (Processed)', 'CO(GT) (Processed)',
+                                                  'PT08.S1(CO) (Processed)', 'C6H6(GT) (Processed)',
+                                                  'PT08.S2(NMHC) (Processed)',
+                                                  'NOx(GT) (Processed)', 'PT08.S3(NOx) (Processed)',
+                                                  'NO2(GT) (Processed)',
+                                                  'PT08.S4(NO2) (Processed)', 'PT08.S5(O3) (Processed)']
+        elif variable == 'AH':
+            combined_visualise_dataset.columns = ['AH (Original)', 'CO(GT) (Original)', 'PT08.S1(CO) (Original)',
+                                                  'C6H6(GT) (Original)', 'PT08.S2(NMHC) (Original)',
+                                                  'NOx(GT) (Original)',
+                                                  'PT08.S3(NOx) (Original)', 'NO2(GT) (Original)',
+                                                  'PT08.S4(NO2) (Original)',
+                                                  'PT08.S5(O3) (Original)', 'AH (Processed)', 'CO(GT) (Processed)',
+                                                  'PT08.S1(CO) (Processed)', 'C6H6(GT) (Processed)',
+                                                  'PT08.S2(NMHC) (Processed)',
+                                                  'NOx(GT) (Processed)', 'PT08.S3(NOx) (Processed)',
+                                                  'NO2(GT) (Processed)',
+                                                  'PT08.S4(NO2) (Processed)', 'PT08.S5(O3) (Processed)']
+        elif variable == 'RH':
+            combined_visualise_dataset.columns = ['RH (Original)', 'CO(GT) (Original)', 'PT08.S1(CO) (Original)',
+                                                  'C6H6(GT) (Original)', 'PT08.S2(NMHC) (Original)',
+                                                  'NOx(GT) (Original)',
+                                                  'PT08.S3(NOx) (Original)', 'NO2(GT) (Original)',
+                                                  'PT08.S4(NO2) (Original)',
+                                                  'PT08.S5(O3) (Original)', 'RH (Processed)', 'CO(GT) (Processed)',
+                                                  'PT08.S1(CO) (Processed)', 'C6H6(GT) (Processed)',
+                                                  'PT08.S2(NMHC) (Processed)',
+                                                  'NOx(GT) (Processed)', 'PT08.S3(NOx) (Processed)',
+                                                  'NO2(GT) (Processed)',
+                                                  'PT08.S4(NO2) (Processed)', 'PT08.S5(O3) (Processed)']
+
+        # Rename the dataset
 
         combined_visualise_dataset = combined_visualise_dataset[column_name]
 
@@ -101,8 +146,8 @@ class AIModelVis:
         visualise = combined_normalised_dataset[column_name]
         visualise = visualise.dropna().reset_index(drop=True)
         visualise = visualise.head(400)
-        maximum = max(visualise['CO(GT) (Original)'])
-        minimum = min(visualise['CO(GT) (Processed)'])
+        maximum = max(visualise[column_name[0]])
+        minimum = min(visualise[column_name[1]])
 
         fig, ax = plt.subplots(figsize=(12, 7))
         fig.canvas.manager.set_window_title('Normalisation Visualisation')
@@ -110,89 +155,44 @@ class AIModelVis:
         visualise.plot(kind='line', fontsize=10, ax=ax, xlim=(-5, 400), ylim=(minimum - 1, maximum))
         plt.show()
 
-    def get_data_from_excel(self):
-        self.dataset = pd.read_excel("Dataset/AirQualityUCI.xlsx")
+    def visualise_feature_importance(self, AI_model, dataset):
+        plt.figure().set_figwidth(10)
+        plt.title('Relative Importance between the features used')
+        plt.get_current_fig_manager().canvas.manager.set_window_title('Relative Importance Visualisation')
 
-        self.dataset[self.dataset == -200] = np.NaN
-        self.dataset = self.dataset.dropna(subset=['RH']).reset_index(drop=True)
+        feature_importance = pd.Series(AI_model.feature_importances_, index=dataset.columns)
+        feature_importance.plot(kind='barh')
 
-    def data_preprocessing(self, variable):
-        # Split the dataframe to X and Y variables
-        X = self.dataset.drop(['Date', 'Time', 'T', 'RH', 'AH'], axis=1)
-        Y = self.dataset[variable]
+        plt.xlabel('Relative Importance')
+        plt.show()
 
-        # Normalise the dataset based on the training dataset from comparison
-        features_list = list(X.columns)
-        scaler = StandardScaler()
-        scaler.fit(X)
-        X_norm = scaler.transform(X)
+    def generate_tree(self, path, AI_model, dataset, tree_number):
+        fig = plt.subplots(figsize=(12, 6), dpi=800)
 
-        X_norm = pd.DataFrame(X_norm, columns=features_list)
+        tree.plot_tree(AI_model.estimators_[tree_number], feature_names=dataset.columns, filled=True)
+        plt.savefig(path + "/" + 'tree')
+        return plt
 
-        # Drop the column that has too much null value
-        X_norm = X_norm.drop(['NMHC(GT)'], axis=1)
+    def show_Tree(self, method, graph, image):
+        if method == 'image':
+            # Read image
+            img = Image.open(image)
 
-        dataset = pd.concat([Y, X_norm], axis=1)
+            # Output Images
+            img.show()
+        elif method == 'graph':
+            graph.show()
 
-        return dataset
+    def create_Folder(self):
+        new_directory = "Visualisation"  # New folder name
+        current_path = os.getcwd()  # Get current file path
+        path = os.path.join(current_path, new_directory)
 
-    # Method to deal with outliers
-    @staticmethod
-    def outliers(method, dataset):
-        q1 = dataset.quantile(0.25)
-        q3 = dataset.quantile(0.75)
-        iqr = q3 - q1
-        factor = 1.5
+        # Create new folder
+        if not os.path.exists(path):
+            os.mkdir(path)
 
-        if method == 'none':
-            return dataset
-
-        elif method == 'delete':
-            dataset = dataset[
-                ~((dataset < (q1 - factor * iqr)) | (dataset > (q3 + factor * iqr))).any(axis=1)].reset_index(drop=True)
-            return dataset
-
-        else:
-            print("No Outliers method found")
-
-    # Method to deal with null values, data imputation
-    @staticmethod
-    def null_value(method, dataset):
-        if method == "delete":
-            dataset = dataset.dropna(axis=0, how='any').reset_index(drop=True)
-            return dataset
-        else:
-            print("No Imputation method found")
-
-    # Feature Scaling Method
-    @staticmethod
-    def feature_scaling(method, dataset, variable):
-        if method == 'none':
-            return dataset
-
-        elif method == 'lasso':
-            features_name = []
-            X_df = dataset.drop([variable], axis=1)
-            features_list = list(X_df.columns)
-            y_df = dataset[variable]
-
-            # Lasso Model
-            lasso = linear_model.Lasso(max_iter=50, random_state=5, alpha=0.2).fit(X_df.values, y_df.values)
-            lasso_model = SelectFromModel(lasso, prefit=True)
-            features_output = lasso_model.get_support(indices=True)
-            X_df = lasso_model.transform(X_df.values)
-
-            for i in features_output:
-                features_name.append(features_list[i])
-
-            X_df = pd.DataFrame(X_df, columns=features_name)
-
-            dataset = pd.concat([y_df, X_df], axis=1)
-
-            return dataset
-
-        else:
-            print("No Feature Scaling method found")
+        return path
 
 
 if __name__ == '__main__':

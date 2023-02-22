@@ -7,13 +7,15 @@ import plotly.graph_objects as go
 from LiveData import *
 
 import geopandas as gpd
-import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-from mpl_interactions import panhandler
+
+from HandlingInteractions import *
 
 
 class LiveDataVisualisation:
     def __init__(self):
+        self.interact = HandlingInteractions()
+
         self.path = None
         self.live_path = None
         self.update_text = None
@@ -24,49 +26,15 @@ class LiveDataVisualisation:
 
         self.create_Folder()
 
-        #self.pop_up_graph(live_data)
-        #self.create_Map(live_data)
+        self.pop_up_graph(live_data)
+        self.create_Map(live_data)
 
         # Remove the matplotlib toolbar
         plt.rcParams['toolbar'] = 'None'
 
         #self.bubble_map(live_data, 'CO')
         #self.bar_graph_on_map(live_data, 'CO')
-        self.pie_chart_on_map(live_data, 'CO')
-
-    @staticmethod
-    def zoom_factory(ax, base_scale=2.):
-        def zoom_fun(event):
-            # get the current x and y limits
-            cur_xlim = ax.get_xlim()
-            cur_ylim = ax.get_ylim()
-            cur_xrange = (cur_xlim[1] - cur_xlim[0]) * .5
-            cur_yrange = (cur_ylim[1] - cur_ylim[0]) * .5
-            xdata = event.xdata  # get event x location
-            ydata = event.ydata  # get event y location
-            if event.button == 'up':
-                # deal with zoom in
-                scale_factor = 1 / base_scale
-            elif event.button == 'down':
-                # deal with zoom out
-                scale_factor = base_scale
-            else:
-                # deal with something that should never happen
-                scale_factor = 1
-
-            # set new limits
-            ax.set_xlim([xdata - cur_xrange * scale_factor,
-                         xdata + cur_xrange * scale_factor])
-            ax.set_ylim([ydata - cur_yrange * scale_factor,
-                         ydata + cur_yrange * scale_factor])
-            plt.draw()  # force re-draw
-
-        fig = ax.get_figure()  # get the figure of interest
-        # attach the call back
-        fig.canvas.mpl_connect('scroll_event', zoom_fun)
-
-        # return the function
-        return zoom_fun
+        #self.pie_chart_on_map(live_data, 'BC')
 
     # Use scatter map to produce a bubble map
     def bubble_map(self, live_data, pollutant_type):
@@ -78,7 +46,7 @@ class LiveDataVisualisation:
 
         # Allow panning and zooming using a mouse
         pan_handler = panhandler(fig, 1)
-        self.zoom_factory(ax, base_scale=1.2)
+        self.interact.zoom_factory(ax, base_scale=1.2)
 
         worldmap.plot(ax=ax)
 
@@ -119,7 +87,7 @@ class LiveDataVisualisation:
 
         # Allow panning and zooming using a mouse
         pan_handler = panhandler(fig, 1)
-        self.zoom_factory(ax, base_scale=1.2)
+        self.interact.zoom_factory(ax, base_scale=1.2)
 
         world.plot(ax=ax)
 
@@ -170,11 +138,11 @@ class LiveDataVisualisation:
 
             x_axis = list(range(1, len(measurements) + 1))
 
-            ax_bar = inset_axes(ax, width=0.6, height=0.4, loc=10, bbox_to_anchor=(longitude, latitude),
-                                bbox_transform=ax.transData)
-
             if all(num == 0 for num in measurements) and len(measurements) > 0:
                 continue
+
+            ax_bar = inset_axes(ax, width=0.6, height=0.4, loc=10, bbox_to_anchor=(longitude, latitude),
+                                bbox_transform=ax.transData)
 
             ax_bar.bar(x_axis, measurements, color=colours)
             ax_bar.set_axis_off()
@@ -194,7 +162,7 @@ class LiveDataVisualisation:
 
         # Allow panning and zooming using a mouse
         pan_handler = panhandler(fig, 1)
-        self.zoom_factory(ax, base_scale=1.2)
+        self.interact.zoom_factory(ax, base_scale=1.2)
 
         world.plot(ax=ax)
 
@@ -239,11 +207,11 @@ class LiveDataVisualisation:
                         measurements_data = values['measurements_value'].values
                         measurements.append(float(measurements_data))
 
-            ax_pie = inset_axes(ax, width=0.6, height=0.4, loc=10, bbox_to_anchor=(longitude, latitude),
-                                bbox_transform=ax.transData)
-
             if all(num == 0 for num in measurements) and len(measurements) > 0:
                 continue
+
+            ax_pie = inset_axes(ax, width=0.6, height=0.4, loc=10, bbox_to_anchor=(longitude, latitude),
+                                bbox_transform=ax.transData)
 
             ax_pie.pie(measurements, colors=colours)
             ax_pie.set_axis_off()
@@ -423,7 +391,7 @@ class LiveDataVisualisation:
             self.update_text = self.update_text + 'Enhanced Map is not updated.\n'
 
     def create_Folder(self):
-        new_directory = "LiveMapHTML"  # New folder name
+        new_directory = "Visualisation"  # New folder name
         current_path = os.getcwd()  # Get current file path
         self.live_path = os.path.join(current_path, new_directory)
 
