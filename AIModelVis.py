@@ -16,23 +16,34 @@ class AIModelVis:
 
         path = self.create_Folder()
 
-        # self.visualise_variable('feature', ['CO(GT) (Original)', 'CO(GT) (Processed)'], 'RH')
+        self.visualise_variable('normalised', ['CO(GT) (Original)', 'CO(GT) (Processed)'], 'T', self.ai_model.T_normalise)
 
-        self.visualise_feature_importance(self.ai_model.T_model, self.ai_model.T_dataset.drop(['T'], axis=1))
+        #self.visualise_feature_importance(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1))
 
         # graph = self.generate_tree(path, self.ai_model.T_model, self.ai_model.T_dataset.drop(['T'], axis=1), 0)
         # self.show_Tree('graph', graph, path + "/" + 'tree.png')
 
-    def visualise_variable(self, method, column, variable):
-        original_dataset = self.ai_model.dataset.drop(['Date', 'Time', 'T', 'RH', 'AH', 'NMHC(GT)'], axis=1)
-        normalised_dataset = self.ai_model.data_preprocessing(variable)
+    def visualise_variable(self, method, column, variable, normaliser):
+        original_dataset = self.ai_model.model_dataset.copy()
+        original_dataset[original_dataset == -200] = np.NaN
+        original_dataset = original_dataset.dropna(subset=['T']).reset_index(drop=True)
+        original_df = original_dataset.drop(['Date', 'Time', 'T', 'RH', 'AH'], axis=1)
+        y_value = original_dataset[variable]
 
-        original_normalised_dataset = normalised_dataset.copy()
-        outliers_dataset = self.ai_model.outliers('delete', self.ai_model.data_preprocessing(variable))
+        normalised_dataset = original_df.copy()
+        features_list = list(normalised_dataset.columns)
+        normalised_df = normaliser.transform(normalised_dataset)
+        normalised_dataset = pd.DataFrame(normalised_df, columns=features_list)
 
-        feature_dataset = self.ai_model.null_value('delete', self.ai_model.outliers('delete',
-                                                                                    self.ai_model.data_preprocessing(
-                                                                                        variable)))
+        original_dataset = original_df.drop(['NMHC(GT)'], axis=1)
+        normalised_dataset = normalised_dataset.drop(['NMHC(GT)'], axis=1)
+
+        normalised = pd.concat([y_value, normalised_dataset], axis=1)
+
+        original_normalised_dataset = normalised.copy()
+        outliers_dataset = self.ai_model.outliers('delete', original_normalised_dataset)
+
+        feature_dataset, _ = self.ai_model.null_value('delete', outliers_dataset, pd.DataFrame())
 
         if method == 'normalised':
             self.visualise_normalised_data(original_dataset, normalised_dataset, column)
@@ -122,9 +133,10 @@ class AIModelVis:
     def visualise_normalised_data(self, original_dataset, normalised_dataset, column_name):
         # Combine the dataset to visualise more easily
         combined_normalised_dataset = pd.concat([normalised_dataset, original_dataset], axis=1)
+        print(combined_normalised_dataset.columns)
 
         # Rename the dataset
-        combined_normalised_dataset.columns = ['T', 'CO(GT) (Processed)', 'PT08.S1(CO) (Processed)',
+        combined_normalised_dataset.columns = ['CO(GT) (Processed)', 'PT08.S1(CO) (Processed)',
                                                'C6H6(GT) (Processed)',
                                                'PT08.S2(NMHC) (Processed)', 'NOx(GT) (Processed)',
                                                'PT08.S3(NOx) (Processed)',
