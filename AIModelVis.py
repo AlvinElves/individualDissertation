@@ -16,9 +16,10 @@ class AIModelVis:
 
         path = self.create_Folder()
 
-        self.visualise_variable('normalised', ['CO(GT) (Original)', 'CO(GT) (Processed)'], 'T', self.ai_model.T_normalise)
+        #self.visualise_variable('normalised', ['CO(GT) (Original)', 'CO(GT) (Processed)'], 'T', self.ai_model.T_normalise)
 
         #self.visualise_feature_importance(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1))
+        self.visualise_actual_and_predicted(self.ai_model.AH_actual, self.ai_model.AH_prediction, 'AH')
 
         # graph = self.generate_tree(path, self.ai_model.T_model, self.ai_model.T_dataset.drop(['T'], axis=1), 0)
         # self.show_Tree('graph', graph, path + "/" + 'tree.png')
@@ -176,6 +177,21 @@ class AIModelVis:
         feature_importance.plot(kind='barh')
 
         plt.xlabel('Relative Importance')
+        plt.show()
+
+    def visualise_actual_and_predicted(self, actual, predicted, variable):
+
+        predicted = pd.DataFrame(predicted, columns=[variable])
+        combined = pd.concat([actual, predicted], axis=1)
+
+        column_name = [variable + " (Actual)"] + [variable + " (Predicted)"]
+        combined.columns = column_name
+        combined = combined.head(100)
+
+        fig, ax = plt.subplots(figsize=(12, 7))
+        fig.canvas.manager.set_window_title('Normalisation Visualisation')
+
+        combined.plot(kind='line', fontsize=10, ax=ax)
         plt.show()
 
     def generate_tree(self, path, AI_model, dataset, tree_number):

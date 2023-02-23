@@ -29,21 +29,21 @@ class AIModel:
         self.T_model = RandomForestRegressor(n_estimators=396, max_features=1.0, criterion='friedman_mse', max_depth=6,
                                              random_state=5, n_jobs=5)
         self.T_model.fit(self.T_train.drop(['T'], axis=1), self.T_train['T'])
-        self.t_prediction = self.T_model.predict(T_test.drop(['T'], axis=1))
+        self.T_prediction = self.T_model.predict(T_test.drop(['T'], axis=1))
 
-        #self.AH_model = RandomForestRegressor(n_estimators=487, max_features=1.0, criterion='squared_error', max_depth=6,
-        #                                      random_state=5, n_jobs=5)
-        #self.AH_model.fit(self.AH_train.drop(['AH'], axis=1), self.AH_train['AH'])
-        #self.ah_prediction = self.AH_model.predict(AH_test.drop(['AH'], axis=1))
+        self.AH_model = RandomForestRegressor(n_estimators=487, max_features=1.0, criterion='squared_error', max_depth=6,
+                                              random_state=5, n_jobs=5)
+        self.AH_model.fit(self.AH_train.drop(['AH'], axis=1), self.AH_train['AH'])
+        self.AH_prediction = self.AH_model.predict(AH_test.drop(['AH'], axis=1))
 
-        #self.RH_model = RandomForestRegressor(n_estimators=265, max_features=1.0, criterion='friedman_mse', max_depth=6,
-        #                                      random_state=5, n_jobs=5)
-        #self.RH_model.fit(self.RH_train.drop(['RH'], axis=1), self.RH_train['RH'])
-        #self.rh_prediction = self.RH_model.predict(RH_test.drop(['RH'], axis=1))
+        self.RH_model = RandomForestRegressor(n_estimators=265, max_features=1.0, criterion='friedman_mse', max_depth=6,
+                                              random_state=5, n_jobs=5)
+        self.RH_model.fit(self.RH_train.drop(['RH'], axis=1), self.RH_train['RH'])
+        self.RH_prediction = self.RH_model.predict(RH_test.drop(['RH'], axis=1))
 
-        #self.t_actual = T_test['T']
-        #self.ah_actual = AH_test['AH']
-        #self.rh_actual = RH_test['RH']
+        self.T_actual = T_test['T']
+        self.AH_actual = AH_test['AH']
+        self.RH_actual = RH_test['RH']
 
     def train_test_data(self, dataset, variable, outlier_method, null_method, scaling_method):
         normalise, train, test = self.data_preprocessing(dataset, variable)
