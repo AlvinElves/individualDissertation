@@ -18,10 +18,10 @@ class AIModelVis:
 
         # self.visualise_variable('feature', ['CO(GT) (Original)', 'CO(GT) (Processed)'], 'RH')
 
-        # self.visualise_feature_importance(self.ai_model.T_model, self.ai_model.T_dataset.drop(['T'], axis=1))
-        graph = self.generate_tree(path, self.ai_model.T_model, self.ai_model.T_dataset.drop(['T'], axis=1), 0)
+        self.visualise_feature_importance(self.ai_model.T_model, self.ai_model.T_dataset.drop(['T'], axis=1))
 
-        self.show_Tree('graph', graph, path + "/" + 'tree.png')
+        # graph = self.generate_tree(path, self.ai_model.T_model, self.ai_model.T_dataset.drop(['T'], axis=1), 0)
+        # self.show_Tree('graph', graph, path + "/" + 'tree.png')
 
     def visualise_variable(self, method, column, variable):
         original_dataset = self.ai_model.dataset.drop(['Date', 'Time', 'T', 'RH', 'AH', 'NMHC(GT)'], axis=1)

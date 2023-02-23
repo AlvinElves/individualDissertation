@@ -11,7 +11,7 @@ class HistoricalDataVisualisation:
 
         # self.plot_Bar_by_Month(self.historical_data)
         # self.plot_Bar_by_Day(self.historical_data)
-        self.plot_line_all(self.historical_data, ['T', 'AH', 'RH'])
+        # self.plot_line_all(self.historical_data, ['T', 'AH', 'RH'])
 
     def plot_line_all(self, historical_data, y_Value):
         df = historical_data.merged_date_dataset.copy()
@@ -61,24 +61,24 @@ class HistoricalDataVisualisation:
         fig.write_html(self.path + "/" + "Graph.html")
         fig.show()
 
-    @staticmethod
-    def plot_Bar_by_Month(historical_data):
+    def plot_Bar_by_Month(self, historical_data):
         month_year_data = historical_data.grouping(['Month', 'Year'])
         month_year_data['Year'] = month_year_data['Year'].astype(str)
 
         fig = px.bar(month_year_data, x="Month", y='CO(GT)',
                      color='Year')
         fig.update_layout(barmode='group')
+        fig.write_html(self.path + "/" + "Graph.html")
         fig.show()
 
-    @staticmethod
-    def plot_Bar_by_Day(historical_data):
+    def plot_Bar_by_Day(self, historical_data):
         month_year_data = historical_data.grouping(['Day', 'Month', 'Year'])
         month_year_data['Year'] = month_year_data['Year'].astype(str)
 
         fig = px.bar(month_year_data, x='Day', y='T', facet_col="Month", facet_col_wrap=4,
                      color='Year')
         fig.update_layout(barmode='group')
+        fig.write_html(self.path + "/" + "Graph.html")
         # fig = px.bar(month_year_data, x='Month', y='T')
         fig.show()
 

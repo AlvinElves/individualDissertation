@@ -5,6 +5,8 @@ from sklearn import linear_model
 from sklearn.feature_selection import SelectFromModel
 from sklearn.preprocessing import StandardScaler
 
+from verstack.stratified_continuous_split import scsplit
+
 # AI Model
 from sklearn.ensemble import RandomForestRegressor
 
@@ -15,46 +17,75 @@ class AIModel:
 
         dataset = self.historical_data.original_dataset.copy()
 
-        self.dataset = dataset.copy()
+        T_dataset = dataset.copy()
+        AH_dataset = dataset.copy()
+        RH_dataset = dataset.copy()
 
-        self.dataset[self.dataset == -200] = np.NaN
-        self.dataset = self.dataset.dropna(subset=['T']).reset_index(drop=True)
-
-        self.T_dataset = self.feature_scaling('lasso', self.null_value('delete', self.outliers('delete', self.data_preprocessing('T'))), 'T')
-        self.AH_dataset = self.feature_scaling('none', self.null_value('delete', self.outliers('delete', self.data_preprocessing('AH'))), 'AH')
-        self.RH_dataset = self.feature_scaling('lasso', self.null_value('delete', self.outliers('none', self.data_preprocessing('RH'))), 'RH')
+        self.T_normalise, self.T_scaler, T_train, T_test = self.train_test_data(T_dataset, 'T', 'delete', 'delete', 'lasso')
+        self.AH_normalise, AH_train, AH_test = self.train_test_data(AH_dataset, 'AH', 'delete', 'delete', 'none')
+        self.RH_normalise, self.RH_scaler, RH_train, RH_test = self.train_test_data(RH_dataset, 'RH', 'none', 'delete', 'lasso')
 
         self.T_model = RandomForestRegressor(n_estimators=396, max_features=1.0, criterion='friedman_mse', max_depth=6,
                                              random_state=5, n_jobs=5)
-        self.T_model.fit(self.T_dataset.drop(['T'], axis=1), self.T_dataset['T'])
+        self.T_model.fit(T_train.drop(['T'], axis=1), T_train['T'])
+        self.t_prediction = self.T_model.predict(T_test.drop(['T'], axis=1))
 
-        #self.AH_model = RandomForestRegressor(n_estimators=487, max_features=1.0, criterion='squared_error', max_depth=6,
-        #                                      random_state=5, n_jobs=5)
-        #self.AH_model.fit(self.AH_dataset.drop(['AH'], axis=1), self.AH_dataset['AH'])
+        self.AH_model = RandomForestRegressor(n_estimators=487, max_features=1.0, criterion='squared_error', max_depth=6,
+                                              random_state=5, n_jobs=5)
+        self.AH_model.fit(AH_train.drop(['AH'], axis=1), AH_train['AH'])
+        self.ah_prediction = self.AH_model.predict(AH_test.drop(['AH'], axis=1))
 
-        #self.RH_model = RandomForestRegressor(n_estimators=265, max_features=1.0, criterion='friedman_mse', max_depth=6,
-        #                                      random_state=5, n_jobs=5)
-        #self.RH_model.fit(self.RH_dataset.drop(['RH'], axis=1), self.RH_dataset['RH'])
+        self.RH_model = RandomForestRegressor(n_estimators=265, max_features=1.0, criterion='friedman_mse', max_depth=6,
+                                              random_state=5, n_jobs=5)
+        self.RH_model.fit(RH_train.drop(['RH'], axis=1), RH_train['RH'])
+        self.rh_prediction = self.RH_model.predict(RH_test.drop(['RH'], axis=1))
 
-    def data_preprocessing(self, variable):
+        self.t_actual = T_test['T']
+        self.ah_actual = AH_test['AH']
+        self.rh_actual = RH_test['RH']
+
+    def train_test_data(self, dataset, variable, outlier_method, null_method, scaling_method):
+        normalise, train, test = self.data_preprocessing(dataset, variable)
+        train, test = self.null_value(null_method, self.outliers(outlier_method, train), test)
+        if scaling_method == 'lasso':
+            model, train, test = self.feature_scaling(scaling_method, variable, train, test)
+            return normalise, model, train, test
+        elif scaling_method == 'none':
+            train, test = self.feature_scaling(scaling_method, variable, train, test)
+            return normalise, train, test
+
+    def data_preprocessing(self, dataset, variable):
+        dataset[dataset == -200] = np.NaN
+        dataset = dataset.dropna(subset=['T']).reset_index(drop=True)
+
         # Split the dataframe to X and Y variables
-        X = self.dataset.drop(['Date', 'Time', 'T', 'RH', 'AH'], axis=1)
-        Y = self.dataset[variable]
+        X = dataset.drop(['Date', 'Time', 'T', 'RH', 'AH'], axis=1)
+        Y = dataset[variable]
 
-        # Normalise the dataset based on the training dataset from comparison
-        features_list = list(X.columns)
+        # Split the data into train, test (80%, 20%)
+        Xs_train, Xs_test, y_train, y_test = scsplit(X, Y, stratify=Y, test_size=0.2, random_state=5, continuous=True)
+        Xs_train.reset_index(inplace=True, drop=True)
+        y_train.reset_index(inplace=True, drop=True)
+        Xs_test.reset_index(inplace=True, drop=True)
+        y_test.reset_index(inplace=True, drop=True)
+
+        # Normalise the training dataset
+        features_list = list(Xs_train.columns)
         scaler = StandardScaler()
-        scaler.fit(X)
-        X_norm = scaler.transform(X)
+        scaler.fit(Xs_train)
+        Xs_train_norm = scaler.transform(Xs_train)
+        Xs_train = pd.DataFrame(Xs_train_norm, columns=features_list)
+        train_dataset = pd.concat([y_train, Xs_train], axis=1)
 
-        X_norm = pd.DataFrame(X_norm, columns=features_list)
+        # Use the settings for training dataset to normalise testing dataset too
+        Xs_test_norm = scaler.transform(Xs_test)
+        Xs_test = pd.DataFrame(Xs_test_norm, columns=features_list)
+        test_dataset = pd.concat([y_test, Xs_test], axis=1)
 
-        # Drop the column that has too much null value
-        X_norm = X_norm.drop(['NMHC(GT)'], axis=1)
+        train_df = train_dataset.drop(['NMHC(GT)'], axis=1)
+        test_df = test_dataset.drop(['NMHC(GT)'], axis=1)
 
-        dataset = pd.concat([Y, X_norm], axis=1)
-
-        return dataset
+        return scaler, train_df, test_df
 
     # Method to deal with outliers
     @staticmethod
@@ -77,42 +108,53 @@ class AIModel:
 
     # Method to deal with null values, data imputation
     @staticmethod
-    def null_value(method, dataset):
+    def null_value(method, train_dataset, test_dataset):
         if method == "delete":
-            dataset = dataset.dropna(axis=0, how='any').reset_index(drop=True)
-            return dataset
+            train_dataset = train_dataset.dropna(axis=0, how='any').reset_index(drop=True)
+            test_dataset = test_dataset.dropna(axis=0, how='any').reset_index(drop=True)
+
+            return train_dataset, test_dataset
         else:
             print("No Imputation method found")
 
     # Feature Scaling Method
     @staticmethod
-    def feature_scaling(method, dataset, variable):
+    def feature_scaling(method, variable, train_dataset, test_dataset):
         if method == 'none':
-            return dataset
+            return train_dataset, test_dataset
 
         elif method == 'lasso':
             features_name = []
-            X_df = dataset.drop([variable], axis=1)
-            features_list = list(X_df.columns)
-            y_df = dataset[variable]
+            X_train = train_dataset.drop([variable], axis=1)
+            features_list = list(X_train.columns)
+            y_train = train_dataset[variable]
+
+            X_test = test_dataset.drop([variable], axis=1)
+            y_test = test_dataset[variable]
 
             # Lasso Model
-            lasso = linear_model.Lasso(max_iter=180, random_state=5, alpha=0.2).fit(X_df.values, y_df.values)
-            lasso_model = SelectFromModel(lasso, prefit=True)
-            output_features = lasso_model.get_support(indices=True)
-            X_df = lasso_model.transform(X_df.values)
+            lasso = linear_model.Lasso(max_iter=50, random_state=5, alpha=0.1).fit(X_train, y_train.values)
+            model = SelectFromModel(lasso, prefit=True)
+            features_output = model.get_support(indices=True)
+            train_dataset = model.transform(X_train)
 
-            for i in output_features:
+            # Use setting from training set
+            test_dataset = model.transform(X_test)
+
+            for i in features_output:
                 features_name.append(features_list[i])
 
-            X_df = pd.DataFrame(X_df, columns=features_name)
+            X_train = pd.DataFrame(train_dataset, columns=features_name)
+            X_test = pd.DataFrame(test_dataset, columns=features_name)
 
-            dataset = pd.concat([y_df, X_df], axis=1)
+            train_dataset = pd.concat([y_train, X_train], axis=1)
+            test_dataset = pd.concat([y_test, X_test], axis=1)
 
-            return dataset
+            return model, train_dataset, test_dataset
 
         else:
             print("No Feature Scaling method found")
+
 
 if __name__ == '__main__':
     model = AIModel()
