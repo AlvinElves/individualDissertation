@@ -17,14 +17,14 @@ class AIModel:
 
         dataset = self.historical_data.original_dataset.copy()
 
-        T_dataset = dataset.copy()
-        AH_dataset = dataset.copy()
-        RH_dataset = dataset.copy()
+        self.T_dataset = dataset.copy()
+        self.AH_dataset = dataset.copy()
+        self.RH_dataset = dataset.copy()
         self.model_dataset = dataset.copy()
 
-        self.T_normalise, self.T_scaling, self.T_train, T_test = self.train_test_data(T_dataset, 'T', 'delete', 'delete', 'lasso')
-        self.AH_normalise, self.AH_train, AH_test = self.train_test_data(AH_dataset, 'AH', 'delete', 'delete', 'none')
-        self.RH_normalise, self.RH_scaling, self.RH_train, RH_test = self.train_test_data(RH_dataset, 'RH', 'none', 'delete', 'lasso')
+        self.T_normalise, self.T_scaling, self.T_train, T_test = self.train_test_data(self.T_dataset, 'T', 'delete', 'delete', 'lasso')
+        self.AH_normalise, self.AH_train, AH_test = self.train_test_data(self.AH_dataset, 'AH', 'delete', 'delete', 'none')
+        self.RH_normalise, self.RH_scaling, self.RH_train, RH_test = self.train_test_data(self.RH_dataset, 'RH', 'none', 'delete', 'lasso')
 
         self.T_model = RandomForestRegressor(n_estimators=396, max_features=1.0, criterion='friedman_mse', max_depth=6,
                                              random_state=5, n_jobs=5)
@@ -49,13 +49,14 @@ class AIModel:
         normalise, train, test = self.data_preprocessing(dataset, variable)
         train, test = self.null_value(null_method, self.outliers(outlier_method, train), test)
         if scaling_method == 'lasso':
-            model, train, test = self.feature_scaling(scaling_method, variable, train, test)
-            return normalise, model, train, test
+            scaling_model, train, test = self.feature_scaling(scaling_method, variable, train, test)
+            return normalise, scaling_model, train, test
         elif scaling_method == 'none':
             train, test = self.feature_scaling(scaling_method, variable, train, test)
             return normalise, train, test
 
-    def data_preprocessing(self, dataset, variable):
+    @staticmethod
+    def data_preprocessing(dataset, variable):
         dataset[dataset == -200] = np.NaN
         dataset = dataset.dropna(subset=['T']).reset_index(drop=True)
 
@@ -136,12 +137,12 @@ class AIModel:
 
             # Lasso Model
             lasso = linear_model.Lasso(max_iter=50, random_state=5, alpha=0.1).fit(X_train, y_train.values)
-            model = SelectFromModel(lasso, prefit=True)
-            features_output = model.get_support(indices=True)
-            train_dataset = model.transform(X_train)
+            scaling_model = SelectFromModel(lasso, prefit=True)
+            features_output = scaling_model.get_support(indices=True)
+            train_dataset = scaling_model.transform(X_train)
 
             # Use setting from training set
-            test_dataset = model.transform(X_test)
+            test_dataset = scaling_model.transform(X_test)
 
             for i in features_output:
                 features_name.append(features_list[i])
@@ -152,7 +153,7 @@ class AIModel:
             train_dataset = pd.concat([y_train, X_train], axis=1)
             test_dataset = pd.concat([y_test, X_test], axis=1)
 
-            return model, train_dataset, test_dataset
+            return scaling_model, train_dataset, test_dataset
 
         else:
             print("No Feature Scaling method found")

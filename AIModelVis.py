@@ -7,6 +7,7 @@ import seaborn as sns
 from HandlingInteractions import *
 from sklearn import tree
 from PIL import Image
+from yellowbrick.model_selection import ValidationCurve, LearningCurve
 
 
 class AIModelVis:
@@ -16,13 +17,55 @@ class AIModelVis:
 
         path = self.create_Folder()
 
+        # Remove the matplotlib toolbar
+        plt.rcParams['toolbar'] = 'None'
+
         #self.visualise_variable('normalised', ['CO(GT) (Original)', 'CO(GT) (Processed)'], 'T', self.ai_model.T_normalise)
 
         #self.visualise_feature_importance(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1))
-        self.visualise_actual_and_predicted(self.ai_model.AH_actual, self.ai_model.AH_prediction, 'AH')
+        #self.visualise_actual_and_predicted(self.ai_model.AH_actual, self.ai_model.AH_prediction, 'AH')
 
-        # graph = self.generate_tree(path, self.ai_model.T_model, self.ai_model.T_dataset.drop(['T'], axis=1), 0)
-        # self.show_Tree('graph', graph, path + "/" + 'tree.png')
+        #graph = self.generate_tree(path, self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 0)
+        #self.show_Tree('graph', graph, path + "/" + 'tree.png')
+
+        self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, 'T', 'max_depth')
+        #self.visualise_learning_rate(self.ai_model.T_model, self.ai_model.T_train, 'T')
+
+    def visualise_hyperparameter(self, ai_model, dataset, variable, param_name):
+        if param_name == 'n_estimators':
+            param_range = np.arange(1, 31)
+        elif param_name == 'max_depth':
+            param_range = np.arange(5, 11)
+
+        visualizer = ValidationCurve(ai_model, param_name=param_name, n_jobs=-1,
+                                     param_range=param_range, cv=5, scoring="r2")
+
+        plt.get_current_fig_manager().canvas.manager.set_window_title('Hyperparameter Tuning Visualisation')
+
+        x = dataset.drop([variable], axis=1)
+        y = dataset[variable]
+
+        plt.xlabel(param_name)
+        plt.ylabel("R2 Score (Scoring)")
+
+        visualizer.fit(x, y)
+
+        plt.show()
+
+    def visualise_learning_rate(self, ai_model, dataset, variable):
+        visualizer = LearningCurve(ai_model, n_jobs=-1, cv=10, scoring="r2")
+
+        plt.get_current_fig_manager().canvas.manager.set_window_title('Learning Rate Visualisation')
+
+        x = dataset.drop([variable], axis=1)
+        y = dataset[variable]
+
+        plt.xlabel("Number of Data")
+        plt.ylabel("R2 Score (Scoring)")
+
+        visualizer.fit(x, y)
+
+        plt.show()
 
     def visualise_variable(self, method, column, variable, normaliser):
         original_dataset = self.ai_model.model_dataset.copy()
@@ -53,7 +96,8 @@ class AIModelVis:
         elif method == 'feature':
             self.visualise_feature_correlation(feature_dataset)
 
-    def visualise_feature_correlation(self, dataset):
+    @staticmethod
+    def visualise_feature_correlation(dataset):
         # Correlation matrix for preprocessed data
         cor_df = dataset.copy()
         cor_df = cor_df.iloc[:, 1:10]
@@ -79,7 +123,8 @@ class AIModelVis:
 
         plt.show()
 
-    def visualise_outliers_data(self, original_dataset, normalised_dataset, column_name, variable):
+    @staticmethod
+    def visualise_outliers_data(original_dataset, normalised_dataset, column_name, variable):
         # Combine the dataset to visualise more easily
         combined_visualise_dataset = pd.concat([original_dataset, normalised_dataset], axis=1)
 
@@ -134,7 +179,6 @@ class AIModelVis:
     def visualise_normalised_data(self, original_dataset, normalised_dataset, column_name):
         # Combine the dataset to visualise more easily
         combined_normalised_dataset = pd.concat([normalised_dataset, original_dataset], axis=1)
-        print(combined_normalised_dataset.columns)
 
         # Rename the dataset
         combined_normalised_dataset.columns = ['CO(GT) (Processed)', 'PT08.S1(CO) (Processed)',
@@ -158,17 +202,26 @@ class AIModelVis:
 
         visualise = combined_normalised_dataset[column_name]
         visualise = visualise.dropna().reset_index(drop=True)
-        visualise = visualise.head(400)
         maximum = max(visualise[column_name[0]])
         minimum = min(visualise[column_name[1]])
 
         fig, ax = plt.subplots(figsize=(12, 7))
         fig.canvas.manager.set_window_title('Normalisation Visualisation')
 
-        visualise.plot(kind='line', fontsize=10, ax=ax, xlim=(-5, 400), ylim=(minimum - 1, maximum))
+        # Allow panning and zooming using a mouse
+        pan_handler = panhandler(fig, 1)
+        self.interact.zoom_factory(ax, base_scale=1.2)
+
+        # Creating axis limits and title
+        plt.xlim([0, 100])
+        plt.xlabel("Data Number")
+        plt.ylabel(column_name[0] + " VS " + column_name[1] + " Values")
+
+        visualise.plot(kind='line', fontsize=10, ax=ax, ylim=(minimum - 1, maximum))
         plt.show()
 
-    def visualise_feature_importance(self, AI_model, dataset):
+    @staticmethod
+    def visualise_feature_importance(AI_model, dataset):
         plt.figure().set_figwidth(10)
         plt.title('Relative Importance between the features used')
         plt.get_current_fig_manager().canvas.manager.set_window_title('Relative Importance Visualisation')
@@ -186,22 +239,35 @@ class AIModelVis:
 
         column_name = [variable + " (Actual)"] + [variable + " (Predicted)"]
         combined.columns = column_name
-        combined = combined.head(100)
 
         fig, ax = plt.subplots(figsize=(12, 7))
-        fig.canvas.manager.set_window_title('Normalisation Visualisation')
+        fig.canvas.manager.set_window_title('Prediction Visualisation')
+
+        # Allow panning and zooming using a mouse
+        pan_handler = panhandler(fig, 1)
+        self.interact.zoom_factory(ax, base_scale=1.2)
+
+        # Creating axis limits and title
+        plt.xlim([0, 50])
+        plt.xlabel("Prediction Number")
+        plt.ylabel(variable + " Values")
+
+        plt.title("Actual vs Predicted " + variable + " variable")
 
         combined.plot(kind='line', fontsize=10, ax=ax)
         plt.show()
 
-    def generate_tree(self, path, AI_model, dataset, tree_number):
-        fig = plt.subplots(figsize=(12, 6), dpi=800)
+    @staticmethod
+    def generate_tree(path, AI_model, dataset, tree_number):
+        fig, ax = plt.subplots(figsize=(12, 6), dpi=800)
+        fig.canvas.manager.set_window_title('Tree ' + str(tree_number + 1) + ' Estimator Visualisation')
 
         tree.plot_tree(AI_model.estimators_[tree_number], feature_names=dataset.columns, filled=True)
         plt.savefig(path + "/" + 'tree')
         return plt
 
-    def show_Tree(self, method, graph, image):
+    @staticmethod
+    def show_Tree(method, graph, image):
         if method == 'image':
             # Read image
             img = Image.open(image)
@@ -211,7 +277,8 @@ class AIModelVis:
         elif method == 'graph':
             graph.show()
 
-    def create_Folder(self):
+    @staticmethod
+    def create_Folder():
         new_directory = "Visualisation"  # New folder name
         current_path = os.getcwd()  # Get current file path
         path = os.path.join(current_path, new_directory)

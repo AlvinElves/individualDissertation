@@ -66,5 +66,6 @@ class HistoricalData:
         self.historical_dataset = pd.read_excel("Dataset/AirQualityUCI.xlsx")
         self.original_dataset = self.historical_dataset.copy()
 
+
 if __name__ == '__main__':
     historical_Data = HistoricalData()

@@ -49,7 +49,8 @@ class LiveData:
         self.live_dataset.to_excel('CleanedDataset/CleanedLiveData.xlsx', index=False)
         self.all_live_dataset.to_excel('CleanedDataset/CleanedAllLiveData.xlsx', index=False)
 
-    def split_data_based_on_pollutant(self, dataset, name):
+    @staticmethod
+    def split_data_based_on_pollutant(dataset, name):
         return dataset.loc[dataset['measurements_parameter'] == name].reset_index(drop=True)
 
     def remove_unwanted_data(self):

@@ -1,7 +1,6 @@
 import folium
 import webbrowser
 
-import numpy as np
 import plotly.graph_objects as go
 
 from LiveData import *
@@ -33,7 +32,7 @@ class LiveDataVisualisation:
         plt.rcParams['toolbar'] = 'None'
 
         #self.bubble_map(live_data, 'CO')
-        #self.bar_graph_on_map(live_data, 'CO')
+        self.bar_graph_on_map(live_data, 'CO')
         #self.pie_chart_on_map(live_data, 'BC')
 
     # Use scatter map to produce a bubble map
@@ -119,6 +118,7 @@ class LiveDataVisualisation:
         labels = list(colours_legend.keys())
         handles = [plt.Rectangle((0, 0), 1, 1, color=colours_legend[label]) for label in labels]
         plt.legend(handles, labels)
+
 
         for i in range(0, len(unique_city)):
             measurements = []
