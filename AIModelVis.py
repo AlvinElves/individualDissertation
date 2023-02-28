@@ -28,7 +28,7 @@ class AIModelVis:
         #graph = self.generate_tree(path, self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 0)
         #self.show_Tree('graph', graph, path + "/" + 'tree.png')
 
-        self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, 'T', 'max_depth')
+        #self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, 'T', 'max_depth')
         #self.visualise_learning_rate(self.ai_model.T_model, self.ai_model.T_train, 'T')
 
     def visualise_hyperparameter(self, ai_model, dataset, variable, param_name):

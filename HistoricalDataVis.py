@@ -1,5 +1,8 @@
+import matplotlib.pyplot as plt
+
 from AIModelVis import *
 import plotly.express as px
+import matplotlib.animation as animate
 
 
 class HistoricalDataVisualisation:
@@ -12,6 +15,44 @@ class HistoricalDataVisualisation:
         # self.plot_Bar_by_Month(self.historical_data)
         # self.plot_Bar_by_Day(self.historical_data)
         # self.plot_line_all(self.historical_data, ['T', 'AH', 'RH'])
+        self.animated_graph(self.historical_data, ['T', 'AH', 'RH'])
+
+    def animated_graph(self, historical_data, column):
+        colours = []
+        time = []
+        colour_number = 0
+
+        df = historical_data.merged_date_dataset.copy()
+        df['Date'] = pd.to_datetime(df.Date.astype(str) + ' ' + df.Time.astype(str))
+        column_name = ['Date'] + column
+        df = df[column_name]
+        df = df.set_index('Date')
+
+        for i in range(len(df.columns)):
+            colour_number += 1
+            time.append(df.columns[i])
+            colours.append("C" + str(colour_number))
+
+        colours_legend = dict(zip(time, colours))
+        labels = list(colours_legend.keys())
+        handles = [plt.Rectangle((0, 0), width=1, height=1, color=colours_legend[label]) for label in labels]
+
+        fig = plt.figure()
+
+        def build(i=int):
+            plt.clf()
+            p = plt.plot(df[:i].index, df[:i].values)
+            plt.legend(handles, labels)
+            plt.xticks(rotation=45, ha="right", rotation_mode="anchor")
+            plt.subplots_adjust(bottom=0.2, top=0.9)
+            plt.xlabel('Dates')
+            plt.ylabel('Values')
+
+            for j in range(len(df.columns)):
+                p[j].set_color(colours[j])
+
+        animator = animate.FuncAnimation(fig, build, interval=100)
+        plt.show()
 
     def plot_line_all(self, historical_data, y_Value):
         df = historical_data.merged_date_dataset.copy()

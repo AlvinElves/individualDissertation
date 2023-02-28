@@ -119,7 +119,6 @@ class LiveDataVisualisation:
         handles = [plt.Rectangle((0, 0), 1, 1, color=colours_legend[label]) for label in labels]
         plt.legend(handles, labels)
 
-
         for i in range(0, len(unique_city)):
             measurements = []
             city_data = data.loc[data['city'] == unique_city[i]].reset_index(drop=True)
