@@ -25,15 +25,15 @@ class LiveDataVisualisation:
 
         self.create_Folder()
 
-        self.pop_up_graph(live_data)
-        self.create_Map(live_data)
+        #self.pop_up_graph(live_data)
+        #self.create_Map(live_data)
 
         # Remove the matplotlib toolbar
         plt.rcParams['toolbar'] = 'None'
 
         #self.bubble_map(live_data, 'CO')
-        self.bar_graph_on_map(live_data, 'CO')
-        #self.pie_chart_on_map(live_data, 'BC')
+        #self.bar_graph_on_map(live_data, 'CO', 'most_frequent')
+        #self.pie_chart_on_map(live_data, 'BC', 'last_updated')
 
     # Use scatter map to produce a bubble map
     def bubble_map(self, live_data, pollutant_type):
@@ -74,10 +74,12 @@ class LiveDataVisualisation:
         plt.show()
 
     # Bar Graph on world map
-    def bar_graph_on_map(self, live_data, pollutant_type):
+    def bar_graph_on_map(self, live_data, pollutant_type, visual_type):
         colours = []
         time = []
         colour_number = 0
+        visual_city = []
+        unique_time = []
 
         # Creating axes and plotting world map
         world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
@@ -94,20 +96,28 @@ class LiveDataVisualisation:
         plt.xlim([-180, 180])
         plt.ylim([-90, 90])
 
-        plt.title("Bar graph on map for " + pollutant_type + " Pollutant")
         plt.xlabel("Longitude")
         plt.ylabel("Latitude")
 
         # Plotting the measurements data with a color map
         data = live_data.split_data_based_on_pollutant(live_data.all_live_dataset, pollutant_type)
-        unique_country = data['country_name_en'].unique()
-        unique_city = data['city'].unique()
-        unique_time = data['Time'].unique()
 
-        print(unique_country)
-        print(print(data['country_name_en'].value_counts()))
+        if visual_type == 'most_frequent':
+            frequent_city = data['city'].value_counts().index.values
+            visual_city = frequent_city[:80]
 
-        unique_city = unique_city[:80]
+            visual_data = data.loc[data['city'].isin(visual_city)].reset_index(drop=True)
+            unique_time = visual_data['Time'].unique()
+
+            plt.title("Most Frequent Bar Graph on map for " + pollutant_type + " Pollutant")
+        elif visual_type == 'last_updated':
+            unique_city = data['city'].unique()
+            visual_city = unique_city[:80]
+
+            visual_data = data.loc[data['city'].isin(visual_city)].reset_index(drop=True)
+            unique_time = visual_data['Time'].unique()
+
+            plt.title("Last Updated Bar Graph on map for " + pollutant_type + " Pollutant")
 
         for i in range(len(unique_time)):
             colour_number += 1
@@ -119,9 +129,9 @@ class LiveDataVisualisation:
         handles = [plt.Rectangle((0, 0), 1, 1, color=colours_legend[label]) for label in labels]
         plt.legend(handles, labels)
 
-        for i in range(0, len(unique_city)):
+        for i in range(0, len(visual_city)):
             measurements = []
-            city_data = data.loc[data['city'] == unique_city[i]].reset_index(drop=True)
+            city_data = data.loc[data['city'] == visual_city[i]].reset_index(drop=True)
 
             latitude = city_data['latitude'].median()
             longitude = city_data['longitude'].median()
@@ -149,10 +159,11 @@ class LiveDataVisualisation:
         plt.show()
 
     # Pie Chart on world map
-    def pie_chart_on_map(self, live_data, pollutant_type):
+    def pie_chart_on_map(self, live_data, pollutant_type, visual_type):
         colours = []
         time = []
         colour_number = 0
+        visual_city = []
 
         # Creating axes and plotting world map
         world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
@@ -169,16 +180,22 @@ class LiveDataVisualisation:
         plt.xlim([-180, 180])
         plt.ylim([-90, 90])
 
-        plt.title("Pie Chart on map for " + pollutant_type + " Pollutant")
         plt.xlabel("Longitude")
         plt.ylabel("Latitude")
 
         # Plotting the measurements data with a color map
         data = live_data.split_data_based_on_pollutant(live_data.all_live_dataset, pollutant_type)
-        unique_city = data['city'].unique()
+
         unique_time = data['Time'].unique()
 
-        #unique_city = unique_city[:80]
+        if visual_type == 'most_frequent':
+            frequent_city = data['city'].value_counts().index.values
+            visual_city = frequent_city[:80]
+            plt.title("Most Frequent Pie Chart on map for " + pollutant_type + " Pollutant")
+        elif visual_type == 'last_updated':
+            unique_city = data['city'].unique()
+            visual_city = unique_city[:80]
+            plt.title("Last Updated Pie Chart on map for " + pollutant_type + " Pollutant")
 
         for i in range(len(unique_time)):
             colour_number += 1
@@ -190,9 +207,9 @@ class LiveDataVisualisation:
         handles = [plt.Rectangle((0, 0), 1, 1, color=colours_legend[label]) for label in labels]
         plt.legend(handles, labels)
 
-        for i in range(0, len(unique_city)):
+        for i in range(0, len(visual_city)):
             measurements = []
-            city_data = data.loc[data['city'] == unique_city[i]].reset_index(drop=True)
+            city_data = data.loc[data['city'] == visual_city[i]].reset_index(drop=True)
 
             latitude = city_data['latitude'].median()
             longitude = city_data['longitude'].median()
@@ -264,7 +281,7 @@ class LiveDataVisualisation:
             fig.update_layout(barmode='group', title='Pollutant Values for all types of pollutant', legend_title='Time',
                               updatemenus=[dict(active=0, buttons=button_list)])
             text = "fig" + str(a) + ".html"
-            fig.write_html(self.path + "/" + text)
+            fig.write_html(self.path + "/" + text, config={'displayModeBar': False})
 
             self.pop_up_df.loc[len(self.pop_up_df)] = [unique_country[a], text, median_latitude, median_longitude]
 
