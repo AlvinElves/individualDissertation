@@ -1,10 +1,10 @@
-from AIModel import *
+from Code.AIModel.AIModel import *
+from Code.HandlingInteractions import *
 
 import pandas as pd
 import numpy as np
 import seaborn as sns
 
-from HandlingInteractions import *
 from sklearn import tree
 from PIL import Image
 from yellowbrick.model_selection import ValidationCurve, LearningCurve
@@ -280,7 +280,7 @@ class AIModelVis:
     @staticmethod
     def create_Folder():
         new_directory = "Visualisation"  # New folder name
-        current_path = os.getcwd()  # Get current file path
+        current_path = os.path.dirname(os.path.dirname(os.getcwd()))  # Get current file path
         path = os.path.join(current_path, new_directory)
 
         # Create new folder

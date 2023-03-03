@@ -51,19 +51,20 @@ class HistoricalData:
         self.split_date()
 
         new_directory = "CleanedDataset"  # New folder name
-        path = os.getcwd()  # Get current file path
+        path = os.path.dirname(os.path.dirname(os.getcwd()))  # Get current file path
+
         data_path = os.path.join(path, new_directory)
 
         # Create new folder
         if not os.path.exists(data_path):
             os.mkdir(data_path)
 
-            # Put it into an Excel file to visualise using tableau or excel
-        self.historical_dataset.to_excel('CleanedDataset/CleanedHistoricalData.xlsx', index=False)
-        self.merged_date_dataset.to_excel('CleanedDataset/MergedHistoricalData.xlsx', index=False)
+        # Put it into an Excel file to visualise using tableau or excel
+        self.historical_dataset.to_excel(data_path + '/CleanedHistoricalData.xlsx', index=False)
+        self.merged_date_dataset.to_excel(data_path + '/MergedHistoricalData.xlsx', index=False)
 
     def get_data_from_excel(self):
-        self.historical_dataset = pd.read_excel("Dataset/AirQualityUCI.xlsx")
+        self.historical_dataset = pd.read_excel("../../Dataset/AirQualityUCI.xlsx")
         self.original_dataset = self.historical_dataset.copy()
 
 

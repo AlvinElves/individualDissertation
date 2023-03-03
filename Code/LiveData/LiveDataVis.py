@@ -1,14 +1,13 @@
+from Code.LiveData.LiveData import *
+from Code.HandlingInteractions import *
+
 import folium
 import webbrowser
 
 import plotly.graph_objects as go
 
-from LiveData import *
-
 import geopandas as gpd
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-
-from HandlingInteractions import *
 
 
 class LiveDataVisualisation:
@@ -408,7 +407,7 @@ class LiveDataVisualisation:
 
     def create_Folder(self):
         new_directory = "Visualisation"  # New folder name
-        current_path = os.getcwd()  # Get current file path
+        current_path = os.path.dirname(os.path.dirname(os.getcwd()))  # Get current file path
         self.live_path = os.path.join(current_path, new_directory)
 
         # Create new folder

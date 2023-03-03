@@ -39,15 +39,15 @@ class LiveData:
 
     def write_dataset_to_excel(self):
         new_directory = "CleanedDataset"  # New folder name
-        path = os.getcwd()  # Get current file path
+        path = os.path.dirname(os.path.dirname(os.getcwd()))  # Get current file path
         data_path = os.path.join(path, new_directory)
 
         # Create new folder
         if not os.path.exists(data_path):
             os.mkdir(data_path)
 
-        self.live_dataset.to_excel('CleanedDataset/CleanedLiveData.xlsx', index=False)
-        self.all_live_dataset.to_excel('CleanedDataset/CleanedAllLiveData.xlsx', index=False)
+        self.live_dataset.to_excel(data_path + '/CleanedLiveData.xlsx', index=False)
+        self.all_live_dataset.to_excel(data_path + '/CleanedAllLiveData.xlsx', index=False)
 
     @staticmethod
     def split_data_based_on_pollutant(dataset, name):
