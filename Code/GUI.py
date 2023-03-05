@@ -2,6 +2,7 @@ import tkinter as tk
 
 from GUIBuilding.FrameWidgetBuilder import left_frame_widget, right_frame_widget
 from GUIBuilding.ModelVisWidget import *
+from GUIBuilding.AIModelWidget import *
 
 
 class GUI(tk.Tk):
@@ -34,7 +35,7 @@ class GUI(tk.Tk):
 
         # iterating through a tuple consisting of the different page layouts
         # for F in (HomePage, HistoricalDataPage, LiveDataPage, PredictionPage, AIModelPage):
-        for F in (HomePage, HistoricalDataPage, AIModelPage):
+        for F in (HomePage, HistoricalDataPage, PredictionPage):
             frame = F(container, self)
 
             # initializing frame of that object from all the pages within the for loop
@@ -42,7 +43,7 @@ class GUI(tk.Tk):
 
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(AIModelPage)
+        self.show_frame(PredictionPage)
 
     # to display the current frame passed as parameter
     def show_frame(self, cont):
@@ -223,6 +224,8 @@ class PredictionPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg='black')
 
+        aiModelWidget = AIModelWidget()
+
         # Create left, right and inner right frames
         left_frame = tk.Frame(self, width=225, height=694, bg='royalblue', highlightbackground="darkblue",
                               highlightthickness=5)
@@ -241,6 +244,7 @@ class PredictionPage(tk.Frame):
                           lambda: controller.show_frame(LiveDataPage), lambda: controller.show_frame(PredictionPage),
                           lambda: controller.show_frame(AIModelPage))
         right_frame_widget(right_frame, "Air Quality Prediction")
+        aiModelWidget.inner_aimodel_widget(right_inside_frame)
 
 
 # AI Model Vis window frame

@@ -28,19 +28,28 @@ class AIModelVis:
         #graph = self.generate_tree(path, self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 0)
         #self.show_Tree('graph', graph, path + "/" + 'tree.png')
 
-        #self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, 'T', 'max_depth')
+        #self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, 'T', 'criterion')
         #self.visualise_learning_rate(self.ai_model.T_model, self.ai_model.T_train, 'T')
 
     def visualise_hyperparameter(self, ai_model, dataset, variable, param_name):
         if param_name == 'n_estimators':
-            param_range = np.arange(1, 31)
+            param_range = np.arange(1, 36)
         elif param_name == 'max_depth':
             param_range = np.arange(5, 11)
+        elif param_name == 'max_features':
+            param_range = [1.0, 'log2', 'sqrt']
+        elif param_name == 'criterion':
+            param_range = ['poisson', 'squared_error', 'absolute_error', 'friedman_mse']
+
+        fig, ax = plt.subplots(figsize=(10, 5))
+        fig.canvas.manager.set_window_title('Hyperparameter Tuning Visualisation')
+
+        # Allow panning and zooming using a mouse
+        pan_handler = panhandler(fig, 1)
+        self.interact.zoom_factory(ax, base_scale=1.2)
 
         visualizer = ValidationCurve(ai_model, param_name=param_name, n_jobs=-1,
                                      param_range=param_range, cv=5, scoring="r2")
-
-        plt.get_current_fig_manager().canvas.manager.set_window_title('Hyperparameter Tuning Visualisation')
 
         x = dataset.drop([variable], axis=1)
         y = dataset[variable]
@@ -50,12 +59,17 @@ class AIModelVis:
 
         visualizer.fit(x, y)
 
-        plt.show()
+        visualizer.show()
 
     def visualise_learning_rate(self, ai_model, dataset, variable):
-        visualizer = LearningCurve(ai_model, n_jobs=-1, cv=10, scoring="r2")
+        fig, ax = plt.subplots(figsize=(10, 5))
+        fig.canvas.manager.set_window_title('Learning Rate Visualisation')
 
-        plt.get_current_fig_manager().canvas.manager.set_window_title('Learning Rate Visualisation')
+        # Allow panning and zooming using a mouse
+        pan_handler = panhandler(fig, 1)
+        self.interact.zoom_factory(ax, base_scale=1.2)
+
+        visualizer = LearningCurve(ai_model, n_jobs=-1, cv=10, scoring="r2")
 
         x = dataset.drop([variable], axis=1)
         y = dataset[variable]
@@ -65,7 +79,7 @@ class AIModelVis:
 
         visualizer.fit(x, y)
 
-        plt.show()
+        visualizer.show()
 
     def visualise_variable(self, method, column, variable, normaliser):
         original_dataset = self.ai_model.model_dataset.copy()
