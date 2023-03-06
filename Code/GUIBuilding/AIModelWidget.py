@@ -16,26 +16,19 @@ class AIModelWidget:
         self.frame.grid(row=2, column=0, columnspan=5, rowspan=8)
         self.frame.config(pady=4)
 
-        self.independent_label = self.heading(row=3, right_inside_frame=self.frame,
-                                              text=self.aiModelFunction.input_independent_type)
+        self.independent_label = self.heading(row=3, frame=self.frame, text=self.aiModelFunction.input_independent_type)
 
-        self.single_independent_feature_label(row=4, right_inside_frame=self.frame)
-        self.single_independent_feature_input(row=5, right_inside_frame=self.frame)
+        #self.draw_canvas(row=4, frame=self.frame)
+        self.single_input(row=4, frame=self.frame)
+        #self.file_input(row=4, frame=self.frame)
 
-        self.dependent_label = self.heading(row=8, right_inside_frame=self.frame,
-                                            text=self.aiModelFunction.input_dependent_type)
-        self.dependent_variable(row=9, right_inside_frame=self.frame)
+        self.dependent_label = self.heading(row=8, frame=self.frame, text=self.aiModelFunction.input_dependent_type)
+        self.dependent_variable(row=9, frame=self.frame)
 
         self.draw_line(row=10, right_inside_frame=right_inside_frame)
-        self.heading(row=11, right_inside_frame=right_inside_frame, text='RESULTS')
+        self.heading(row=11, frame=right_inside_frame, text='RESULTS')
         self.prediction_result(row=12, right_inside_frame=right_inside_frame)
         self.final_button(row=13, right_inside_frame=right_inside_frame)
-
-        self.entry = [self.input_1_entry, self.input_2_entry, self.input_3_entry, self.input_4_entry,
-                      self.input_5_entry, self.input_6_entry, self.input_7_entry, self.input_8_entry,
-                      self.input_9_entry, self.input_10_entry]
-        self.label = [self.input_1, self.input_2, self.input_3, self.input_4, self.input_5,
-                      self.input_6, self.input_7, self.input_8, self.input_9, self.input_10]
 
     def choose_input_type(self, row, right_inside_frame):
         # Choose input type, single point or file
@@ -73,126 +66,161 @@ class AIModelWidget:
         top_canvas.grid(row=row, columnspan=5)
         top_canvas.create_line(5, 15, 762, 15, fill="black", width=5)
 
-    def draw_canvas(self, row, right_inside_frame):
+    def draw_canvas(self, row, frame):
         # Draw Canvas
-        self.canvas = tk.Canvas(right_inside_frame, width=750, height=268, bg='lightskyblue', highlightthickness=0)
-        self.canvas.grid(row=row, columnspan=5, rowspan=7)
+        self.canvas = tk.Canvas(frame, width=750, height=144, bg='lightskyblue', highlightthickness=0)
+        self.canvas.grid(row=row, columnspan=5, rowspan=2)
 
-    def heading(self, row, right_inside_frame, text):
-        input_type_label = tk.Label(right_inside_frame, text=text, width=55, height=1,
+    def heading(self, row, frame, text):
+        input_type_label = tk.Label(frame, text=text, width=55, height=1,
                                     font=('Raleway', 12, 'bold'), bg='lightskyblue')
         input_type_label.grid(row=row, column=0, columnspan=5, pady=(3, 0))
 
         return input_type_label
 
-    def single_independent_feature_input(self, row, right_inside_frame):
+    def single_input(self, row, frame):
+        self.single_independent_feature_label(row=row, frame=frame)
+        self.single_independent_feature_input(row=row+1, frame=frame)
+
+        self.entry = [self.input_1_entry, self.input_2_entry, self.input_3_entry, self.input_4_entry,
+                      self.input_5_entry, self.input_6_entry, self.input_7_entry, self.input_8_entry,
+                      self.input_9_entry, self.input_10_entry]
+        self.label = [self.input_1, self.input_2, self.input_3, self.input_4, self.input_5,
+                      self.input_6, self.input_7, self.input_8, self.input_9, self.input_10]
+
+    def single_independent_feature_input(self, row, frame):
         # Independent Feature Input
-        self.input_1_entry = tk.Entry(right_inside_frame, width=16,
+        self.input_1_entry = tk.Entry(frame, width=16,
                                       font=('Raleway', 10, 'bold'), state='disabled', bd=0,
                                       disabledbackground='lightskyblue', cursor='arrow')
         self.input_1_entry.grid(row=row, column=0)
 
-        self.input_2_entry = tk.Entry(right_inside_frame, width=16,
+        self.input_2_entry = tk.Entry(frame, width=16,
                                       font=('Raleway', 10, 'bold'), state='disabled', bd=0,
                                       disabledbackground='lightskyblue', cursor='arrow')
         self.input_2_entry.grid(row=row, column=1)
 
-        self.input_3_entry = tk.Entry(right_inside_frame, width=16,
+        self.input_3_entry = tk.Entry(frame, width=16,
                                       font=('Raleway', 10, 'bold'), state='disabled', bd=0,
                                       disabledbackground='lightskyblue', cursor='arrow')
         self.input_3_entry.grid(row=row, column=2)
 
-        self.input_4_entry = tk.Entry(right_inside_frame, width=16,
+        self.input_4_entry = tk.Entry(frame, width=16,
                                       font=('Raleway', 10, 'bold'), state='disabled', bd=0,
                                       disabledbackground='lightskyblue', cursor='arrow')
         self.input_4_entry.grid(row=row, column=3)
 
-        self.input_5_entry = tk.Entry(right_inside_frame, width=16,
+        self.input_5_entry = tk.Entry(frame, width=16,
                                       font=('Raleway', 10, 'bold'), state='disabled', bd=0,
                                       disabledbackground='lightskyblue', cursor='arrow')
         self.input_5_entry.grid(row=row, column=4)
 
-        self.input_6_entry = tk.Entry(right_inside_frame, width=16,
+        self.input_6_entry = tk.Entry(frame, width=16,
                                       font=('Raleway', 10, 'bold'), state='disabled', bd=0,
                                       disabledbackground='lightskyblue', cursor='arrow')
         self.input_6_entry.grid(row=row + 2, column=0)
 
-        self.input_7_entry = tk.Entry(right_inside_frame, width=16,
+        self.input_7_entry = tk.Entry(frame, width=16,
                                       font=('Raleway', 10, 'bold'), state='disabled', bd=0,
                                       disabledbackground='lightskyblue', cursor='arrow')
         self.input_7_entry.grid(row=row + 2, column=1)
 
-        self.input_8_entry = tk.Entry(right_inside_frame, width=16,
+        self.input_8_entry = tk.Entry(frame, width=16,
                                       font=('Raleway', 10, 'bold'), state='disabled', bd=0,
                                       disabledbackground='lightskyblue', cursor='arrow')
         self.input_8_entry.grid(row=row + 2, column=2)
 
-        self.input_9_entry = tk.Entry(right_inside_frame, width=16,
+        self.input_9_entry = tk.Entry(frame, width=16,
                                       font=('Raleway', 10, 'bold'), state='disabled', bd=0,
                                       disabledbackground='lightskyblue', cursor='arrow')
         self.input_9_entry.grid(row=row + 2, column=3)
 
-        self.input_10_entry = tk.Entry(right_inside_frame, width=16,
+        self.input_10_entry = tk.Entry(frame, width=16,
                                        font=('Raleway', 10, 'bold'), state='disabled', bd=0,
                                        disabledbackground='lightskyblue', cursor='arrow')
         self.input_10_entry.grid(row=row + 2, column=4)
 
-    def single_independent_feature_label(self, row, right_inside_frame):
+    def single_independent_feature_label(self, row, frame):
         # Independent Feature Label
-        self.input_1 = tk.Label(right_inside_frame, text='', width=16, height=3,
+        self.input_1 = tk.Label(frame, text='', width=16, height=3,
                                 font=('Raleway', 10, 'bold'), bg='lightskyblue')
         self.input_1.grid(row=row, column=0)
 
-        self.input_2 = tk.Label(right_inside_frame, text='', width=16, height=3,
+        self.input_2 = tk.Label(frame, text='', width=16, height=3,
                                 font=('Raleway', 10, 'bold'), bg='lightskyblue')
         self.input_2.grid(row=row, column=1)
 
-        self.input_3 = tk.Label(right_inside_frame, text='', width=16, height=3,
+        self.input_3 = tk.Label(frame, text='', width=16, height=3,
                                 font=('Raleway', 10, 'bold'), bg='lightskyblue')
         self.input_3.grid(row=row, column=2)
 
-        self.input_4 = tk.Label(right_inside_frame, text='', width=16, height=3,
+        self.input_4 = tk.Label(frame, text='', width=16, height=3,
                                 font=('Raleway', 10, 'bold'), bg='lightskyblue')
         self.input_4.grid(row=row, column=3)
 
-        self.input_5 = tk.Label(right_inside_frame, text='', width=16, height=3,
+        self.input_5 = tk.Label(frame, text='', width=16, height=3,
                                 font=('Raleway', 10, 'bold'), bg='lightskyblue')
         self.input_5.grid(row=row, column=4)
 
-        self.input_6 = tk.Label(right_inside_frame, text='', width=16, height=3,
+        self.input_6 = tk.Label(frame, text='', width=16, height=3,
                                 font=('Raleway', 10, 'bold'), bg='lightskyblue')
         self.input_6.grid(row=row + 2, column=0)
 
-        self.input_7 = tk.Label(right_inside_frame, text='', width=16, height=3,
+        self.input_7 = tk.Label(frame, text='', width=16, height=3,
                                 font=('Raleway', 10, 'bold'), bg='lightskyblue')
         self.input_7.grid(row=row + 2, column=1)
 
-        self.input_8 = tk.Label(right_inside_frame, text='', width=16, height=3,
+        self.input_8 = tk.Label(frame, text='', width=16, height=3,
                                 font=('Raleway', 10, 'bold'), bg='lightskyblue')
         self.input_8.grid(row=row + 2, column=2)
 
-        self.input_9 = tk.Label(right_inside_frame, text='', width=16, height=3,
+        self.input_9 = tk.Label(frame, text='', width=16, height=3,
                                 font=('Raleway', 10, 'bold'), bg='lightskyblue')
         self.input_9.grid(row=row + 2, column=3)
 
-        self.input_10 = tk.Label(right_inside_frame, text='', width=16, height=3,
+        self.input_10 = tk.Label(frame, text='', width=16, height=3,
                                  font=('Raleway', 10, 'bold'), bg='lightskyblue')
         self.input_10.grid(row=row + 2, column=4)
 
-    def dependent_variable(self, row, right_inside_frame):
-        self.t_Button = tk.Checkbutton(right_inside_frame, text='', bd=0, indicatoron=False,
+    def file_input(self, row, frame):
+        self.browse_file = tk.Button(frame, text="Browse File", width=15, height=1,
+                                     font=('Raleway', 10, 'bold'), bg='lightskyblue',
+                                     activebackground='cornflowerblue')
+        self.browse_file.grid(row=row, column=0, padx=(65, 10), pady=(5, 0))
+
+        self.file_text = tk.Label(frame, text='Inputted File Path: ', width=15, height=1,
+                                  font=('Raleway', 12, 'bold'), bg='lightskyblue')
+        self.file_text.grid(row=row, column=1, padx=(3, 3), pady=(5, 0))
+
+        self.file_path = tk.Label(frame, text='Inputted File Path:', width=29, height=1,
+                                  font=('Raleway', 12, 'bold', 'underline'), bg='white', anchor='w')
+        self.file_path.grid(row=row, column=2, padx=(3, 65), columnspan=3, pady=(5, 0))
+
+        input_view = ttk.Treeview(frame, selectmode='browse', height=4,
+                                  show='headings',
+                                  columns=['test'])
+        input_view.grid(row=row + 1, column=0, columnspan=5, pady=(5, 0))
+
+        input_view.column("0", width=600, anchor='c')
+
+        input_scrollbar = tk.Scrollbar(frame, orient="vertical", command=input_view.yview)
+        input_view.configure(yscrollcommand=input_scrollbar.set)
+        input_scrollbar.grid(row=row + 1, column=4, sticky='ns', padx=(52, 0), pady=(6, 1))
+
+    def dependent_variable(self, row, frame):
+        self.t_Button = tk.Checkbutton(frame, text='', bd=0, indicatoron=False,
                                        font=('Raleway', 10, 'bold'), bg='lightskyblue',
                                        variable=self.aiModelFunction.t_variable, onvalue=1, offvalue=0,
                                        height=3, width=15)
         self.t_Button.grid(row=row, column=0, pady=(3, 3))
 
-        self.ah_Button = tk.Checkbutton(right_inside_frame, text='', bd=0, indicatoron=False,
+        self.ah_Button = tk.Checkbutton(frame, text='', bd=0, indicatoron=False,
                                         font=('Raleway', 10, 'bold'), bg='lightskyblue',
                                         variable=self.aiModelFunction.ah_variable, onvalue=1, offvalue=0,
                                         height=3, width=15)
         self.ah_Button.grid(row=row, column=2, pady=(3, 3))
 
-        self.rh_Button = tk.Checkbutton(right_inside_frame, text='', bd=0, indicatoron=False,
+        self.rh_Button = tk.Checkbutton(frame, text='', bd=0, indicatoron=False,
                                         font=('Raleway', 10, 'bold'), bg='lightskyblue',
                                         variable=self.aiModelFunction.rh_variable, onvalue=1, offvalue=0,
                                         height=3, width=15)
