@@ -22,15 +22,13 @@ class AIModel:
         self.RH_dataset = dataset.copy()
         self.model_dataset = dataset.copy()
 
-        #self.T_normalise, self.T_scaling, self.T_train, self.T_test = self.train_test_data(self.T_dataset, 'T', 'delete', 'delete', 'lasso')
+        self.T_normalise, self.T_scaling, self.T_train, self.T_test = self.train_test_data(self.T_dataset, 'T', 'delete', 'delete', 'lasso')
         #self.AH_normalise, self.AH_train, self.AH_test = self.train_test_data(self.AH_dataset, 'AH', 'delete', 'delete', 'none')
         #self.RH_normalise, self.RH_scaling, self.RH_train, self.RH_test = self.train_test_data(self.RH_dataset, 'RH', 'none', 'delete', 'lasso')
 
-        #self.T_model = RandomForestRegressor(n_estimators=396, max_features=1.0, criterion='friedman_mse', max_depth=6,
-        #                                     random_state=5, n_jobs=5)
-        #self.T_model.fit(self.T_train.drop(['T'], axis=1), self.T_train['T'])
-
-        test = [tree.predict(self.T_test.drop(['T'], axis=1)) for tree in self.T_model.estimators_]
+        self.T_model = RandomForestRegressor(n_estimators=396, max_features=1.0, criterion='friedman_mse', max_depth=6,
+                                             random_state=5, n_jobs=5)
+        self.T_model.fit(self.T_train.drop(['T'], axis=1), self.T_train['T'])
 
         #self.T_prediction = self.T_model.predict(self.T_test.drop(['T'], axis=1))
 

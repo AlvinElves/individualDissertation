@@ -31,6 +31,37 @@ class AIModelVis:
         #self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, 'T', 'criterion')
         #self.visualise_learning_rate(self.ai_model.T_model, self.ai_model.T_train, 'T')
 
+        # self.visualise_tree_result(self.ai_model.T_model, self.ai_model.T_test.drop(['T'], axis=1), 0)
+
+    def visualise_tree_result(self, ai_model, dataset, prediction_number):
+        tree_prediction = [decision_tree.predict(dataset) for decision_tree in ai_model.estimators_]
+        result = [element[prediction_number] for element in tree_prediction]
+
+        result_df = pd.DataFrame(result, columns=['Prediction Result'])
+
+        fig, ax = plt.subplots()
+        fig.canvas.manager.set_window_title('All Tree Prediction')
+
+        # Allow panning and zooming using a mouse
+        pan_handler = panhandler(fig, 1)
+        self.interact.zoom_factory(ax, base_scale=1.2)
+
+        result_df.plot(kind="bar", ax=ax, color='g', figsize=(12, 7))
+
+        plt.minorticks_on()
+        ax.tick_params(axis='x', which='minor', bottom='off')
+        ax.set_xlabel("Decision Tree Number")
+        ax.set_ylabel("Value")
+        ax.set_title("Decision Tree Prediction & Average Value")
+
+        plt.xlim([0, 30])
+        plt.ylim([min(result_df['Prediction Result']) - 2, max(result_df['Prediction Result']) + 2])
+
+        mean = result_df['Prediction Result'].mean()
+        ax.axhline(mean, linestyle='--')
+
+        plt.show()
+
     def visualise_hyperparameter(self, ai_model, dataset, variable, param_name):
         if param_name == 'n_estimators':
             param_range = np.arange(1, 36)

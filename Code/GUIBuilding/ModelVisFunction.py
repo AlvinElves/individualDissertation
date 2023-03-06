@@ -27,13 +27,13 @@ class ModelVisFunction:
     def choose_method(self, method, visualisation_label, variable_label, model_label, listbox, button1, button2, button3):
         if method == 'normalised':
             self.visualisation_text = 'Normalised Data'
-            self.choose_variable_text = 'Choose the Variable(s)'
+            self.choose_variable_text = 'Choose the Feature(s)'
             listbox.config(state='normal', bg='white', highlightbackground='white')
             self.choose_model_text = 'Choose the AI Model'
 
         elif method == 'outliers':
             self.visualisation_text = 'Outliers Data'
-            self.choose_variable_text = 'Choose the Variable(s)'
+            self.choose_variable_text = 'Choose the Feature(s)'
             listbox.config(state='normal', bg='white', highlightbackground='white')
             self.choose_model_text = 'Choose the AI Model'
 

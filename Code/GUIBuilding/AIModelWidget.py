@@ -13,8 +13,8 @@ class AIModelWidget:
         self.draw_line(row=1, right_inside_frame=right_inside_frame)
 
         self.heading(row=3, right_inside_frame=right_inside_frame, text=self.aiModelFunction.input_independent_type)
-        self.independent_variable_label(row=4, right_inside_frame=right_inside_frame)
-        self.independent_variable_input(row=5, right_inside_frame=right_inside_frame)
+        self.single_independent_feature_label(row=4, right_inside_frame=right_inside_frame)
+        self.single_independent_feature_input(row=5, right_inside_frame=right_inside_frame)
         self.heading(row=8, right_inside_frame=right_inside_frame, text=self.aiModelFunction.input_dependent_type)
         self.dependent_variable(row=9, right_inside_frame=right_inside_frame)
         self.draw_line(row=10, right_inside_frame=right_inside_frame)
@@ -48,11 +48,11 @@ class AIModelWidget:
 
     @staticmethod
     def heading(row, right_inside_frame, text):
-        input_type_label = tk.Label(right_inside_frame, text=text, width=50, height=1,
+        input_type_label = tk.Label(right_inside_frame, text=text, width=55, height=1,
                                     font=('Raleway', 12, 'bold'), bg='lightskyblue')
         input_type_label.grid(row=row, column=0, columnspan=5, pady=(3, 0))
 
-    def independent_variable_input(self, row, right_inside_frame):
+    def single_independent_feature_input(self, row, right_inside_frame):
         # Independent Feature Input
         input_1_entry = tk.Entry(right_inside_frame, width=16,
                                  font=('Raleway', 10, 'bold'), bg='white')
@@ -94,7 +94,7 @@ class AIModelWidget:
                                   font=('Raleway', 10, 'bold'), bg='white')
         input_10_entry.grid(row=row + 2, column=4, padx=(0, 3))
 
-    def independent_variable_label(self, row, right_inside_frame):
+    def single_independent_feature_label(self, row, right_inside_frame):
         # Independent Feature Label
         input_1 = tk.Label(right_inside_frame, text='CO(GT)', width=16, height=3,
                            font=('Raleway', 10, 'bold'), bg='lightskyblue')
