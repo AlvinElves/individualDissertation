@@ -31,7 +31,7 @@ class AIModelVis:
         #self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, 'T', 'criterion')
         #self.visualise_learning_rate(self.ai_model.T_model, self.ai_model.T_train, 'T')
 
-        # self.visualise_tree_result(self.ai_model.T_model, self.ai_model.T_test.drop(['T'], axis=1), 0)
+        #self.visualise_tree_result(self.ai_model.T_model, self.ai_model.T_test.drop(['T'], axis=1), 0)
 
     def visualise_tree_result(self, ai_model, dataset, prediction_number):
         tree_prediction = [decision_tree.predict(dataset) for decision_tree in ai_model.estimators_]
