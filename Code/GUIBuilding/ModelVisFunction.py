@@ -65,6 +65,8 @@ class ModelVisFunction:
             self.visualisation_text = 'Decision Tree'
             self.choose_variable_text = 'Choose the Tree'
             listbox.config(state='normal', bg='white', highlightbackground='white')
+            for i in range(0, 51):
+                listbox.insert('end', "test" + str(i))
             self.choose_model_text = 'Choose the AI Model'
 
         elif method == 'predicted':

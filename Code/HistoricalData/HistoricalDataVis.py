@@ -14,7 +14,7 @@ class HistoricalDataVisualisation:
         #self.plot_Bar_by_Day(self.historical_data, 'CO(GT)')
         # self.plot_line_all(self.historical_data, ['T', 'AH', 'RH'])
         # self.animated_line_graph(self.historical_data, ['T', 'AH', 'RH'])
-        # self.animated_bar_graph(self.historical_data, ['T', 'AH', 'RH'])
+        self.animated_bar_graph(self.historical_data, 'T')
 
     def animated_line_graph(self, historical_data, column):
         colours = []
@@ -57,8 +57,15 @@ class HistoricalDataVisualisation:
         colours = []
         time = []
         colour_number = 0
+        df = historical_data.grouping(['Day', 'Month', 'Year'])
+        df['Date'] = pd.to_datetime(df[['Day', 'Month', 'Year']]).dt.strftime('%m-%d')
+        """column_name = ['Date'] + [column]
+        df = df[column_name]
+        df = df.set_index('Date')"""
 
-        df = historical_data.merged_date_dataset.copy()
+        print(df)
+
+        """df = historical_data.merged_date_dataset.copy()
         df['Date'] = pd.to_datetime(df.Date.astype(str) + ' ' + df.Time.astype(str))
         column_name = ['Date'] + column
         df = df[column_name]
@@ -88,7 +95,7 @@ class HistoricalDataVisualisation:
             plt.title(str(df.index[iv].strftime('%y/%m/%d')))
 
         animator = animate.FuncAnimation(fig, test, interval=50)
-        plt.show()
+        plt.show()"""
 
     def plot_line_all(self, historical_data, y_Value):
         df = historical_data.merged_date_dataset.copy()

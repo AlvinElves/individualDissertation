@@ -5,107 +5,111 @@ class AIModelFunction:
     def __init__(self):
         self.input_independent_type = ''
         self.input_dependent_type = ''
+        self.result = ''
+        self.file_inputted = ''
 
         self.t_variable = tk.IntVar()
         self.ah_variable = tk.IntVar()
         self.rh_variable = tk.IntVar()
 
         self.view_options = 'initial'
+        self.prediction_options = False
 
-    def change_input(self, method, frame, independent_label, dependent_label, entry_input, label_input, t_Button, ah_Button, rh_Button):
-        frame.config(pady=0)
-        if method == 'single':
-            if self.view_options == 'initial':
-                self.view_options = 'single'
+    def button_config(self, method, t_Button, ah_Button, rh_Button):
+        self.t_variable = 0
+        self.ah_variable = 0
+        self.rh_variable = 0
 
-                self.entry_config('normal', entry_input, label_input)
+        t_Button.deselect()
+        ah_Button.deselect()
+        rh_Button.deselect()
 
-                self.t_variable = 0
-                self.ah_variable = 0
-                self.rh_variable = 0
-                t_Button.config(text='T Variable\n(TEMPERATURE)', state='normal', bd=2, indicatoron=True)
-                ah_Button.config(text='AH Variable\n(ABSOLUTE\nHUMIDITY)', state='normal', bd=2, indicatoron=True)
-                rh_Button.config(text='RH Variable\n(RELATIVE\nHUMIDITY)', state='normal', bd=2, indicatoron=True)
-
-                independent_label.config(text='ENTER THE INDEPENDENT FEATURES FOR SINGLE POINT INPUT')
-                dependent_label.config(text='CHOOSE THE DEPENDENT FEATURE(S) FOR PREDICTION')
-
-            elif self.view_options == 'file':
-                self.view_options = 'single'
-                independent_label.config(text='ENTER THE INDEPENDENT FEATURES FOR SINGLE POINT INPUT')
-
-                t_Button.deselect()
-                ah_Button.deselect()
-                rh_Button.deselect()
-
-        elif method == 'file':
-            if self.view_options == 'initial':
-                self.view_options = 'file'
-
-                t_Button.config(text='T Variable\n(TEMPERATURE)', state='normal', bd=2, indicatoron=True)
-                ah_Button.config(text='AH Variable\n(ABSOLUTE\nHUMIDITY)', state='normal', bd=2, indicatoron=True)
-                rh_Button.config(text='RH Variable\n(RELATIVE\nHUMIDITY)', state='normal', bd=2, indicatoron=True)
-
-                independent_label.config(text='UPLOAD A FILE WITH INDEPENDENT FEATURES FOR FILE INPUT')
-                dependent_label.config(text='CHOOSE THE DEPENDENT FEATURE(S) FOR PREDICTION')
-
-            elif self.view_options == 'single':
-                self.view_options = 'file'
-                independent_label.config(text='UPLOAD A FILE WITH INDEPENDENT FEATURES FOR FILE INPUT')
-
-                t_Button.deselect()
-                ah_Button.deselect()
-                rh_Button.deselect()
-
-    def entry_config(self, method, entry_input, label_input):
-        for entry in entry_input:
-            entry.delete(0, 'end')
-            if method == 'normal':
-                entry.config(state='normal', bd=1, cursor='xterm')
-            elif method == 'disabled':
-                entry.config(state='disabled', bd=0, disabledbackground='lightskyblue', cursor='arrow')
-
-        feature_name = ['CO(GT)', 'PT08.S1(CO)', 'NMHC(GT)', 'C6H6(GT)', 'PT08.S2(NMHC)',
-                        'NOx(GT)', 'PT08.S3(NOx)', 'NO2(GT)', 'PT08.S4(NO2)', 'PT08.S5(O3)']
-
-        if method == 'normal':
-            for i in range(0, len(label_input)):
-                label_input[i].config(text=feature_name[i])
-        elif method == 'disabled':
-            for label in label_input:
-                label.config(text='')
-
-    def clear_all(self, frame, independent_label, dependent_label, entry_input, label_input, t_Button, ah_Button, rh_Button):
-        frame.config(pady=4)
-        if self.view_options == 'single':
-            self.view_options = 'initial'
-
-            self.entry_config('disabled', entry_input, label_input)
-
-            independent_label.config(text='')
-            dependent_label.config(text='')
-            self.t_variable = 0
-            self.ah_variable = 0
-            self.rh_variable = 0
+        if method == 'disabled':
             t_Button.config(text='', state='disabled', bd=0, indicatoron=False)
-            t_Button.deselect()
             ah_Button.config(text='', state='disabled', bd=0, indicatoron=False)
-            ah_Button.deselect()
             rh_Button.config(text='', state='disabled', bd=0, indicatoron=False)
-            rh_Button.deselect()
+
+        elif method == 'normal':
+            t_Button.config(text='T Variable\n(TEMPERATURE)', state='normal', bd=2, indicatoron=True)
+            ah_Button.config(text='AH Variable\n(ABSOLUTE\nHUMIDITY)', state='normal', bd=2, indicatoron=True)
+            rh_Button.config(text='RH Variable\n(RELATIVE\nHUMIDITY)', state='normal', bd=2, indicatoron=True)
+
+    def change_input(self, method, frame, input_func, canvas, independent_label, dependent_label, entry_input, label_input,
+                     file_input, t_Button, ah_Button, rh_Button):
+        if self.view_options == 'initial':
+            canvas.destroy()
+
+        elif self.view_options == 'single':
+            self.single_destroy(entry_input, label_input)
 
         elif self.view_options == 'file':
-            self.view_options = 'initial'
+            self.file_destroy(file_input)
 
-            independent_label.config(text='')
-            dependent_label.config(text='')
+        self.button_config('normal', t_Button, ah_Button, rh_Button)
 
-            self.t_variable = 0
-            self.ah_variable = 0
-            self.rh_variable = 0
-            t_Button.config(text='', state='disabled', bd=0, indicatoron=False)
-            t_Button.deselect()
-            ah_Button.config(text='', state='disabled', bd=0, indicatoron=False)
-            ah_Button.deselect()
-            rh_Button.config(text='', state='disabled', bd=0, indicatoron=False)
-            rh_Button.deselect()
+        if method == 'single':
+            self.view_options = 'single'
+            frame.config(pady=3)
+
+            independent_label.config(text='ENTER THE INDEPENDENT FEATURES FOR SINGLE POINT INPUT')
+            dependent_label.config(text='CHOOSE THE DEPENDENT FEATURE(S) FOR PREDICTION')
+
+        elif method == 'file':
+            self.view_options = 'file'
+            frame.config(pady=5)
+
+            independent_label.config(text='UPLOAD A FILE WITH INDEPENDENT FEATURES FOR FILE INPUT')
+            dependent_label.config(text='CHOOSE THE DEPENDENT FEATURE(S) FOR PREDICTION')
+
+    def single_destroy(self, entry_input, label_input):
+        for label in label_input:
+            label.destroy()
+
+        for entry in entry_input:
+            entry.destroy()
+
+    def file_destroy(self, file_input):
+        for file in file_input:
+            file.destroy()
+
+    def result_destroy(self, result):
+        for result in result:
+            result.destroy()
+
+    def prediction(self, frame, result_label, pred_func):
+        label = tk.Label(frame, text='Loading, Please wait', foreground='green', bg='lightskyblue')
+        label.grid(row=13, column=2)
+        label.after(3000, lambda: label.destroy())
+
+        self.result = 'RESULTS'
+        self.prediction_options = True
+        result_label.config(text=self.result)
+
+    def clear_all(self, frame, canvas, canvas_func, independent_label, dependent_label, result_label, entry_input,
+                  label_input, file_input, result, t_Button, ah_Button, rh_Button):
+
+        if self.view_options == 'single':
+            self.single_destroy(entry_input, label_input)
+
+        elif self.view_options == 'file':
+            self.file_destroy(file_input)
+
+        elif self.view_options == 'initial':
+            canvas.destroy()
+
+        self.view_options = 'initial'
+
+        frame.config(pady=4)
+
+        independent_label.config(text='')
+        dependent_label.config(text='')
+        result_label.config(text='')
+
+        if self.prediction_options is True:
+            result_label.config(text='')
+            self.result_destroy(result)
+            self.prediction_options = False
+
+        self.file_inputted = ''
+
+        self.button_config('disabled', t_Button, ah_Button, rh_Button)

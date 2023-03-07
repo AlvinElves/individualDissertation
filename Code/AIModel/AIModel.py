@@ -30,7 +30,7 @@ class AIModel:
                                              random_state=5, n_jobs=5)
         self.T_model.fit(self.T_train.drop(['T'], axis=1), self.T_train['T'])
 
-        #self.T_prediction = self.T_model.predict(self.T_test.drop(['T'], axis=1))
+        self.T_prediction = self.T_model.predict(self.T_test.drop(['T'], axis=1))
 
         #self.AH_model = RandomForestRegressor(n_estimators=487, max_features=1.0, criterion='squared_error', max_depth=6,
         #                                      random_state=5, n_jobs=5)
@@ -42,7 +42,7 @@ class AIModel:
         #self.RH_model.fit(self.RH_train.drop(['RH'], axis=1), self.RH_train['RH'])
         #self.RH_prediction = self.RH_model.predict(self.RH_test.drop(['RH'], axis=1))
 
-        #self.T_actual = T_test['T']
+        self.T_actual = self.T_test['T']
         #self.AH_actual = AH_test['AH']
         #self.RH_actual = RH_test['RH']
 
