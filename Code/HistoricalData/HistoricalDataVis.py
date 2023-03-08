@@ -10,92 +10,117 @@ class HistoricalDataVisualisation:
 
         self.path = self.model_vis.create_Folder()
 
-        #self.plot_Bar_by_Month(self.historical_data, 'CO(GT)')
-        #self.plot_Bar_by_Day(self.historical_data, 'CO(GT)')
+        # self.plot_Bar_by_Month(self.historical_data, 'CO(GT)')
+        # self.plot_Bar_by_Day(self.historical_data, 'CO(GT)')
         # self.plot_line_all(self.historical_data, ['T', 'AH', 'RH'])
         # self.animated_line_graph(self.historical_data, ['T', 'AH', 'RH'])
-        self.animated_bar_graph(self.historical_data, 'T')
+        # self.animated_bar_graph(self.historical_data, 'CO(GT)')
+        # self.animated_pie_chart(self.historical_data, 'CO(GT)')
+
+    @staticmethod
+    def date_index_dataset(historical_data, column):
+        df = historical_data.grouping(['Day', 'Month', 'Year'])
+
+        df['Date'] = pd.to_datetime(df[['Day', 'Month', 'Year']]).dt.strftime('%m-%d')
+        column_name = ['Date', 'Year'] + [column]
+        df = df[column_name]
+
+        unique_year = df['Year'].unique()
+        df1 = df.loc[df['Year'] == unique_year[1]]
+        df2 = df.loc[df['Year'] == unique_year[0]]
+        merged_df = pd.merge(df1, df2, on='Date', how='left')
+        merged_df2 = pd.merge(df1, df2, on='Date', how='right')
+
+        column_str = column + '_x'
+        merged_df2 = merged_df2[merged_df2[column_str].isnull()].reset_index(drop=True)
+
+        final_df = pd.concat([merged_df, merged_df2], ignore_index=True)
+
+        column_use = ['Date'] + [column + '_x'] + [column + '_y']
+        final_df = final_df[column_use]
+        final_df.columns = ['Date', '2004', '2005']
+
+        final_df = final_df.sort_values(by='Date')
+
+        final_df[['Month', 'Day']] = final_df.Date.str.split("-", expand=True)
+        final_df['Year'] = 2002
+        final_df['Date'] = pd.to_datetime(final_df[['Day', 'Month', 'Year']]).dt.strftime('%b-%d')
+        final_df = final_df[['Date', '2004', '2005']]
+
+        final_df = final_df.set_index('Date')
+
+        max_value = max(final_df[['2004', '2005']].max(axis=1))
+
+        return final_df, max_value
 
     def animated_line_graph(self, historical_data, column):
-        colours = []
-        time = []
-        colour_number = 0
-
         df = historical_data.merged_date_dataset.copy()
         df['Date'] = pd.to_datetime(df.Date.astype(str) + ' ' + df.Time.astype(str))
         column_name = ['Date'] + column
         df = df[column_name]
         df = df.set_index('Date')
 
-        for i in range(len(df.columns)):
-            colour_number += 1
-            time.append(df.columns[i])
-            colours.append("C" + str(colour_number))
-
-        colours_legend = dict(zip(time, colours))
-        labels = list(colours_legend.keys())
-        handles = [plt.Rectangle((0, 0), width=1, height=1, color=colours_legend[label]) for label in labels]
-
         fig = plt.figure()
 
         def build(i=int):
             plt.clf()
-            p = plt.plot(df[:i].index, df[:i].values)
-            plt.legend(handles, labels)
+            plt.plot(df[:i].index, df[:i].values, label=df.columns)
+            plt.legend()
             plt.xticks(rotation=45, ha="right", rotation_mode="anchor")
             plt.subplots_adjust(bottom=0.2, top=0.9)
             plt.xlabel('Dates')
             plt.ylabel('Values')
 
-            for j in range(len(df.columns)):
-                p[j].set_color(colours[j])
-
         animator = animate.FuncAnimation(fig, build, interval=50)
         plt.show()
 
+    def animated_pie_chart(self, historical_data, column):
+        final_df, max_value = self.date_index_dataset(historical_data, column)
+
+        fig, ax = plt.subplots()
+        explode = [0.01, 0.01]
+
+        def buildpie(i):
+            def absolute_value(val):  # turn % back to the value
+                a = np.round(val / 100. * final_df.iloc[[i]].squeeze().sum(), 3)
+                if a > 0:
+                    return a
+
+            ax.clear()
+            plot = final_df.iloc[[i]].squeeze().plot.pie(y=final_df.columns, label='',
+                                                         autopct=absolute_value, explode=explode, shadow=True)
+            plot.set_title('Date of the year: ' + str(final_df.index[i]), fontsize=12)
+
+        animator = animate.FuncAnimation(fig, buildpie, interval=200)
+        plt.show()
+
     def animated_bar_graph(self, historical_data, column):
-        colours = []
-        time = []
-        colour_number = 0
-        df = historical_data.grouping(['Day', 'Month', 'Year'])
-        df['Date'] = pd.to_datetime(df[['Day', 'Month', 'Year']]).dt.strftime('%m-%d')
-        """column_name = ['Date'] + [column]
-        df = df[column_name]
-        df = df.set_index('Date')"""
-
-        print(df)
-
-        """df = historical_data.merged_date_dataset.copy()
-        df['Date'] = pd.to_datetime(df.Date.astype(str) + ' ' + df.Time.astype(str))
-        column_name = ['Date'] + column
-        df = df[column_name]
-        df = df.set_index('Date')
-
-        for i in range(len(df.columns)):
-            colour_number += 1
-            time.append(df.columns[i])
-            colours.append("C" + str(colour_number))
-
-        colours_legend = dict(zip(time, colours))
-        labels = list(colours_legend.keys())
-        handles = [plt.Rectangle((0, 0), width=1, height=1, color=colours_legend[label]) for label in labels]
+        final_df, max_value = self.date_index_dataset(historical_data, column)
 
         fig = plt.figure()
 
-        def test(i=int):
-            iv = min(i, len(df.index) - 1)
-            objects = df.max().index
+        def buildbar(i=int):
+            plt.clf()
+
+            number = min(i, len(final_df.index) - 1)
+            objects = final_df.max().index
             y_pos = np.arange(len(objects))
-            performance = df.iloc[[iv]].values.tolist()[0]
+            performance = final_df.iloc[[number]].values.tolist()[0]
 
-            plt.bar(y_pos, performance, align='center')
+            plt.bar(y_pos, performance, align='center', label=final_df.columns, color=['blue', 'orange'])
+            plt.legend()
+
             plt.xticks(y_pos, objects)
-            plt.ylabel('Values')
-            plt.xlabel('Dates')
-            plt.title(str(df.index[iv].strftime('%y/%m/%d')))
+            plt.ylabel(column + ' Values')
+            plt.xlabel('Year')
 
-        animator = animate.FuncAnimation(fig, test, interval=50)
-        plt.show()"""
+            plt.xlim(-0.5, 1.5)
+            plt.ylim(0, max_value + 0.5)
+
+            plt.title('Date of the year: ' + str(final_df.index[number]))
+
+        animator = animate.FuncAnimation(fig, buildbar, interval=100)
+        plt.show()
 
     def plot_line_all(self, historical_data, y_Value):
         df = historical_data.merged_date_dataset.copy()
@@ -152,7 +177,7 @@ class HistoricalDataVisualisation:
         fig = px.bar(month_year_data, x="Month", y=y_Value,
                      color='Year', title="Monthly Bar Graph on " + y_Value + " value")
         fig.update_layout(barmode='group')
-        #fig.write_html(self.path + "/" + "Graph.html")
+        # fig.write_html(self.path + "/" + "Graph.html")
         fig.show(config={'displayModeBar': False})
 
     def plot_Bar_by_Day(self, historical_data, y_Value):
@@ -162,7 +187,7 @@ class HistoricalDataVisualisation:
         fig = px.bar(month_year_data, x='Day', y=y_Value, facet_col="Month", facet_col_wrap=4,
                      color='Year', title="Daily Bar Graph on " + y_Value + " value")
         fig.update_layout(barmode='group')
-        #fig.write_html(self.path + "/" + "Graph.html")
+        # fig.write_html(self.path + "/" + "Graph.html")
 
         fig.show(config={'displayModeBar': False})
 

@@ -3,6 +3,7 @@ import tkinter as tk
 from GUIBuilding.FrameWidgetBuilder import left_frame_widget, right_frame_widget
 from GUIBuilding.ModelVisWidget import *
 from GUIBuilding.AIModelWidget import *
+from GUIBuilding.HomePageWidget import *
 
 
 class GUI(tk.Tk):
@@ -43,7 +44,7 @@ class GUI(tk.Tk):
 
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(PredictionPage)
+        self.show_frame(HomePage)
 
     # to display the current frame passed as parameter
     def show_frame(self, cont):
@@ -55,6 +56,8 @@ class GUI(tk.Tk):
 class HomePage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg='black')
+
+        homePageWidget = HomePageWidget()
 
         # Create left, right and inner right frames
         left_frame = tk.Frame(self, width=225, height=694, bg='royalblue', highlightbackground="darkblue",
@@ -74,6 +77,8 @@ class HomePage(tk.Frame):
                           lambda: controller.show_frame(LiveDataPage), lambda: controller.show_frame(PredictionPage),
                           lambda: controller.show_frame(AIModelPage))
         right_frame_widget(right_frame, "Home Page")
+        homePageWidget.inner_homepage_widget(right_inside_frame)
+
 
 
 # Historical Data window frame

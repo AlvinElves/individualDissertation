@@ -31,13 +31,21 @@ class AIModelVis:
         #self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, 'T', 'criterion')
         #self.visualise_learning_rate(self.ai_model.T_model, self.ai_model.T_train, 'T')
 
-        #self.visualise_tree_result(self.ai_model.T_model, self.ai_model.T_test.drop(['T'], axis=1), 0)
+        #self.visualise_tree_result(self.ai_model.T_model, self.ai_model.T_test.drop(['T'], axis=1), 'T', 0)
 
-    def visualise_tree_result(self, ai_model, dataset, prediction_number):
+    def visualise_tree_result(self, ai_model, dataset, variable, prediction_number):
+        y_label = ''
         tree_prediction = [decision_tree.predict(dataset) for decision_tree in ai_model.estimators_]
         result = [element[prediction_number] for element in tree_prediction]
 
-        result_df = pd.DataFrame(result, columns=['Prediction Result'])
+        result_df = pd.DataFrame(result, columns=['Predicted Result'])
+
+        if variable == 'T':
+            y_label = 'Temperature '
+        elif variable == 'AH':
+            y_label = 'Absolute Humidity '
+        elif variable == 'RH':
+            y_label = 'Relative Humidity '
 
         fig, ax = plt.subplots()
         fig.canvas.manager.set_window_title('All Tree Prediction')
@@ -49,16 +57,20 @@ class AIModelVis:
         result_df.plot(kind="bar", ax=ax, color='g', figsize=(12, 7))
 
         plt.minorticks_on()
+        ax.set_xticklabels(ax.get_xticks(), rotation=0)
         ax.tick_params(axis='x', which='minor', bottom='off')
         ax.set_xlabel("Decision Tree Number")
-        ax.set_ylabel("Value")
+        ax.set_ylabel(y_label + " Value")
         ax.set_title("Decision Tree Prediction & Average Value")
 
         plt.xlim([0, 30])
-        plt.ylim([min(result_df['Prediction Result']) - 2, max(result_df['Prediction Result']) + 2])
+        plt.ylim([min(result_df['Predicted Result']) - 2, max(result_df['Predicted Result']) + 2])
 
-        mean = result_df['Prediction Result'].mean()
-        ax.axhline(mean, linestyle='--')
+        mean = result_df['Predicted Result'].mean()
+        ax.axhline(mean, linestyle='--', label='Average Result')
+        #ax.axhline(mean + 1, linestyle='--', color='red', label='Predicted Result')
+
+        plt.legend()
 
         plt.show()
 

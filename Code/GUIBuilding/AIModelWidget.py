@@ -33,6 +33,7 @@ class AIModelWidget:
         self.draw_canvas(row=4, frame=self.frame)
         self.single_input(row=4, frame=self.frame)
         self.aiModelFunction.single_destroy(self.entry, self.label)
+
         self.file_input(row=4, frame=self.frame)
         self.aiModelFunction.file_destroy(self.file)
 
@@ -44,6 +45,9 @@ class AIModelWidget:
         self.result_label = self.heading(row=11, frame=self.result_frame, text=self.aiModelFunction.result)
 
         self.draw_canvas2(row=12, frame=self.result_frame)
+        self.prediction_result(row=12, frame=self.result_frame)
+        self.aiModelFunction.result_destroy(self.result)
+
         self.final_button(row=13, frame=bottom_frame)
 
     def choose_input_type(self, row, frame):

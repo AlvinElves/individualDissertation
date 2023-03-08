@@ -25,6 +25,7 @@ class ModelVisFunction:
             label.after(3000, lambda: label.destroy())
 
     def choose_method(self, method, visualisation_label, variable_label, model_label, listbox, button1, button2, button3):
+        listbox.delete(0, 'end')
         if method == 'normalised':
             self.visualisation_text = 'Normalised Data'
             self.choose_variable_text = 'Choose the Feature(s)'
@@ -103,6 +104,7 @@ class ModelVisFunction:
         variable_label.config(text=self.choose_variable_text)
         model_choose_label.config(text=self.choose_model_text)
 
+        listbox.delete(0, 'end')
         listbox.config(state='disabled', bg='lightskyblue', highlightbackground='lightskyblue')
         button1.config(text='', state='disabled', bd=0)
         button2.config(text='', state='disabled', bd=0)
