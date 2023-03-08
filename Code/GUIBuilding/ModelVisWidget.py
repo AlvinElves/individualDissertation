@@ -3,14 +3,6 @@ from Code.GUIBuilding.ModelVisFunction import *
 
 class ModelVisWidget:
     def __init__(self):
-        self.ai_model_label = None
-        self.variable_label = None
-        self.visualisation_chosen_label = None
-        self.model_chosen_label = None
-        self.list_box = None
-        self.t_button = None
-        self.ah_button = None
-        self.rh_button = None
 
         self.modelVisFunction = ModelVisFunction()
 
