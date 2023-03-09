@@ -5,6 +5,7 @@ from GUIBuilding.HistoricalPageWidget import *
 from GUIBuilding.ModelVisWidget import *
 from GUIBuilding.AIModelWidget import *
 from GUIBuilding.HomePageWidget import *
+from GUIBuilding.LivePageWidget import *
 
 
 class GUI(tk.Tk):
@@ -36,8 +37,7 @@ class GUI(tk.Tk):
         self.frames = {}
 
         # iterating through a tuple consisting of the different page layouts
-        # for F in (HomePage, HistoricalDataPage, LiveDataPage, PredictionPage, AIModelPage):
-        for F in (HistoricalDataPage, ModelVisPage):
+        for F in (HomePage, HistoricalDataPage, LiveDataPage, PredictionPage, ModelVisPage):
             frame = F(container, self)
 
             # initializing frame of that object from all the pages within the for loop
@@ -45,7 +45,7 @@ class GUI(tk.Tk):
 
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(HistoricalDataPage)
+        self.show_frame(LiveDataPage)
 
     # to display the current frame passed as parameter
     def show_frame(self, cont):
@@ -113,8 +113,9 @@ class HistoricalDataPage(tk.Frame):
 class LiveDataPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg='black')
-        #
-        # live_Data = LiveData()
+
+        livePageWidget = LivePageWidget()
+
         self.map_type = ""
         self.pollutant_type = ""
         self.last_updated = ""
@@ -125,39 +126,6 @@ class LiveDataPage(tk.Frame):
         self.data_website_label = tk.StringVar()
 
         def right_inner_frame_widget():
-            basic_button = tk.Button(right_inside_frame, text="BASIC MAP", width=25, height=3,
-                                     font=('Raleway', 10, 'bold'))
-            basic_button.grid(row=0, column=0, columnspan=3, pady=(10, 5), padx=(0, 80))
-
-            advanced_button = tk.Button(right_inside_frame, text="ADVANCED MAP", width=25, height=3,
-                                        font=('Raleway', 10, 'bold'))
-            advanced_button.grid(row=0, column=3, columnspan=2, pady=(10, 5))
-
-            top_canvas = tk.Canvas(right_inside_frame, width=767, height=30, bg='lightskyblue', highlightthickness=0)
-            top_canvas.grid(row=1, columnspan=5, pady=6)
-            top_canvas.create_line(5, 15, 762, 15, fill="black", width=10)
-
-            pm2_dot_5_button = tk.Button(right_inside_frame, text="PM2.5", width=15, height=3,
-                                         font=('Raleway', 10, 'bold'))
-            pm2_dot_5_button.grid(row=2, column=0, columnspan=2, pady=(5, 3), padx=(20, 0))
-
-            pm10_button = tk.Button(right_inside_frame, text="PM10", width=15, height=3, font=('Raleway', 10, 'bold'))
-            pm10_button.grid(row=3, column=0, columnspan=2, pady=3, padx=(20, 0))
-
-            o3_button = tk.Button(right_inside_frame, text="O3", width=15, height=3, font=('Raleway', 10, 'bold'))
-            o3_button.grid(row=4, column=0, columnspan=2, pady=3, padx=(20, 0))
-
-            no2_button = tk.Button(right_inside_frame, text="NO2", width=15, height=3, font=('Raleway', 10, 'bold'))
-            no2_button.grid(row=5, column=0, columnspan=2, pady=3, padx=(20, 0))
-
-            so2_button = tk.Button(right_inside_frame, text="SO2", width=15, height=3, font=('Raleway', 10, 'bold'))
-            so2_button.grid(row=6, column=0, columnspan=2, pady=3, padx=(20, 0))
-
-            co_button = tk.Button(right_inside_frame, text="CO", width=15, height=3, font=('Raleway', 10, 'bold'))
-            co_button.grid(row=7, column=0, columnspan=2, pady=3, padx=(20, 0))
-
-            bc_button = tk.Button(right_inside_frame, text="BC", width=15, height=3, font=('Raleway', 10, 'bold'))
-            bc_button.grid(row=8, column=0, columnspan=2, pady=(3, 5), padx=(20, 0))
 
             map_type_text = tk.Label(right_inside_frame, text="Selected Map Type: ", width=21, height=3,
                                      font=('Raleway', 10, 'bold'), bg='royalblue')
@@ -224,7 +192,7 @@ class LiveDataPage(tk.Frame):
                           lambda: controller.show_frame(LiveDataPage), lambda: controller.show_frame(PredictionPage),
                           lambda: controller.show_frame(ModelVisPage))
         right_frame_widget(right_frame, "Live Data Visualisation")
-        right_inner_frame_widget()
+        livePageWidget.inner_livepage_widget(right_inside_frame)
 
 
 # Prediction window frame
