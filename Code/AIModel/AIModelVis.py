@@ -15,7 +15,7 @@ class AIModelVis:
         self.interact = HandlingInteractions()
         self.ai_model = AIModel()
 
-        path = self.create_Folder()
+        #path = self.create_Folder()
 
         # Remove the matplotlib toolbar
         plt.rcParams['toolbar'] = 'None'
@@ -31,9 +31,9 @@ class AIModelVis:
         #self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, 'T', 'criterion')
         #self.visualise_learning_rate(self.ai_model.T_model, self.ai_model.T_train, 'T')
 
-        #self.visualise_tree_result(self.ai_model.T_model, self.ai_model.T_test.drop(['T'], axis=1), 'T', 0)
+        #self.visualise_tree_result(self.ai_model.T_model, self.ai_model.T_test.drop(['T'], axis=1), self.ai_model.T_actual, 'T', 0)
 
-    def visualise_tree_result(self, ai_model, dataset, variable, prediction_number):
+    def visualise_tree_result(self, ai_model, dataset, actual_dataset, variable, prediction_number):
         y_label = ''
         tree_prediction = [decision_tree.predict(dataset) for decision_tree in ai_model.estimators_]
         result = [element[prediction_number] for element in tree_prediction]
@@ -68,7 +68,7 @@ class AIModelVis:
 
         mean = result_df['Predicted Result'].mean()
         ax.axhline(mean, linestyle='--', label='Average Result')
-        #ax.axhline(mean + 1, linestyle='--', color='red', label='Predicted Result')
+        ax.axhline(actual_dataset[prediction_number], linestyle='--', color='red', label='Actual Result')
 
         plt.legend()
 

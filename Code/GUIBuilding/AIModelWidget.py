@@ -14,7 +14,7 @@ class AIModelWidget:
 
         self.frame = tk.Frame(right_inside_frame, width=767, height=268, bg='lightskyblue')
         self.frame.grid(row=3, column=0, columnspan=5, rowspan=4)
-        self.frame.config(pady=4)
+        self.frame.config(pady=2)
 
         dependent_frame = tk.Frame(right_inside_frame, width=767, height=268, bg='lightskyblue')
         dependent_frame.grid(row=8, column=0, columnspan=5, rowspan=2)
@@ -291,13 +291,17 @@ class AIModelWidget:
         label = tk.Label(frame, text="", width=16, height=2, bg='lightskyblue')
         label.grid(row=row, column=2, pady=(8, 5), padx=(0, 0))
 
-        row_entry = tk.Entry(frame, width=16, font=('Raleway', 10, 'bold'), bg='dodgerblue')
-        row_entry.grid(row=row, column=3, pady=(8, 5), padx=(5, 5))
-
         view_prediction_button = tk.Button(frame, text="View Prediction", width=16, height=2,
                                            font=('Raleway', 10, 'bold'), bg='dodgerblue',
                                            activebackground='cornflowerblue')
-        view_prediction_button.grid(row=row, column=4, pady=(8, 5), padx=(0, 5))
+        view_prediction_button.grid(row=row, column=3, pady=(8, 5), padx=(5, 5))
+
+        self.row_label = tk.Label(frame, text='', width=10, height=3,
+                                  font=('Raleway', 8, 'bold'), bg='lightskyblue', anchor='w')
+        self.row_label.grid(row=row, column=4, pady=(8, 5), padx=(0, 70))
+
+        self.row_entry = tk.Entry(frame, width=10, font=('Raleway', 10, 'bold'), bg='lightskyblue', relief='flat', cursor='arrow')
+        self.row_entry.grid(row=row, column=4, pady=(8, 5), padx=(80, 0))
 
     def predict(self, frame, result_label):
         if self.aiModelFunction.view_options != 'initial':
@@ -308,18 +312,19 @@ class AIModelWidget:
         if method == 'file':
             if self.aiModelFunction.view_options != 'file':
                 self.aiModelFunction.change_input('file', self.frame, self.file_input(row=4, frame=self.frame),
-                                                  self.canvas, self.independent_label, self.dependent_label,
-                                                  self.entry, self.label, self.file,
+                                                  self.canvas, self.independent_label, self.dependent_label, self.row_label,
+                                                  self.row_entry, self.entry, self.label, self.file,
                                                   self.t_Button, self.ah_Button, self.rh_Button)
         elif method == 'single':
             if self.aiModelFunction.view_options != 'single':
                 self.aiModelFunction.change_input('single', self.frame, self.single_input(row=4, frame=self.frame),
-                                                  self.canvas, self.independent_label, self.dependent_label,
-                                                  self.entry, self.label, self.file,
+                                                  self.canvas, self.independent_label, self.dependent_label, self.row_label,
+                                                  self.row_entry, self.entry, self.label, self.file,
                                                   self.t_Button, self.ah_Button, self.rh_Button)
 
     def clear(self):
         if self.aiModelFunction.view_options != 'initial':
             self.aiModelFunction.clear_all(self.frame, self.canvas, self.draw_canvas(row=4, frame=self.frame),
-                                           self.independent_label, self.dependent_label, self.result_label, self.entry,
-                                           self.label, self.file, self.result, self.t_Button, self.ah_Button, self.rh_Button)
+                                           self.independent_label, self.dependent_label, self.result_label, self.row_label,
+                                           self.row_entry, self.entry, self.label, self.file, self.result, self.t_Button,
+                                           self.ah_Button,  self.rh_Button)

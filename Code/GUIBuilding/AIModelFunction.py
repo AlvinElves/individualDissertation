@@ -3,6 +3,7 @@ import tkinter as tk
 
 class AIModelFunction:
     def __init__(self):
+
         self.input_independent_type = ''
         self.input_dependent_type = ''
         self.result = ''
@@ -34,8 +35,8 @@ class AIModelFunction:
             ah_Button.config(text='AH Variable\n(ABSOLUTE\nHUMIDITY)', state='normal', bd=2, indicatoron=True)
             rh_Button.config(text='RH Variable\n(RELATIVE\nHUMIDITY)', state='normal', bd=2, indicatoron=True)
 
-    def change_input(self, method, frame, input_func, canvas, independent_label, dependent_label, entry_input, label_input,
-                     file_input, t_Button, ah_Button, rh_Button):
+    def change_input(self, method, frame, input_func, canvas, independent_label, dependent_label, row_label, row_entry, entry_input,
+                     label_input, file_input, t_Button, ah_Button, rh_Button):
         if self.view_options == 'initial':
             canvas.destroy()
 
@@ -49,17 +50,21 @@ class AIModelFunction:
 
         if method == 'single':
             self.view_options = 'single'
-            frame.config(pady=3)
+            frame.config(pady=1)
 
             independent_label.config(text='ENTER THE INDEPENDENT FEATURES FOR SINGLE POINT INPUT')
             dependent_label.config(text='CHOOSE THE DEPENDENT FEATURE(S) FOR PREDICTION')
+            row_label.config(text='')
+            row_entry.config(bg='lightskyblue', relief='flat', cursor='arrow')
 
         elif method == 'file':
             self.view_options = 'file'
-            frame.config(pady=5)
+            frame.config(pady=3)
 
             independent_label.config(text='UPLOAD A FILE WITH INDEPENDENT FEATURES FOR FILE INPUT')
             dependent_label.config(text='CHOOSE THE DEPENDENT FEATURE(S) FOR PREDICTION')
+            row_label.config(text='Enter the\nRow to View\nPrediction:')
+            row_entry.config(bg='dodgerblue', relief='sunken', cursor='xterm')
 
     def single_destroy(self, entry_input, label_input):
         for label in label_input:
@@ -85,8 +90,8 @@ class AIModelFunction:
         self.prediction_options = True
         result_label.config(text=self.result)
 
-    def clear_all(self, frame, canvas, canvas_func, independent_label, dependent_label, result_label, entry_input,
-                  label_input, file_input, result, t_Button, ah_Button, rh_Button):
+    def clear_all(self, frame, canvas, canvas_func, independent_label, dependent_label, result_label, row_label, row_entry,
+                  entry_input, label_input, file_input, result, t_Button, ah_Button, rh_Button):
 
         if self.view_options == 'single':
             self.single_destroy(entry_input, label_input)
@@ -99,11 +104,13 @@ class AIModelFunction:
 
         self.view_options = 'initial'
 
-        frame.config(pady=4)
+        frame.config(pady=2)
 
         independent_label.config(text='')
         dependent_label.config(text='')
         result_label.config(text='')
+        row_label.config(text='')
+        row_entry.config(bg='lightskyblue', relief='flat', cursor='arrow')
 
         if self.prediction_options is True:
             result_label.config(text='')

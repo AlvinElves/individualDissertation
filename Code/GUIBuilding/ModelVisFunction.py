@@ -8,6 +8,11 @@ class ModelVisFunction:
         self.choose_variable_text = ''
         self.choose_model_text = ''
 
+        self.visualise_variable = ['CO(GT)', 'PT08.S1(CO)', 'NMHC(GT)', 'C6H6(GT)', 'PT08.S2(NMHC)', 'NOx(GT)',
+                                   'PT08.S3(NOx)', 'NO2(GT)', 'PT08.S4(NO2)', 'PT08.S5(O3)']
+        self.hyperparameter = ['Number Of Trees', 'Max Depth Of Tree', 'Max Features',
+                               'Splitting Method']
+
     def visualise(self, right_inside_frame, method):
         if self.visualisation_text == '':
             label = tk.Label(right_inside_frame, text='Please Choose the\ntype of Visualisation', foreground='red',
@@ -15,7 +20,7 @@ class ModelVisFunction:
             label.grid(row=9, column=1)
             label.after(3000, lambda: label.destroy())
         elif self.model_text == '':
-            label = tk.Label(right_inside_frame, text='Please Choose the\nModel to Visualise', foreground='red',
+            label = tk.Label(right_inside_frame, text='Please Choose the\nAI Model to Visualise', foreground='red',
                              bg='lightskyblue')
             label.grid(row=9, column=1)
             label.after(3000, lambda: label.destroy())
@@ -30,12 +35,16 @@ class ModelVisFunction:
             self.visualisation_text = 'Normalised Data'
             self.choose_variable_text = 'Choose the Feature(s)'
             listbox.config(state='normal', bg='white', highlightbackground='white')
+            for item in self.visualise_variable:
+                listbox.insert('end', item)
             self.choose_model_text = 'Choose the AI Model'
 
         elif method == 'outliers':
             self.visualisation_text = 'Outliers Data'
             self.choose_variable_text = 'Choose the Feature(s)'
             listbox.config(state='normal', bg='white', highlightbackground='white')
+            for item in self.visualise_variable:
+                listbox.insert('end', item)
             self.choose_model_text = 'Choose the AI Model'
 
         elif method == 'feature':
@@ -60,6 +69,8 @@ class ModelVisFunction:
             self.visualisation_text = 'Hyperparameter Tuning'
             self.choose_variable_text = 'Choose the\nHyperparameter'
             listbox.config(state='normal', bg='white', highlightbackground='white')
+            for item in self.hyperparameter:
+                listbox.insert('end', item)
             self.choose_model_text = 'Choose the AI Model'
 
         elif method == 'tree':

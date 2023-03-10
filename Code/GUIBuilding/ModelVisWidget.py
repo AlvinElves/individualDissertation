@@ -143,7 +143,7 @@ class ModelVisWidget:
 
     def choose_visualise_variable(self, row, frame):
         # Choose Variable Button and ListBox
-        variable_box = tk.Listbox(frame, height=19, width=25, selectmode='multiple',
+        variable_box = tk.Listbox(frame, height=19, width=25, selectmode='single',
                                   activestyle='none', justify='center', bg='lightskyblue', highlightbackground='lightskyblue',
                                   relief='flat', bd=0, state='disabled')
         variable_box.grid(row=row + 1, column=0, rowspan=4)

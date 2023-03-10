@@ -61,7 +61,7 @@ def left_frame_widget(left_frame, page, command1, command2, command3, command4, 
         live_vis_button.bind("<Leave>", on_leave)
 
     background_colour, active_colour = check_page(page, 'prediction')
-    predict_button = tk.Button(left_frame, text="PREDICTION", fg='lightsteelblue', bg=background_colour, width=25,
+    predict_button = tk.Button(left_frame, text="AI PREDICTION", fg='lightsteelblue', bg=background_colour, width=25,
                                height=4, bd=0, activebackground=active_colour,
                                activeforeground='royalblue', font=('Raleway', 10, 'bold'),
                                command=command4)

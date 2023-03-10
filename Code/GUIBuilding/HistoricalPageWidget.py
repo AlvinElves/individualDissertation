@@ -23,31 +23,31 @@ class HistoricalPageWidget:
         all_data_button = tk.Button(frame, text="ALL DATA\n(LINE GRAPH)", width=22, height=2,
                                     font=('Raleway', 10, 'bold'), bg='lightskyblue',
                                     activebackground='cornflowerblue',
-                                    command=lambda: self.historicalPageFunction.choose_method('normal', 'line',
+                                    command=lambda: self.historicalPageFunction.choose_method('normal', 'all',
                                                                                               self.variable_label,
                                                                                               self.visualisation_chosen_label,
                                                                                               self.vis_type_chosen_label,
-                                                                                              self.variable_box))
+                                                                                              self.variable_box, self.save_entry))
         all_data_button.grid(row=row, column=1, pady=(10, 0), padx=(5, 5))
 
         daily_button = tk.Button(frame, text="DAILY DATA\n(BAR GRAPH)", width=22, height=2,
                                  font=('Raleway', 10, 'bold'), bg='lightskyblue',
                                  activebackground='cornflowerblue',
-                                 command=lambda: self.historicalPageFunction.choose_method('normal', 'bar',
+                                 command=lambda: self.historicalPageFunction.choose_method('normal', 'daily',
                                                                                            self.variable_label,
                                                                                            self.visualisation_chosen_label,
                                                                                            self.vis_type_chosen_label,
-                                                                                           self.variable_box))
+                                                                                           self.variable_box, self.save_entry))
         daily_button.grid(row=row, column=2, pady=(10, 0), padx=(5, 5))
 
-        monthly_button = tk.Button(frame, text="MONTHLY DATA\n(PIE CHART)", width=22, height=2,
+        monthly_button = tk.Button(frame, text="MONTHLY DATA\n(BAR GRAPH)", width=22, height=2,
                                    font=('Raleway', 10, 'bold'), bg='lightskyblue',
                                    activebackground='cornflowerblue',
-                                   command=lambda: self.historicalPageFunction.choose_method('normal', 'pie',
+                                   command=lambda: self.historicalPageFunction.choose_method('normal', 'monthly',
                                                                                              self.variable_label,
                                                                                              self.visualisation_chosen_label,
                                                                                              self.vis_type_chosen_label,
-                                                                                             self.variable_box))
+                                                                                             self.variable_box, self.save_entry))
         monthly_button.grid(row=row, column=3, pady=(10, 0), padx=(5, 5))
 
     def animated_visualisation(self, row, frame):
@@ -63,7 +63,7 @@ class HistoricalPageWidget:
                                                                                                 self.variable_label,
                                                                                                 self.visualisation_chosen_label,
                                                                                                 self.vis_type_chosen_label,
-                                                                                                self.variable_box))
+                                                                                                self.variable_box, self.save_entry))
         line_graph_button.grid(row=row, column=1, pady=(10, 0), padx=(5, 5))
 
         bar_graph_button = tk.Button(frame, text="DAY COMPARISON\n(BAR GRAPH)", width=22, height=2,
@@ -73,7 +73,7 @@ class HistoricalPageWidget:
                                                                                                self.variable_label,
                                                                                                self.visualisation_chosen_label,
                                                                                                self.vis_type_chosen_label,
-                                                                                               self.variable_box))
+                                                                                               self.variable_box, self.save_entry))
         bar_graph_button.grid(row=row, column=2, pady=(10, 0), padx=(5, 5))
 
         pie_chart_button = tk.Button(frame, text="DAY COMPARISON\n(PIE CHART)", width=22, height=2,
@@ -83,7 +83,7 @@ class HistoricalPageWidget:
                                                                                                self.variable_label,
                                                                                                self.visualisation_chosen_label,
                                                                                                self.vis_type_chosen_label,
-                                                                                               self.variable_box))
+                                                                                               self.variable_box, self.save_entry))
         pie_chart_button.grid(row=row, column=3, pady=(10, 0), padx=(5, 5))
 
     @staticmethod
@@ -99,7 +99,7 @@ class HistoricalPageWidget:
                                        height=3, font=('Raleway', 10, 'bold'), bg='lightskyblue')
         self.variable_label.grid(row=row, column=0)
 
-        self.variable_box = tk.Listbox(frame, height=19, width=25, selectmode='multiple',
+        self.variable_box = tk.Listbox(frame, height=12, width=25, selectmode='multiple', highlightthickness=0,
                                        activestyle='none', justify='center', bg='lightskyblue',
                                        highlightbackground='lightskyblue',
                                        relief='flat', bd=0, state='disabled')
@@ -113,56 +113,63 @@ class HistoricalPageWidget:
 
         vis_type_chosen_text = tk.Label(frame, text="Types of Visualisation: ", width=21, height=3,
                                         font=('Raleway', 10, 'bold'), bg='lightskyblue')
-        vis_type_chosen_text.grid(row=row + 1, column=2)
+        vis_type_chosen_text.grid(row=row + 1, column=2, pady=(10, 10))
 
         self.vis_type_chosen_label = tk.Label(frame,
                                               text=self.historicalPageFunction.visualisation_type_text, width=21,
                                               height=2,
                                               font=('Raleway', 10, 'bold'), bg='royalblue')
-        self.vis_type_chosen_label.grid(row=row + 1, column=3)
+        self.vis_type_chosen_label.grid(row=row + 1, column=3, pady=(10, 10))
 
         visualisation_chosen_text = tk.Label(frame, text="Visualisation Chosen: ", width=21, height=3,
                                              font=('Raleway', 10, 'bold'), bg='lightskyblue')
-        visualisation_chosen_text.grid(row=row + 2, column=2)
+        visualisation_chosen_text.grid(row=row + 2, column=2, pady=(10, 10))
 
         self.visualisation_chosen_label = tk.Label(frame,
                                                    text=self.historicalPageFunction.visualisation_text,
                                                    width=21,
                                                    height=2,
                                                    font=('Raleway', 10, 'bold'), bg='royalblue')
-        self.visualisation_chosen_label.grid(row=row + 2, column=3)
+        self.visualisation_chosen_label.grid(row=row + 2, column=3, pady=(10, 10))
 
         save_text = tk.Label(frame, text="Name of File to Save: ", width=21, height=3,
                              font=('Raleway', 10, 'bold'), bg='lightskyblue')
-        save_text.grid(row=row + 3, column=2)
+        save_text.grid(row=row + 3, column=2, pady=(10, 10))
 
-        save_entry = tk.Entry(frame, width=24, font=('Raleway', 10, 'bold'), bg='royalblue')
-        save_entry.grid(row=row + 3, column=3)
+        self.save_entry = tk.Entry(frame, width=24, font=('Raleway', 10, 'bold'), bg='royalblue')
+        self.save_entry.grid(row=row + 3, column=3, pady=(10, 10))
 
     def download_visualise_button(self, row, frame):
         download_dataset_button = tk.Button(frame, text="Download Dataset\nUsed in Visualisation",
                                             width=21,
                                             height=2, font=('Raleway', 10, 'bold'), bg='dodgerblue',
-                                            activebackground='cornflowerblue')
-        download_dataset_button.grid(row=row, column=2, padx=(4, 2))
+                                            activebackground='cornflowerblue',
+                                            command=lambda: self.historicalPageFunction.visualise(frame,
+                                                                                                  self.variable_box,
+                                                                                                  self.save_entry,
+                                                                                                  'dataset'))
+        download_dataset_button.grid(row=row, column=2, padx=(4, 2), pady=(10, 10))
 
         save_vis_button = tk.Button(frame, text="Save Visualisation", width=21, height=2,
                                     font=('Raleway', 10, 'bold'), bg='dodgerblue',
                                     activebackground='cornflowerblue',
-                                    command=lambda: self.historicalPageFunction.visualise(frame, 'save'))
-        save_vis_button.grid(row=row, column=3, padx=(2, 2))
+                                    command=lambda: self.historicalPageFunction.visualise(frame, self.variable_box,
+                                                                                          self.save_entry,
+                                                                                          'save'))
+        save_vis_button.grid(row=row, column=3, padx=(2, 2), pady=(10, 10))
 
         clear_button = tk.Button(frame, text="Clear All", width=21, height=2,
                                  font=('Raleway', 10, 'bold'), bg='dodgerblue', activebackground='cornflowerblue',
                                  command=lambda: self.historicalPageFunction.clear(self.variable_label,
                                                                                    self.visualisation_chosen_label,
                                                                                    self.vis_type_chosen_label,
-                                                                                   self.variable_box))
-        clear_button.grid(row=row + 1, column=2, padx=(4, 2), pady=(0, 11))
+                                                                                   self.variable_box, self.save_entry))
+        clear_button.grid(row=row + 1, column=2, padx=(4, 2), pady=(20, 11))
 
-        visualise_button = tk.Button(frame, text="Visualise the Model", width=21, height=2,
+        visualise_button = tk.Button(frame, text="Visualise the\nHistorical Data", width=21, height=2,
                                      font=('Raleway', 10, 'bold'), bg='dodgerblue',
                                      activebackground='cornflowerblue',
-                                     command=lambda: self.historicalPageFunction.visualise(frame,
+                                     command=lambda: self.historicalPageFunction.visualise(frame, self.variable_box,
+                                                                                           self.save_entry,
                                                                                            'visualise'))
-        visualise_button.grid(row=row + 1, column=3, padx=(2, 2), pady=(0, 11))
+        visualise_button.grid(row=row + 1, column=3, padx=(2, 2), pady=(20, 11))

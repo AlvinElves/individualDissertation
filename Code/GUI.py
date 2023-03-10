@@ -1,11 +1,11 @@
 import tkinter as tk
 
 from GUIBuilding.FrameWidgetBuilder import left_frame_widget, right_frame_widget
-from GUIBuilding.HistoricalPageWidget import *
-from GUIBuilding.ModelVisWidget import *
-from GUIBuilding.AIModelWidget import *
 from GUIBuilding.HomePageWidget import *
+from GUIBuilding.HistoricalPageWidget import *
 from GUIBuilding.LivePageWidget import *
+from GUIBuilding.AIModelWidget import *
+from GUIBuilding.ModelVisWidget import *
 
 
 class GUI(tk.Tk):
@@ -45,7 +45,7 @@ class GUI(tk.Tk):
 
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(LiveDataPage)
+        self.show_frame(HistoricalDataPage)
 
     # to display the current frame passed as parameter
     def show_frame(self, cont):
@@ -66,7 +66,7 @@ class HomePage(tk.Frame):
         left_frame.grid(row=0, column=0, padx=(2, 0), pady=3)
 
         right_frame = tk.Frame(self, width=865, height=694, bg='deepskyblue', highlightbackground="darkblue",
-                               highlightthickness=5)
+                               highlightthickness=5, highlightcolor='darkblue')
         right_frame.grid(row=0, column=1, padx=(0, 2), pady=3)
 
         right_inside_frame = tk.Frame(right_frame, width=767, height=583, bg='lightskyblue')
@@ -94,7 +94,7 @@ class HistoricalDataPage(tk.Frame):
         left_frame.grid(row=0, column=0, padx=(2, 0), pady=3)
 
         right_frame = tk.Frame(self, width=865, height=694, bg='deepskyblue', highlightbackground="darkblue",
-                               highlightthickness=5)
+                               highlightthickness=5, highlightcolor='darkblue')
         right_frame.grid(row=0, column=1, padx=(0, 2), pady=3)
 
         right_inside_frame = tk.Frame(right_frame, width=767, height=583, bg='lightskyblue')
@@ -116,71 +116,13 @@ class LiveDataPage(tk.Frame):
 
         livePageWidget = LivePageWidget()
 
-        self.map_type = ""
-        self.pollutant_type = ""
-        self.last_updated = ""
-        self.data_website = ""
-        self.map_type_label = tk.StringVar()
-        self.pollutant_type_label = tk.StringVar()
-        self.last_updated_label = tk.StringVar()
-        self.data_website_label = tk.StringVar()
-
-        def right_inner_frame_widget():
-
-            map_type_text = tk.Label(right_inside_frame, text="Selected Map Type: ", width=21, height=3,
-                                     font=('Raleway', 10, 'bold'), bg='royalblue')
-            map_type_text.grid(row=2, column=2, padx=(0, 40))
-
-            map_type_label = tk.Label(right_inside_frame, textvariable=self.map_type_label, width=40, height=3,
-                                      font=('Raleway', 10, 'bold'), bg='royalblue')
-            map_type_label.grid(row=2, column=3, columnspan=2, padx=(0, 19))
-
-            button_text = tk.Label(right_inside_frame, text="Selected Pollutant:", width=21, height=3,
-                                   font=('Raleway', 10, 'bold'), bg='royalblue')
-            button_text.grid(row=3, column=2, padx=(0, 40))
-
-            button_label = tk.Label(right_inside_frame, textvariable=self.pollutant_type_label, width=40, height=3,
-                                    font=('Raleway', 10, 'bold'), bg='royalblue')
-            button_label.grid(row=3, column=3, columnspan=2, padx=(0, 19))
-
-            last_update_text = tk.Label(right_inside_frame, text="Last update: ", width=21, height=3,
-                                        font=('Raleway', 10, 'bold'), bg='royalblue')
-            last_update_text.grid(row=4, column=2, padx=(0, 40))
-
-            last_update_label = tk.Label(right_inside_frame, textvariable=self.last_updated_label, width=40, height=3,
-                                         font=('Raleway', 10, 'bold'), bg='royalblue')
-            last_update_label.grid(row=4, column=3, columnspan=2, padx=(0, 19))
-
-            data_url_text = tk.Label(right_inside_frame, text="Dataset website:", width=21, height=3,
-                                     font=('Raleway', 10, 'bold'), bg='royalblue')
-            data_url_text.grid(row=5, column=2, padx=(0, 40))
-
-            data_url_label = tk.Label(right_inside_frame, textvariable=self.data_website_label, width=40, height=3,
-                                      font=('Raleway', 10, 'bold'), bg='royalblue')
-            data_url_label.grid(row=5, column=3, columnspan=2, padx=(0, 19))
-
-            download_excel_button = tk.Button(right_inside_frame, text="Download", width=25, height=3,
-                                              font=('Raleway', 10, 'bold'))
-            download_excel_button.grid(row=6, column=2, padx=(0, 5))
-
-            clear_button = tk.Button(right_inside_frame, text="Clear", width=25, height=3, font=('Raleway', 10, 'bold'))
-            clear_button.grid(row=6, column=3, columnspan=2)
-
-            refresh_button = tk.Button(right_inside_frame, text="Refresh", width=25, height=3,
-                                       font=('Raleway', 10, 'bold'))
-            refresh_button.grid(row=7, column=2, padx=(0, 5))
-
-            visualise_button = tk.Button(right_inside_frame, text="Visualise", width=25, height=3,
-                                         font=('Raleway', 10, 'bold'))
-            visualise_button.grid(row=7, column=3, columnspan=2)
-
         # Create left, right and inner right frames
         left_frame = tk.Frame(self, width=225, height=694, bg='royalblue', highlightbackground="darkblue",
                               highlightthickness=5)
         left_frame.grid(row=0, column=0, padx=(2, 0), pady=3)
 
         right_frame = tk.Frame(self, width=865, height=694, bg='deepskyblue', highlightbackground="darkblue",
-                               highlightthickness=5)
+                               highlightthickness=5, highlightcolor='darkblue')
         right_frame.grid(row=0, column=1, padx=(0, 2), pady=3)
 
         right_inside_frame = tk.Frame(right_frame, width=767, height=583, bg='lightskyblue')
@@ -208,7 +150,7 @@ class PredictionPage(tk.Frame):
         left_frame.grid(row=0, column=0, padx=(2, 0), pady=3)
 
         right_frame = tk.Frame(self, width=865, height=694, bg='deepskyblue', highlightbackground="darkblue",
-                               highlightthickness=5)
+                               highlightthickness=5, highlightcolor='darkblue')
         right_frame.grid(row=0, column=1, padx=(0, 2), pady=3)
 
         right_inside_frame = tk.Frame(right_frame, width=767, height=584, bg='lightskyblue')
@@ -236,7 +178,7 @@ class ModelVisPage(tk.Frame):
         left_frame.grid(row=0, column=0, padx=(2, 0), pady=3)
 
         right_frame = tk.Frame(self, width=865, height=694, bg='deepskyblue', highlightbackground="darkblue",
-                               highlightthickness=5)
+                               highlightthickness=5, highlightcolor='darkblue')
         right_frame.grid(row=0, column=1, padx=(0, 2), pady=3)
 
         right_inside_frame = tk.Frame(right_frame, width=767, height=584, bg='lightskyblue')

@@ -13,8 +13,21 @@ class HistoricalData:
         self.get_data_from_excel()
         self.data_cleaning()
 
+    def create_folder(self, name):
+        new_directory = name  # New folder name
+        path = os.path.dirname(os.getcwd())  # Get current file path
+
+        data_path = os.path.join(path, new_directory)
+
+        # Create new folder
+        if not os.path.exists(data_path):
+            os.mkdir(data_path)
+
+        return data_path
+
     def grouping(self, group_by_column):
-        return self.historical_dataset.groupby(group_by_column, as_index=False).mean(numeric_only=True).reset_index(drop=True)
+        return self.historical_dataset.groupby(group_by_column, as_index=False).mean(numeric_only=True).reset_index(
+            drop=True)
 
     def split_date(self):
         # Split the date into day month and year column and drop the Date column
@@ -50,21 +63,14 @@ class HistoricalData:
 
         self.split_date()
 
-        new_directory = "CleanedDataset"  # New folder name
-        path = os.path.dirname(os.path.dirname(os.getcwd()))  # Get current file path
-
-        data_path = os.path.join(path, new_directory)
-
-        # Create new folder
-        if not os.path.exists(data_path):
-            os.mkdir(data_path)
+        data_path = self.create_folder('CleanedDataset')
 
         # Put it into an Excel file to visualise using tableau or excel
         self.historical_dataset.to_excel(data_path + '/CleanedHistoricalData.xlsx', index=False)
         self.merged_date_dataset.to_excel(data_path + '/MergedHistoricalData.xlsx', index=False)
 
     def get_data_from_excel(self):
-        self.historical_dataset = pd.read_excel("../../Dataset/AirQualityUCI.xlsx")
+        self.historical_dataset = pd.read_excel("../Dataset/AirQualityUCI.xlsx")
         self.original_dataset = self.historical_dataset.copy()
 
 

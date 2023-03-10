@@ -1,25 +1,117 @@
 import tkinter as tk
+from Code.HistoricalData.HistoricalDataVis import *
 
 
 class HistoricalPageFunction:
     def __init__(self):
+        self.historicalVis = HistoricalDataVisualisation()
+
         self.variable_text = ''
         self.visualisation_text = ''
         self.visualisation_type_text = ''
+        self.visualise_variable = ['T (Temperature)', 'AH (Absolute Humidity)', 'RH (Relative Humidity)', 'CO(GT)', 'PT08.S1(CO)',
+                                   'C6H6(GT)', 'PT08.S2(NMHC)', 'NOx(GT)', 'PT08.S3(NOx)', 'NO2(GT)', 'PT08.S4(NO2)', 'PT08.S5(O3)']
 
-    def visualise(self, right_inside_frame, method):
+    def get_listbox(self, listbox):
+        items = []
+        index = listbox.curselection()
+        for i in index:
+            result = listbox.get(i)
+            if result == 'T (Temperature)':
+                result = 'T'
+            elif result == 'AH (Absolute Humidity)':
+                result = 'AH'
+            elif result == 'RH (Relative Humidity)':
+                result = 'RH'
+
+            items.append(result)
+
+        return items
+
+    def visualise(self, right_inside_frame, listbox, entry, method):
+        features, checked_passed, file_name, file_passed = self.check_filename(right_inside_frame, listbox, entry, method)
+
+        if checked_passed:
+            if self.visualisation_type_text == 'Animated':
+                if self.visualisation_text == 'Line Graph':
+                    dataset = self.historicalVis.animated_line_graph(self.historicalVis.historical_data, features, method)
+
+                elif self.visualisation_text == 'Bar Graph':
+                    dataset = self.historicalVis.animated_bar_graph(self.historicalVis.historical_data, features[0], method)
+
+                elif self.visualisation_text == 'Pie Chart':
+                    dataset = self.historicalVis.animated_pie_chart(self.historicalVis.historical_data, features[0], method)
+
+            elif self.visualisation_type_text == 'Normal':
+                if self.visualisation_text == 'All Data':
+                    dataset = self.historicalVis.plot_line_all(self.historicalVis.historical_data, features, method)
+
+                elif self.visualisation_text == 'Daily Data':
+                    dataset = self.historicalVis.plot_Bar_by_Day(self.historicalVis.historical_data, features[0], method)
+
+                elif self.visualisation_text == 'Monthly Data':
+                    dataset = self.historicalVis.plot_Bar_by_Month(self.historicalVis.historical_data, features[0], method)
+
+            if method == 'dataset':
+                if file_passed:
+                    path = self.historicalVis.historical_data.create_folder('SavedDataset')
+                    try:
+                        dataset.to_excel(path + '/' + file_name + '.xlsx', index=False)
+                    except:
+                        label = tk.Label(right_inside_frame, text='Please Enter a\n Valid Filename', foreground='red',
+                                         bg='lightskyblue')
+                        label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
+                        label.after(3000, lambda: label.destroy())
+
+    def check_filename(self, right_inside_frame, listbox, entry, method):
+        features, checked_passed = self.check_visualise(right_inside_frame, listbox, method)
+        file_name = entry.get()
+        file_passed = False
+
+        if checked_passed and method == 'dataset':
+            if file_name == '':
+                label = tk.Label(right_inside_frame, text='Please Enter a\nFilename to Save', foreground='red',
+                                 bg='lightskyblue')
+                label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
+                label.after(3000, lambda: label.destroy())
+                file_passed = False
+
+            else:
+                label = tk.Label(right_inside_frame, text='Saving the File', foreground='green', bg='lightskyblue')
+                label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
+                label.after(3000, lambda: label.destroy())
+                file_passed = True
+
+        return features, checked_passed, file_name, file_passed
+
+    def check_visualise(self, right_inside_frame, listbox, method):
+        variables = self.get_listbox(listbox)
         if self.visualisation_text == '':
             label = tk.Label(right_inside_frame, text='Please Choose the\ntype of Visualisation', foreground='red',
                              bg='lightskyblue')
             label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
             label.after(3000, lambda: label.destroy())
-        else:
-            label = tk.Label(right_inside_frame, text='Loading, Please wait', foreground='green', bg='lightskyblue')
+            checked = False
+
+        elif not variables:
+            label = tk.Label(right_inside_frame, text='Please Choose the\nVariable(s) to Visualise', foreground='red',
+                             bg='lightskyblue')
             label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
             label.after(3000, lambda: label.destroy())
+            checked = False
 
-    def choose_method(self, vis_type, method, variable_label, visualisation_label, vis_type_label, listbox):
+        else:
+            checked = True
+            if method != 'dataset':
+                label = tk.Label(right_inside_frame, text='Loading, Please wait', foreground='green', bg='lightskyblue')
+                label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
+                label.after(3000, lambda: label.destroy())
+
+        return variables, checked
+
+    def choose_method(self, vis_type, method, variable_label, visualisation_label, vis_type_label, listbox, entry):
         listbox.delete(0, 'end')
+        entry.delete(0, 'end')
 
         if vis_type == 'animated':
             self.visualisation_type_text = 'Animated'
@@ -42,14 +134,29 @@ class HistoricalPageFunction:
             self.variable_text = 'Choose the Variable\nto Visualise'
             listbox.config(state='normal', bg='white', highlightbackground='white', selectmode='single')
 
-        for i in range(0, 51):
-            listbox.insert('end', "test" + str(i))
+        elif method == 'all':
+            self.visualisation_text = 'All Data'
+            self.variable_text = 'Choose the Variable(s)\nto Visualise'
+            listbox.config(state='normal', bg='white', highlightbackground='white', selectmode='multiple')
+
+        elif method == 'daily':
+            self.visualisation_text = 'Daily Data'
+            self.variable_text = 'Choose the Variable\nto Visualise'
+            listbox.config(state='normal', bg='white', highlightbackground='white', selectmode='single')
+
+        elif method == 'monthly':
+            self.visualisation_text = 'Monthly Data'
+            self.variable_text = 'Choose the Variable\nto Visualise'
+            listbox.config(state='normal', bg='white', highlightbackground='white', selectmode='single')
+
+        for item in self.visualise_variable:
+            listbox.insert('end', item)
 
         variable_label.config(text=self.variable_text)
         visualisation_label.config(text=self.visualisation_text)
         vis_type_label.config(text=self.visualisation_type_text)
 
-    def clear(self, variable_label, visualisation_label, vis_type_label, listbox):
+    def clear(self, variable_label, visualisation_label, vis_type_label, listbox, entry):
         self.visualisation_text = ''
         self.variable_text = ''
         self.visualisation_type_text = ''
@@ -60,3 +167,5 @@ class HistoricalPageFunction:
 
         listbox.delete(0, 'end')
         listbox.config(state='disabled', bg='lightskyblue', highlightbackground='lightskyblue')
+
+        entry.delete(0, 'end')

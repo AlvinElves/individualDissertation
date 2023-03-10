@@ -252,7 +252,7 @@ class LivePageWidget:
                                                                              self.most_frequent_button))
         clear_button.grid(row=row + 1, column=2, padx=(4, 2), pady=(0, 2))
 
-        visualise_button = tk.Button(frame, text="Visualise the Model", width=21, height=2,
+        visualise_button = tk.Button(frame, text="Visualise the\nLive Data", width=21, height=2,
                                      font=('Raleway', 10, 'bold'), bg='dodgerblue',
                                      activebackground='cornflowerblue',
                                      command=lambda: self.livePageFunction.visualise(frame, 'visualise'))

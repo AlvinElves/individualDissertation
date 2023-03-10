@@ -8,14 +8,7 @@ class HistoricalDataVisualisation:
         self.model_vis = AIModelVis()
         self.historical_data = self.model_vis.ai_model.historical_data
 
-        self.path = self.model_vis.create_Folder()
-
-        # self.plot_Bar_by_Month(self.historical_data, 'CO(GT)')
-        # self.plot_Bar_by_Day(self.historical_data, 'CO(GT)')
-        # self.plot_line_all(self.historical_data, ['T', 'AH', 'RH'])
-        # self.animated_line_graph(self.historical_data, ['T', 'AH', 'RH'])
-        # self.animated_bar_graph(self.historical_data, 'CO(GT)')
-        # self.animated_pie_chart(self.historical_data, 'CO(GT)')
+        # self.path = self.model_vis.create_Folder()
 
     @staticmethod
     def date_index_dataset(historical_data, column):
@@ -47,149 +40,177 @@ class HistoricalDataVisualisation:
         final_df['Date'] = pd.to_datetime(final_df[['Day', 'Month', 'Year']]).dt.strftime('%b-%d')
         final_df = final_df[['Date', '2004', '2005']]
 
+        saved_df = final_df.copy()
+
         final_df = final_df.set_index('Date')
 
         max_value = max(final_df[['2004', '2005']].max(axis=1))
 
-        return final_df, max_value
+        return final_df, max_value, saved_df
 
-    def animated_line_graph(self, historical_data, column):
+    def animated_line_graph(self, historical_data, column, method):
         df = historical_data.merged_date_dataset.copy()
         df['Date'] = pd.to_datetime(df.Date.astype(str) + ' ' + df.Time.astype(str))
         column_name = ['Date'] + column
         df = df[column_name]
+        saved_df = df.copy()
         df = df.set_index('Date')
 
-        fig = plt.figure()
+        if method != 'dataset':
+            fig = plt.figure()
 
-        def build(i=int):
-            plt.clf()
-            plt.plot(df[:i].index, df[:i].values, label=df.columns)
-            plt.legend()
-            plt.xticks(rotation=45, ha="right", rotation_mode="anchor")
-            plt.subplots_adjust(bottom=0.2, top=0.9)
-            plt.xlabel('Dates')
-            plt.ylabel('Values')
+            def build(i=int):
+                plt.clf()
+                plt.plot(df[:i].index, df[:i].values, label=df.columns)
+                plt.legend()
+                plt.xticks(rotation=45, ha="right", rotation_mode="anchor")
+                plt.subplots_adjust(bottom=0.2, top=0.9)
+                plt.xlabel('Dates')
+                plt.ylabel('Values')
 
-        animator = animate.FuncAnimation(fig, build, interval=50)
-        plt.show()
+            animator = animate.FuncAnimation(fig, build, interval=50)
+            plt.show()
+        else:
+            return saved_df
 
-    def animated_pie_chart(self, historical_data, column):
-        final_df, max_value = self.date_index_dataset(historical_data, column)
+    def animated_pie_chart(self, historical_data, column, method):
+        final_df, max_value, saved_df = self.date_index_dataset(historical_data, column)
 
-        fig, ax = plt.subplots()
-        explode = [0.01, 0.01]
+        if method != 'dataset':
+            fig, ax = plt.subplots()
+            explode = [0.01, 0.01]
 
-        def buildpie(i):
-            def absolute_value(val):  # turn % back to the value
-                a = np.round(val / 100. * final_df.iloc[[i]].squeeze().sum(), 3)
-                if a > 0:
-                    return a
+            def buildpie(i):
+                def absolute_value(val):  # turn % back to the value
+                    a = np.round(val / 100. * final_df.iloc[[i]].squeeze().sum(), 3)
+                    if a > 0:
+                        return a
 
-            ax.clear()
-            plot = final_df.iloc[[i]].squeeze().plot.pie(y=final_df.columns, label='',
-                                                         autopct=absolute_value, explode=explode, shadow=True)
-            plot.set_title('Date of the year: ' + str(final_df.index[i]), fontsize=12)
+                ax.clear()
+                plot = final_df.iloc[[i]].squeeze().plot.pie(y=final_df.columns, label='',
+                                                             autopct=absolute_value, explode=explode, shadow=True)
+                plot.set_title('Date of the year: ' + str(final_df.index[i]), fontsize=12)
 
-        animator = animate.FuncAnimation(fig, buildpie, interval=200)
-        plt.show()
+            animator = animate.FuncAnimation(fig, buildpie, interval=200)
+            plt.show()
+        else:
+            return saved_df
 
-    def animated_bar_graph(self, historical_data, column):
-        final_df, max_value = self.date_index_dataset(historical_data, column)
+    def animated_bar_graph(self, historical_data, column, method):
+        final_df, max_value, saved_df = self.date_index_dataset(historical_data, column)
 
-        fig = plt.figure()
+        if method != 'dataset':
+            fig = plt.figure()
 
-        def buildbar(i=int):
-            plt.clf()
+            def buildbar(i=int):
+                plt.clf()
 
-            number = min(i, len(final_df.index) - 1)
-            objects = final_df.max().index
-            y_pos = np.arange(len(objects))
-            performance = final_df.iloc[[number]].values.tolist()[0]
+                number = min(i, len(final_df.index) - 1)
+                objects = final_df.max().index
+                y_pos = np.arange(len(objects))
+                performance = final_df.iloc[[number]].values.tolist()[0]
 
-            plt.bar(y_pos, performance, align='center', label=final_df.columns, color=['blue', 'orange'])
-            plt.legend()
+                plt.bar(y_pos, performance, align='center', label=final_df.columns, color=['blue', 'orange'])
+                plt.legend()
 
-            plt.xticks(y_pos, objects)
-            plt.ylabel(column + ' Values')
-            plt.xlabel('Year')
+                plt.xticks(y_pos, objects)
+                plt.ylabel(column + ' Values')
+                plt.xlabel('Year')
 
-            plt.xlim(-0.5, 1.5)
-            plt.ylim(0, max_value + 0.5)
+                plt.xlim(-0.5, 1.5)
+                plt.ylim(0, max_value + 0.5)
 
-            plt.title('Date of the year: ' + str(final_df.index[number]))
+                plt.title('Date of the year: ' + str(final_df.index[number]))
 
-        animator = animate.FuncAnimation(fig, buildbar, interval=100)
-        plt.show()
+            animator = animate.FuncAnimation(fig, buildbar, interval=100)
+            plt.show()
+        else:
+            return saved_df
 
-    def plot_line_all(self, historical_data, y_Value):
+    def plot_line_all(self, historical_data, y_Value, method):
         df = historical_data.merged_date_dataset.copy()
         df['Date'] = pd.to_datetime(df.Date.astype(str) + ' ' + df.Time.astype(str))
-        fig = px.line(df, x='Date', y=y_Value, title='Date VS Multiple Attributes', render_mode='webg1')
-        fig.update_xaxes(
-            rangeslider_visible=True,
-            rangeselector=dict(
-                buttons=list([
-                    dict(count=1, label="1 Month", step="month", stepmode="backward"),
-                    dict(count=6, label="6 Month", step="month", stepmode="backward"),
-                    dict(count=1, label="1 Year", step="year", stepmode="backward"),
-                    dict(label='All', step="all")
-                ])
-            ),
-            tickformatstops=[
-                dict(dtickrange=[None, 1000], value="%H:%M:%S.%L ms"),
-                dict(dtickrange=[1000, 60000], value="%H:%M:%S"),
-                dict(dtickrange=[60000, 3600000], value="%H:%M hr"),
-                dict(dtickrange=[3600000, 86400000], value="%H:%M hr"),
-                dict(dtickrange=[86400000, 604800000], value="%e %b"),
-                dict(dtickrange=[604800000, "M1"], value="%e %b"),
-                dict(dtickrange=["M1", "M12"], value="%b '%y"),
-                dict(dtickrange=["M12", None], value="%Y")
-            ]
-        )
 
-        button_list = [dict(label='All', method='update',
-                            args=[{'visible': [True, True, True]}, {'title': 'Date VS Multiple Attributes'}])]
-        for i in range(0, len(y_Value)):
-            visible = [j == i for j in list(range(0, len(y_Value)))]
-
-            button_list.append(dict(label=y_Value[i], method='update',
-                                    args=[{'visible': visible}, {'title': 'Date VS ' + str(y_Value[i])}]))
-
-        fig.update_layout(
-            updatemenus=[
-                dict(
-                    active=0,
-                    buttons=button_list
-                )
-            ],
-            legend=dict(
-                title="Attributes"
+        if method != 'dataset':
+            fig = px.line(df, x='Date', y=y_Value, title='Date VS Multiple Attributes', render_mode='webg1')
+            fig.update_xaxes(
+                rangeslider_visible=True,
+                rangeselector=dict(
+                    buttons=list([
+                        dict(count=1, label="1 Month", step="month", stepmode="backward"),
+                        dict(count=6, label="6 Month", step="month", stepmode="backward"),
+                        dict(count=1, label="1 Year", step="year", stepmode="backward"),
+                        dict(label='All', step="all")
+                    ])
+                ),
+                tickformatstops=[
+                    dict(dtickrange=[None, 1000], value="%H:%M:%S.%L ms"),
+                    dict(dtickrange=[1000, 60000], value="%H:%M:%S"),
+                    dict(dtickrange=[60000, 3600000], value="%H:%M hr"),
+                    dict(dtickrange=[3600000, 86400000], value="%H:%M hr"),
+                    dict(dtickrange=[86400000, 604800000], value="%e %b"),
+                    dict(dtickrange=[604800000, "M1"], value="%e %b"),
+                    dict(dtickrange=["M1", "M12"], value="%b '%y"),
+                    dict(dtickrange=["M12", None], value="%Y")
+                ]
             )
-        )
-        fig.write_html(self.path + "/" + "Graph.html")
-        fig.show()
 
-    def plot_Bar_by_Month(self, historical_data, y_Value):
+            button_list = [dict(label='All', method='update',
+                                args=[{'visible': [True, True, True]}, {'title': 'Date VS Multiple Attributes'}])]
+            for i in range(0, len(y_Value)):
+                visible = [j == i for j in list(range(0, len(y_Value)))]
+
+                button_list.append(dict(label=y_Value[i], method='update',
+                                        args=[{'visible': visible}, {'title': 'Date VS ' + str(y_Value[i])}]))
+
+            fig.update_layout(
+                updatemenus=[
+                    dict(
+                        active=0,
+                        buttons=button_list
+                    )
+                ],
+                legend=dict(
+                    title="Attributes"
+                ),
+                yaxis_title="Feature Values"
+            )
+            # fig.write_html(self.path + "/" + "Graph.html")
+            fig.show()
+        else:
+            column_used = ['Date'] + y_Value
+            df = df[column_used]
+            return df
+
+    def plot_Bar_by_Month(self, historical_data, y_Value, method):
         month_year_data = historical_data.grouping(['Month', 'Year'])
         month_year_data['Year'] = month_year_data['Year'].astype(str)
 
-        fig = px.bar(month_year_data, x="Month", y=y_Value,
-                     color='Year', title="Monthly Bar Graph on " + y_Value + " value")
-        fig.update_layout(barmode='group')
-        # fig.write_html(self.path + "/" + "Graph.html")
-        fig.show(config={'displayModeBar': False})
+        if method != 'dataset':
+            fig = px.bar(month_year_data, x="Month", y=y_Value,
+                         color='Year', title="Monthly Bar Graph on " + y_Value + " value")
+            fig.update_layout(barmode='group', yaxis_title=y_Value + " Values")
+            # fig.write_html(self.path + "/" + filename + ".html")
+            fig.show()
+        else:
+            column_used = ['Month', 'Year'] + [y_Value]
+            month_year_data = month_year_data[column_used]
+            return month_year_data
 
-    def plot_Bar_by_Day(self, historical_data, y_Value):
+    def plot_Bar_by_Day(self, historical_data, y_Value, method):
         month_year_data = historical_data.grouping(['Day', 'Month', 'Year'])
         month_year_data['Year'] = month_year_data['Year'].astype(str)
 
-        fig = px.bar(month_year_data, x='Day', y=y_Value, facet_col="Month", facet_col_wrap=4,
-                     color='Year', title="Daily Bar Graph on " + y_Value + " value")
-        fig.update_layout(barmode='group')
-        # fig.write_html(self.path + "/" + "Graph.html")
-
-        fig.show(config={'displayModeBar': False})
+        if method != 'dataset':
+            fig = px.bar(month_year_data, x='Day', y=y_Value, facet_col="Month", facet_col_wrap=4,
+                         color='Year', title="Daily Bar Graph on " + y_Value + " value")
+            fig.update_layout(barmode='group', yaxis_title=y_Value + " Values")
+            # fig.write_html(self.path + "/" + "Graph.html")
+            fig.show()
+        else:
+            column_used = ['Month', 'Year'] + [y_Value]
+            month_year_data = month_year_data[column_used]
+            return month_year_data
 
 
 if __name__ == '__main__':
