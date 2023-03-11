@@ -6,7 +6,6 @@ import numpy as np
 import seaborn as sns
 
 from sklearn import tree
-from PIL import Image
 from yellowbrick.model_selection import ValidationCurve, LearningCurve
 
 
@@ -26,14 +25,13 @@ class AIModelVis:
         #self.visualise_actual_and_predicted(self.ai_model.T_actual, self.ai_model.T_prediction, 'T')
 
         #graph = self.generate_tree(path, self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 0)
-        #self.show_Tree('graph', graph, path + "/" + 'tree.png')
 
         #self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, 'T', 'criterion')
         #self.visualise_learning_rate(self.ai_model.T_model, self.ai_model.T_train, 'T')
 
         #self.visualise_tree_result(self.ai_model.T_model, self.ai_model.T_test.drop(['T'], axis=1), self.ai_model.T_actual, 'T', 0)
 
-    def visualise_tree_result(self, ai_model, dataset, actual_dataset, variable, prediction_number, method):
+    def visualise_tree_result(self, ai_model, dataset, actual_dataset, variable, prediction_number, file_name, method):
         tree_prediction = [decision_tree.predict(dataset) for decision_tree in ai_model.estimators_]
         result = [element[prediction_number] for element in tree_prediction]
 
@@ -73,6 +71,9 @@ class AIModelVis:
 
             plt.legend()
 
+            if method == 'save':
+                plt.savefig(file_name)
+
             plt.show()
         else:
             mean = pd.DataFrame([mean], columns=['Average Value'])
@@ -80,7 +81,7 @@ class AIModelVis:
             df = pd.concat([result_df, mean, actual_df], axis=1)
             return df
 
-    def visualise_hyperparameter(self, ai_model, dataset, variable, param_name):
+    def visualise_hyperparameter(self, ai_model, dataset, variable, param_name, file_name, method):
         if param_name == 'n_estimators':
             param_range = np.arange(1, 36)
         elif param_name == 'max_depth':
@@ -90,27 +91,31 @@ class AIModelVis:
         elif param_name == 'criterion':
             param_range = ['poisson', 'squared_error', 'absolute_error', 'friedman_mse']
 
-        fig, ax = plt.subplots(figsize=(10, 5))
-        fig.canvas.manager.set_window_title('Hyperparameter Tuning Visualisation')
+        if method != 'dataset':
+            fig, ax = plt.subplots(figsize=(10, 5))
+            fig.canvas.manager.set_window_title('Hyperparameter Tuning Visualisation')
 
-        # Allow panning and zooming using a mouse
-        pan_handler = panhandler(fig, 1)
-        self.interact.zoom_factory(ax, base_scale=1.2)
+            # Allow panning and zooming using a mouse
+            pan_handler = panhandler(fig, 1)
+            self.interact.zoom_factory(ax, base_scale=1.2)
 
-        visualiser = ValidationCurve(ai_model, param_name=param_name, n_jobs=-1,
-                                     param_range=param_range, cv=5, scoring="r2")
+            visualiser = ValidationCurve(ai_model, param_name=param_name, n_jobs=-1,
+                                         param_range=param_range, cv=5, scoring="r2")
 
-        x = dataset.drop([variable], axis=1)
-        y = dataset[variable]
+            x = dataset.drop([variable], axis=1)
+            y = dataset[variable]
 
-        plt.xlabel(param_name)
-        plt.ylabel("R2 Score (Scoring)")
+            plt.xlabel(param_name)
+            plt.ylabel("R2 Score (Scoring)")
 
-        visualiser.fit(x, y)
+            visualiser.fit(x, y)
 
-        visualiser.show()
+            if method == 'save':
+                plt.savefig(file_name)
 
-    def visualise_learning_rate(self, ai_model, dataset, variable, method):
+            visualiser.show()
+
+    def visualise_learning_rate(self, ai_model, dataset, variable, file_name, method):
         x = dataset.drop([variable], axis=1)
         y = dataset[variable]
 
@@ -137,12 +142,15 @@ class AIModelVis:
 
             visualiser.fit(x, y)
 
+            if method == 'save':
+                plt.savefig(file_name)
+
             visualiser.show()
         else:
             df = pd.concat([y, x], axis=1)
             return df
 
-    def visualise_variable(self, method, column, variable, normaliser, guimethod):
+    def visualise_variable(self, method, column, variable, normaliser, file_name, guimethod):
         original_dataset = self.ai_model.model_dataset.copy()
         original_dataset[original_dataset == -200] = np.NaN
         original_dataset = original_dataset.dropna(subset=['T']).reset_index(drop=True)
@@ -165,19 +173,19 @@ class AIModelVis:
         feature_dataset, _ = self.ai_model.null_value('delete', outliers_dataset, pd.DataFrame())
 
         if method == 'normalised':
-            df = self.visualise_normalised_data(original_dataset, normalised_dataset, column, variable, guimethod)
+            df = self.visualise_normalised_data(original_dataset, normalised_dataset, column, variable, file_name, guimethod)
             return df
 
         elif method == 'outliers':
-            df = self.visualise_outliers_data(original_normalised_dataset, outliers_dataset, column, variable, guimethod)
+            df = self.visualise_outliers_data(original_normalised_dataset, outliers_dataset, column, variable, file_name, guimethod)
             return df
 
         elif method == 'feature':
-            df = self.visualise_feature_correlation(feature_dataset, variable, guimethod)
+            df = self.visualise_feature_correlation(feature_dataset, variable, file_name, guimethod)
             return df
 
     @staticmethod
-    def visualise_feature_correlation(dataset, variable, method):
+    def visualise_feature_correlation(dataset, variable, file_name, method):
         # Correlation matrix for preprocessed data
         cor_df = dataset.copy()
         cor_df = cor_df.iloc[:, 1:10]
@@ -209,13 +217,16 @@ class AIModelVis:
             correlation_map.set_yticklabels(correlation_map.get_ymajorticklabels(), fontsize=7)
             correlation_map.set_xticklabels(correlation_map.get_xmajorticklabels(), fontsize=7)
 
+            if method == 'save':
+                plt.savefig(file_name)
+
             plt.show()
 
         else:
             return corrMatt
 
     @staticmethod
-    def visualise_outliers_data(original_dataset, normalised_dataset, column_name, variable, method):
+    def visualise_outliers_data(original_dataset, normalised_dataset, column_name, variable, file_name, method):
         # Combine the dataset to visualise more easily
         combined_visualise_dataset = pd.concat([original_dataset, normalised_dataset], axis=1)
 
@@ -270,11 +281,15 @@ class AIModelVis:
             plt.get_current_fig_manager().canvas.manager.set_window_title('Outliers Visualisation')
             plt.ylabel(column_name[0] + " VS " + column_name[1] + " Values")
             plt.title('Outliers Visualisation for\nfeature ' + variable)
+
+            if method == 'save':
+                plt.savefig(file_name)
+
             plt.show()
         else:
             return combined_visualise_dataset
 
-    def visualise_normalised_data(self, original_dataset, normalised_dataset, column_name, variable, method):
+    def visualise_normalised_data(self, original_dataset, normalised_dataset, column_name, variable, file_name, method):
         # Combine the dataset to visualise more easily
         combined_normalised_dataset = pd.concat([normalised_dataset, original_dataset], axis=1)
 
@@ -326,12 +341,16 @@ class AIModelVis:
             plt.title('Normalised Visualisation for feature ' + variable)
 
             visualise.plot(kind='line', fontsize=10, ax=ax, ylim=(minimum - 1, maximum))
+
+            if method == 'save':
+                plt.savefig(file_name)
+
             plt.show()
         else:
             return visualise
 
     @staticmethod
-    def visualise_feature_importance(AI_model, dataset, variable, method):
+    def visualise_feature_importance(AI_model, dataset, variable, file_name, method):
         if variable == 'T':
             variable = 'T (Temperature)'
         elif variable == 'AH':
@@ -348,9 +367,13 @@ class AIModelVis:
             feature_importance.plot(kind='barh')
 
             plt.xlabel('Relative Importance')
+
+            if method == 'save':
+                plt.savefig(file_name)
+
             plt.show()
 
-    def visualise_actual_and_predicted(self, actual, predicted, variable, method):
+    def visualise_actual_and_predicted(self, actual, predicted, variable, file_name, method):
 
         predicted = pd.DataFrame(predicted, columns=[variable])
         combined = pd.concat([actual, predicted], axis=1)
@@ -381,41 +404,24 @@ class AIModelVis:
             plt.title("Actual vs Predicted for feature " + variable)
 
             combined.plot(kind='line', fontsize=10, ax=ax)
+
+            if method == 'save':
+                plt.savefig(file_name)
+
             plt.show()
         else:
             return combined
 
     @staticmethod
-    def generate_tree(path, AI_model, dataset, tree_number):
+    def generate_tree(AI_model, dataset, tree_number, file_name, method):
         fig, ax = plt.subplots(figsize=(12, 6), dpi=800)
         fig.canvas.manager.set_window_title('Tree ' + str(tree_number + 1) + ' Estimator Visualisation')
 
         tree.plot_tree(AI_model.estimators_[tree_number], feature_names=dataset.columns, filled=True)
-        plt.savefig(path + "/" + 'tree')
-        return plt
-
-    @staticmethod
-    def show_Tree(method, graph, image):
-        if method == 'image':
-            # Read image
-            img = Image.open(image)
-
-            # Output Images
-            img.show()
-        elif method == 'graph':
-            graph.show()
-
-    @staticmethod
-    def create_Folder():
-        new_directory = "Visualisation"  # New folder name
-        current_path = os.path.dirname(os.path.dirname(os.getcwd()))  # Get current file path
-        path = os.path.join(current_path, new_directory)
-
-        # Create new folder
-        if not os.path.exists(path):
-            os.mkdir(path)
-
-        return path
+        if method == 'save':
+            plt.savefig(file_name)
+        else:
+            plt.show()
 
 
 if __name__ == '__main__':

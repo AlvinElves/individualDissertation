@@ -152,7 +152,7 @@ class HistoricalPageWidget:
                                                                                                   'dataset'))
         download_dataset_button.grid(row=row, column=2, padx=(4, 2), pady=(10, 10))
 
-        save_vis_button = tk.Button(frame, text="Save Visualisation", width=21, height=2,
+        save_vis_button = tk.Button(frame, text="Save Visualisation\nas HTML", width=21, height=2,
                                     font=('Raleway', 10, 'bold'), bg='dodgerblue',
                                     activebackground='cornflowerblue',
                                     command=lambda: self.historicalPageFunction.visualise(frame, self.variable_label,

@@ -23,11 +23,15 @@ class ModelVisFunction:
         listbox_index, features, checked_passed, file_name, file_passed = self.check_filename(right_inside_frame,
                                                                                               listbox, entry,
                                                                                               method)
+        file = ''
 
-        # Show a message in the GUI
+        # If the user chose all the variables Show a message in the GUI
         if checked_passed and file_passed:
             if method == 'visualise':
                 label = tk.Label(right_inside_frame, text='Loading, Please wait', foreground='green',
+                                 bg='lightskyblue')
+            elif method == 'dataset':
+                label = tk.Label(right_inside_frame, text='Saving the Dataset', foreground='green',
                                  bg='lightskyblue')
             else:
                 label = tk.Label(right_inside_frame, text='Saving the File', foreground='green',
@@ -35,8 +39,11 @@ class ModelVisFunction:
             label.grid(row=9, column=1)
             label.after(3000, lambda: label.destroy())
 
-        # If the user chose all the variables
-        if checked_passed:
+            if method == 'save':
+                path = self.aiModel.historical_data.create_folder('SavedVisualisation')
+                file = path + '/' + file_name + '.png'
+
+            # Then show the visualisation
             if self.model_text == 'T Variable':
                 model_variable = 'T'
                 scalar = self.aiModel.T_normalise
@@ -74,34 +81,45 @@ class ModelVisFunction:
 
             if self.visualisation_text == 'Normalised Data':
                 dataset = self.aiModelVis.visualise_variable('normalised', features_used, model_variable, scalar,
-                                                             method)
+                                                             file, method)
 
             elif self.visualisation_text == 'Outliers Data':
-                dataset = self.aiModelVis.visualise_variable('outliers', features_used, model_variable, scalar, method)
+                dataset = self.aiModelVis.visualise_variable('outliers', features_used, model_variable, scalar, file, method)
 
             elif self.visualisation_text == 'Feature Correlation':
-                dataset = self.aiModelVis.visualise_variable('feature', None, model_variable, scalar, method)
+                dataset = self.aiModelVis.visualise_variable('feature', None, model_variable, scalar, file, method)
 
             elif self.visualisation_text == 'Feature Importance':
-                self.aiModelVis.visualise_feature_importance(aiModel, train_df, model_variable, method)
+                self.aiModelVis.visualise_feature_importance(aiModel, train_df, model_variable, file, method)
                 dataset = train_df
 
             elif self.visualisation_text == 'Learning Curve':
-                dataset = self.aiModelVis.visualise_learning_rate(aiModel, all_df, model_variable, method)
+                dataset = self.aiModelVis.visualise_learning_rate(aiModel, all_df, model_variable, file, method)
 
             elif self.visualisation_text == 'Hyperparameter Tuning':
-                print(self.visualisation_text)
+                if listbox_index[0] == 0:
+                    hyperparameter = 'n_estimators'
+                elif listbox_index[0] == 1:
+                    hyperparameter = 'max_depth'
+                elif listbox_index[0] == 2:
+                    hyperparameter = 'max_features'
+                else:
+                    hyperparameter = 'criterion'
+
+                self.aiModelVis.visualise_hyperparameter(aiModel, all_df, model_variable, hyperparameter, file, method)
+                dataset = train_df
 
             elif self.visualisation_text == 'Decision Tree':
-                print(self.visualisation_text)
+                self.aiModelVis.generate_tree(aiModel, train_df, listbox_index[0], file, method)
+                dataset = train_df
 
             elif self.visualisation_text == 'Actual VS Predicted':
-                dataset = self.aiModelVis.visualise_actual_and_predicted(actual_df, predicted_df, model_variable,
+                dataset = self.aiModelVis.visualise_actual_and_predicted(actual_df, predicted_df, model_variable, file,
                                                                          method)
 
             elif self.visualisation_text == 'All Decision\nTree Prediction':
                 dataset = self.aiModelVis.visualise_tree_result(aiModel, test_df, actual_df, model_variable,
-                                                                listbox_index[0], method)
+                                                                listbox_index[0], file, method)
 
             if method == 'dataset':
                 if file_passed:
@@ -115,10 +133,10 @@ class ModelVisFunction:
                         label.after(3000, lambda: label.destroy())
 
                     self.clear(model_label, visualisation_label, variable_label, model_choose_label, listbox, button1,
-                               button2, button3)
+                               button2, button3, entry)
             else:
                 self.clear(model_label, visualisation_label, variable_label, model_choose_label, listbox, button1,
-                           button2, button3)
+                           button2, button3, entry)
 
     def check_filename(self, right_inside_frame, listbox, entry, method):
         listbox_index, features, checked_passed = self.check_visualise(right_inside_frame, listbox)
@@ -305,7 +323,7 @@ class ModelVisFunction:
         model_label.config(text=self.model_text)
 
     def clear(self, model_label, visualisation_label, variable_label, model_choose_label, listbox, button1,
-              button2, button3):
+              button2, button3, entry):
         self.visualisation_text = ''
         self.model_text = ''
         self.choose_variable_text = ''
@@ -320,3 +338,5 @@ class ModelVisFunction:
         button1.config(text='', state='disabled', bd=0)
         button2.config(text='', state='disabled', bd=0)
         button3.config(text='', state='disabled', bd=0)
+
+        entry.delete(0, 'end')

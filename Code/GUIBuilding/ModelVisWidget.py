@@ -91,7 +91,7 @@ class ModelVisWidget:
                                                                                              self.rh_button))
         learning_rate_button.grid(row=row, column=2, pady=(10, 5), padx=(5, 5))
 
-        hyperparameter_button = tk.Button(frame, text="HYPERPARAMETER TUNING", width=22, height=2,
+        hyperparameter_button = tk.Button(frame, text="HYPERPARAMETER\nTUNING", width=22, height=2,
                                           font=('Raleway', 10, 'bold'), bg='lightskyblue',
                                           activebackground='cornflowerblue',
                                           command=lambda: self.modelVisFunction.choose_method('hyperparameter',
@@ -240,7 +240,7 @@ class ModelVisWidget:
                                                                                             self.save_entry, 'dataset'))
         download_dataset_button.grid(row=row, column=2, padx=(4, 2), pady=(20, 0))
 
-        save_button = tk.Button(frame, text="Save Visualisation", width=21, height=2,
+        save_button = tk.Button(frame, text="Save Visualisation\nas PNG", width=21, height=2,
                                 font=('Raleway', 10, 'bold'), bg='dodgerblue',
                                 activebackground='cornflowerblue',
                                 command=lambda: self.modelVisFunction.visualise(frame, self.model_chosen_label,
@@ -259,7 +259,7 @@ class ModelVisWidget:
                                                                              self.variable_label,
                                                                              self.ai_model_label, self.list_box,
                                                                              self.t_button,
-                                                                             self.ah_button, self.rh_button))
+                                                                             self.ah_button, self.rh_button, self.save_entry))
         clear_button.grid(row=row + 1, column=2, padx=(4, 2), pady=(20, 16))
 
         visualise_button = tk.Button(frame, text="Visualise the Model", width=21, height=2,

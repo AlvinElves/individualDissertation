@@ -59,7 +59,7 @@ class HistoricalPageFunction:
 
             if file_passed:
                 if method == 'dataset':
-                    label = tk.Label(right_inside_frame, text='Saving the File', foreground='green', bg='lightskyblue')
+                    label = tk.Label(right_inside_frame, text='Saving the Dataset', foreground='green', bg='lightskyblue')
                     label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
                     label.after(3000, lambda: label.destroy())
 
@@ -71,6 +71,12 @@ class HistoricalPageFunction:
                                          bg='lightskyblue')
                         label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
                         label.after(3000, lambda: label.destroy())
+
+                elif method == 'save':
+                    label = tk.Label(right_inside_frame, text='Saving the File', foreground='green', bg='lightskyblue')
+                    label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
+                    label.after(3000, lambda: label.destroy())
+
                 else:
                     label = tk.Label(right_inside_frame, text='Loading, Please wait', foreground='green', bg='lightskyblue')
                     label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
