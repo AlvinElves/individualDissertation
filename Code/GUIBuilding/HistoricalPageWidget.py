@@ -144,7 +144,9 @@ class HistoricalPageWidget:
                                             width=21,
                                             height=2, font=('Raleway', 10, 'bold'), bg='dodgerblue',
                                             activebackground='cornflowerblue',
-                                            command=lambda: self.historicalPageFunction.visualise(frame,
+                                            command=lambda: self.historicalPageFunction.visualise(frame, self.variable_label,
+                                                                                   self.visualisation_chosen_label,
+                                                                                   self.vis_type_chosen_label,
                                                                                                   self.variable_box,
                                                                                                   self.save_entry,
                                                                                                   'dataset'))
@@ -153,7 +155,9 @@ class HistoricalPageWidget:
         save_vis_button = tk.Button(frame, text="Save Visualisation", width=21, height=2,
                                     font=('Raleway', 10, 'bold'), bg='dodgerblue',
                                     activebackground='cornflowerblue',
-                                    command=lambda: self.historicalPageFunction.visualise(frame, self.variable_box,
+                                    command=lambda: self.historicalPageFunction.visualise(frame, self.variable_label,
+                                                                                   self.visualisation_chosen_label,
+                                                                                   self.vis_type_chosen_label, self.variable_box,
                                                                                           self.save_entry,
                                                                                           'save'))
         save_vis_button.grid(row=row, column=3, padx=(2, 2), pady=(10, 10))
@@ -169,7 +173,9 @@ class HistoricalPageWidget:
         visualise_button = tk.Button(frame, text="Visualise the\nHistorical Data", width=21, height=2,
                                      font=('Raleway', 10, 'bold'), bg='dodgerblue',
                                      activebackground='cornflowerblue',
-                                     command=lambda: self.historicalPageFunction.visualise(frame, self.variable_box,
+                                     command=lambda: self.historicalPageFunction.visualise(frame, self.variable_label,
+                                                                                   self.visualisation_chosen_label,
+                                                                                   self.vis_type_chosen_label, self.variable_box,
                                                                                            self.save_entry,
                                                                                            'visualise'))
         visualise_button.grid(row=row + 1, column=3, padx=(2, 2), pady=(20, 11))

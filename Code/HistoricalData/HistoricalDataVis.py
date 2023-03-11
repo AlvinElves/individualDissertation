@@ -1,12 +1,12 @@
-from Code.AIModel.AIModelVis import *
+from Code.HistoricalData.HistoricalData import *
 import plotly.express as px
 import matplotlib.animation as animate
+import matplotlib.pyplot as plt
 
 
 class HistoricalDataVisualisation:
     def __init__(self):
-        self.model_vis = AIModelVis()
-        self.historical_data = self.model_vis.ai_model.historical_data
+        self.historical_data = HistoricalData()
 
         # self.path = self.model_vis.create_Folder()
 
@@ -127,7 +127,7 @@ class HistoricalDataVisualisation:
         else:
             return saved_df
 
-    def plot_line_all(self, historical_data, y_Value, method):
+    def plot_line_all(self, historical_data, y_Value, method, file_name):
         df = historical_data.merged_date_dataset.copy()
         df['Date'] = pd.to_datetime(df.Date.astype(str) + ' ' + df.Time.astype(str))
 
@@ -175,14 +175,16 @@ class HistoricalDataVisualisation:
                 ),
                 yaxis_title="Feature Values"
             )
-            # fig.write_html(self.path + "/" + "Graph.html")
+            if method == 'save':
+                fig.write_html(file_name)
+
             fig.show()
         else:
             column_used = ['Date'] + y_Value
             df = df[column_used]
             return df
 
-    def plot_Bar_by_Month(self, historical_data, y_Value, method):
+    def plot_Bar_by_Month(self, historical_data, y_Value, method, file_name):
         month_year_data = historical_data.grouping(['Month', 'Year'])
         month_year_data['Year'] = month_year_data['Year'].astype(str)
 
@@ -190,14 +192,17 @@ class HistoricalDataVisualisation:
             fig = px.bar(month_year_data, x="Month", y=y_Value,
                          color='Year', title="Monthly Bar Graph on " + y_Value + " value")
             fig.update_layout(barmode='group', yaxis_title=y_Value + " Values")
-            # fig.write_html(self.path + "/" + filename + ".html")
+
+            if method == 'save':
+                fig.write_html(file_name)
+
             fig.show()
         else:
             column_used = ['Month', 'Year'] + [y_Value]
             month_year_data = month_year_data[column_used]
             return month_year_data
 
-    def plot_Bar_by_Day(self, historical_data, y_Value, method):
+    def plot_Bar_by_Day(self, historical_data, y_Value, method, file_name):
         month_year_data = historical_data.grouping(['Day', 'Month', 'Year'])
         month_year_data['Year'] = month_year_data['Year'].astype(str)
 
@@ -205,7 +210,9 @@ class HistoricalDataVisualisation:
             fig = px.bar(month_year_data, x='Day', y=y_Value, facet_col="Month", facet_col_wrap=4,
                          color='Year', title="Daily Bar Graph on " + y_Value + " value")
             fig.update_layout(barmode='group', yaxis_title=y_Value + " Values")
-            # fig.write_html(self.path + "/" + "Graph.html")
+            if method == 'save':
+                fig.write_html(file_name)
+
             fig.show()
         else:
             column_used = ['Month', 'Year'] + [y_Value]

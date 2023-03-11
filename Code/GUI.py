@@ -1,5 +1,3 @@
-import tkinter as tk
-
 from GUIBuilding.FrameWidgetBuilder import left_frame_widget, right_frame_widget
 from GUIBuilding.HomePageWidget import *
 from GUIBuilding.HistoricalPageWidget import *
@@ -37,7 +35,7 @@ class GUI(tk.Tk):
         self.frames = {}
 
         # iterating through a tuple consisting of the different page layouts
-        for F in (HomePage, HistoricalDataPage, LiveDataPage, PredictionPage, ModelVisPage):
+        for F in (HomePage, HistoricalDataPage):
             frame = F(container, self)
 
             # initializing frame of that object from all the pages within the for loop
@@ -55,10 +53,11 @@ class GUI(tk.Tk):
 
 # HomePage window frame
 class HomePage(tk.Frame):
+
+    homePageWidget = HomePageWidget()
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg='black')
-
-        homePageWidget = HomePageWidget()
 
         # Create left, right and inner right frames
         left_frame = tk.Frame(self, width=225, height=694, bg='royalblue', highlightbackground="darkblue",
@@ -78,15 +77,16 @@ class HomePage(tk.Frame):
                           lambda: controller.show_frame(LiveDataPage), lambda: controller.show_frame(PredictionPage),
                           lambda: controller.show_frame(ModelVisPage))
         right_frame_widget(right_frame, "Home Page")
-        homePageWidget.inner_homepage_widget(right_inside_frame)
+        HomePage.homePageWidget.inner_homepage_widget(right_inside_frame)
 
 
 # Historical Data window frame
 class HistoricalDataPage(tk.Frame):
+
+    historicalPageWidget = HistoricalPageWidget()
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg='black')
-
-        historicalPageWidget = HistoricalPageWidget()
 
         # Create left, right and inner right frames
         left_frame = tk.Frame(self, width=225, height=694, bg='royalblue', highlightbackground="darkblue",
@@ -106,15 +106,16 @@ class HistoricalDataPage(tk.Frame):
                           lambda: controller.show_frame(LiveDataPage), lambda: controller.show_frame(PredictionPage),
                           lambda: controller.show_frame(ModelVisPage))
         right_frame_widget(right_frame, "Historical Data Visualisation")
-        historicalPageWidget.inner_historicalpage_widget(right_inside_frame)
+        HistoricalDataPage.historicalPageWidget.inner_historicalpage_widget(right_inside_frame)
 
 
 # Live Data window frame
 class LiveDataPage(tk.Frame):
+
+    livePageWidget = LivePageWidget()
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg='black')
-
-        livePageWidget = LivePageWidget()
 
         # Create left, right and inner right frames
         left_frame = tk.Frame(self, width=225, height=694, bg='royalblue', highlightbackground="darkblue",
@@ -134,15 +135,14 @@ class LiveDataPage(tk.Frame):
                           lambda: controller.show_frame(LiveDataPage), lambda: controller.show_frame(PredictionPage),
                           lambda: controller.show_frame(ModelVisPage))
         right_frame_widget(right_frame, "Live Data Visualisation")
-        livePageWidget.inner_livepage_widget(right_inside_frame)
+        LiveDataPage.livePageWidget.inner_livepage_widget(right_inside_frame)
 
 
 # Prediction window frame
 class PredictionPage(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent, bg='black')
-
         aiModelWidget = AIModelWidget()
+        tk.Frame.__init__(self, parent, bg='black')
 
         # Create left, right and inner right frames
         left_frame = tk.Frame(self, width=225, height=694, bg='royalblue', highlightbackground="darkblue",
@@ -162,15 +162,16 @@ class PredictionPage(tk.Frame):
                           lambda: controller.show_frame(LiveDataPage), lambda: controller.show_frame(PredictionPage),
                           lambda: controller.show_frame(ModelVisPage))
         right_frame_widget(right_frame, "Air Quality Prediction")
-        aiModelWidget.inner_aimodel_widget(right_inside_frame)
+        ModelVisPage.modelVisWidget.inner_modelvis_widget(right_inside_frame)
 
 
 # AI Model Vis window frame
 class ModelVisPage(tk.Frame):
+
+    modelVisWidget = ModelVisWidget()
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg='black')
-
-        modelVisWidget = ModelVisWidget()
 
         # Create left, right and inner right frames
         left_frame = tk.Frame(self, width=225, height=694, bg='royalblue', highlightbackground="darkblue",
@@ -190,7 +191,7 @@ class ModelVisPage(tk.Frame):
                           lambda: controller.show_frame(LiveDataPage), lambda: controller.show_frame(PredictionPage),
                           lambda: controller.show_frame(ModelVisPage))
         right_frame_widget(right_frame, "AI Model Visualisation")
-        modelVisWidget.inner_modelvis_widget(right_inside_frame)
+        ModelVisPage.modelVisWidget.inner_modelvis_widget(right_inside_frame)
 
 
 # Press the green button in the gutter to run the script.

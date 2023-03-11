@@ -34,7 +34,6 @@ class AIModelVis:
         #self.visualise_tree_result(self.ai_model.T_model, self.ai_model.T_test.drop(['T'], axis=1), self.ai_model.T_actual, 'T', 0)
 
     def visualise_tree_result(self, ai_model, dataset, actual_dataset, variable, prediction_number):
-        y_label = ''
         tree_prediction = [decision_tree.predict(dataset) for decision_tree in ai_model.estimators_]
         result = [element[prediction_number] for element in tree_prediction]
 

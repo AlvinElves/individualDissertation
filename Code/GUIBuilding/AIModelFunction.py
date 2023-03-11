@@ -1,8 +1,10 @@
 import tkinter as tk
+from Code.AIModel.AIModel import *
 
 
 class AIModelFunction:
     def __init__(self):
+        self.aiModel = AIModel()
 
         self.input_independent_type = ''
         self.input_dependent_type = ''

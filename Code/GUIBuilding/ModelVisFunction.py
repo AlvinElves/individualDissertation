@@ -1,8 +1,11 @@
 import tkinter as tk
+from Code.AIModel.AIModelVis import *
 
 
 class ModelVisFunction:
     def __init__(self):
+        self.aiModelVis = AIModelVis()
+
         self.model_text = ''
         self.visualisation_text = ''
         self.choose_variable_text = ''

@@ -28,10 +28,15 @@ class HistoricalPageFunction:
 
         return items
 
-    def visualise(self, right_inside_frame, listbox, entry, method):
+    def visualise(self, right_inside_frame, variable_label, visualisation_label, vis_type_label, listbox, entry, method):
         features, checked_passed, file_name, file_passed = self.check_filename(right_inside_frame, listbox, entry, method)
 
         if checked_passed:
+            file = ''
+            if file_passed and method == 'save':
+                path = self.historicalVis.historical_data.create_folder('SavedVisualisation')
+                file = path + '/' + file_name + '.html'
+
             if self.visualisation_type_text == 'Animated':
                 if self.visualisation_text == 'Line Graph':
                     dataset = self.historicalVis.animated_line_graph(self.historicalVis.historical_data, features, method)
@@ -44,13 +49,13 @@ class HistoricalPageFunction:
 
             elif self.visualisation_type_text == 'Normal':
                 if self.visualisation_text == 'All Data':
-                    dataset = self.historicalVis.plot_line_all(self.historicalVis.historical_data, features, method)
+                    dataset = self.historicalVis.plot_line_all(self.historicalVis.historical_data, features, method, file)
 
                 elif self.visualisation_text == 'Daily Data':
-                    dataset = self.historicalVis.plot_Bar_by_Day(self.historicalVis.historical_data, features[0], method)
+                    dataset = self.historicalVis.plot_Bar_by_Day(self.historicalVis.historical_data, features[0], method, file)
 
                 elif self.visualisation_text == 'Monthly Data':
-                    dataset = self.historicalVis.plot_Bar_by_Month(self.historicalVis.historical_data, features[0], method)
+                    dataset = self.historicalVis.plot_Bar_by_Month(self.historicalVis.historical_data, features[0], method, file)
 
             if method == 'dataset':
                 if file_passed:
@@ -62,13 +67,15 @@ class HistoricalPageFunction:
                                          bg='lightskyblue')
                         label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
                         label.after(3000, lambda: label.destroy())
+            else:
+                self.clear(variable_label, visualisation_label, vis_type_label, listbox, entry)
 
     def check_filename(self, right_inside_frame, listbox, entry, method):
         features, checked_passed = self.check_visualise(right_inside_frame, listbox, method)
         file_name = entry.get()
         file_passed = False
 
-        if checked_passed and method == 'dataset':
+        if checked_passed and (method == 'dataset' or method == 'save'):
             if file_name == '':
                 label = tk.Label(right_inside_frame, text='Please Enter a\nFilename to Save', foreground='red',
                                  bg='lightskyblue')
@@ -77,10 +84,17 @@ class HistoricalPageFunction:
                 file_passed = False
 
             else:
-                label = tk.Label(right_inside_frame, text='Saving the File', foreground='green', bg='lightskyblue')
-                label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
-                label.after(3000, lambda: label.destroy())
-                file_passed = True
+                if self.visualisation_type_text == 'Animated' and method == 'save':
+                    label = tk.Label(right_inside_frame, text='Animated Graph is\nUnable to be Saved', foreground='red',
+                                     bg='lightskyblue')
+                    label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
+                    label.after(3000, lambda: label.destroy())
+                    file_passed = False
+                else:
+                    label = tk.Label(right_inside_frame, text='Saving the File', foreground='green', bg='lightskyblue')
+                    label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
+                    label.after(3000, lambda: label.destroy())
+                    file_passed = True
 
         return features, checked_passed, file_name, file_passed
 
@@ -102,7 +116,7 @@ class HistoricalPageFunction:
 
         else:
             checked = True
-            if method != 'dataset':
+            if method != 'dataset' and method != 'save':
                 label = tk.Label(right_inside_frame, text='Loading, Please wait', foreground='green', bg='lightskyblue')
                 label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
                 label.after(3000, lambda: label.destroy())

@@ -3,7 +3,6 @@ from Code.GUIBuilding.ModelVisFunction import *
 
 class ModelVisWidget:
     def __init__(self):
-
         self.modelVisFunction = ModelVisFunction()
 
     def inner_modelvis_widget(self, right_inside_frame):
@@ -11,9 +10,10 @@ class ModelVisWidget:
         self.draw_line(row=1, frame=right_inside_frame)
         self.ai_model(row=2, frame=right_inside_frame)
         self.draw_line(row=4, frame=right_inside_frame)
+
         self.choose_visualise_label(row=5, frame=right_inside_frame)
-        self.list_box, self.t_button, self.ah_button, self.rh_button \
-            = self.choose_visualise_variable(row=5, frame=right_inside_frame)
+        self.choose_visualise_variable(row=5, frame=right_inside_frame)
+
         self.show_chosen(row=5, frame=right_inside_frame)
         self.download_visualise_button(row=8, frame=right_inside_frame)
 
@@ -29,7 +29,8 @@ class ModelVisWidget:
                                       command=lambda: self.modelVisFunction.choose_method('normalised',
                                                                                           self.visualisation_chosen_label,
                                                                                           self.variable_label,
-                                                                                          self.ai_model_label, self.list_box,
+                                                                                          self.ai_model_label,
+                                                                                          self.list_box,
                                                                                           self.t_button, self.ah_button,
                                                                                           self.rh_button))
         normalised_button.grid(row=row, column=1, pady=(10, 0), padx=(5, 5))
@@ -40,7 +41,8 @@ class ModelVisWidget:
                                     command=lambda: self.modelVisFunction.choose_method('outliers',
                                                                                         self.visualisation_chosen_label,
                                                                                         self.variable_label,
-                                                                                        self.ai_model_label, self.list_box,
+                                                                                        self.ai_model_label,
+                                                                                        self.list_box,
                                                                                         self.t_button, self.ah_button,
                                                                                         self.rh_button))
         outliers_button.grid(row=row, column=2, pady=(10, 0), padx=(5, 5))
@@ -51,7 +53,8 @@ class ModelVisWidget:
                                    command=lambda: self.modelVisFunction.choose_method('feature',
                                                                                        self.visualisation_chosen_label,
                                                                                        self.variable_label,
-                                                                                       self.ai_model_label, self.list_box,
+                                                                                       self.ai_model_label,
+                                                                                       self.list_box,
                                                                                        self.t_button, self.ah_button,
                                                                                        self.rh_button))
         feature_button.grid(row=row, column=3, pady=(10, 0), padx=(5, 5))
@@ -68,7 +71,8 @@ class ModelVisWidget:
                                               command=lambda: self.modelVisFunction.choose_method('feature_importance',
                                                                                                   self.visualisation_chosen_label,
                                                                                                   self.variable_label,
-                                                                                                  self.ai_model_label, self.list_box,
+                                                                                                  self.ai_model_label,
+                                                                                                  self.list_box,
                                                                                                   self.t_button,
                                                                                                   self.ah_button,
                                                                                                   self.rh_button))
@@ -80,7 +84,8 @@ class ModelVisWidget:
                                          command=lambda: self.modelVisFunction.choose_method('learning',
                                                                                              self.visualisation_chosen_label,
                                                                                              self.variable_label,
-                                                                                             self.ai_model_label, self.list_box,
+                                                                                             self.ai_model_label,
+                                                                                             self.list_box,
                                                                                              self.t_button,
                                                                                              self.ah_button,
                                                                                              self.rh_button))
@@ -92,7 +97,8 @@ class ModelVisWidget:
                                           command=lambda: self.modelVisFunction.choose_method('hyperparameter',
                                                                                               self.visualisation_chosen_label,
                                                                                               self.variable_label,
-                                                                                              self.ai_model_label, self.list_box,
+                                                                                              self.ai_model_label,
+                                                                                              self.list_box,
                                                                                               self.t_button,
                                                                                               self.ah_button,
                                                                                               self.rh_button))
@@ -104,7 +110,8 @@ class ModelVisWidget:
                                           command=lambda: self.modelVisFunction.choose_method('tree',
                                                                                               self.visualisation_chosen_label,
                                                                                               self.variable_label,
-                                                                                              self.ai_model_label, self.list_box,
+                                                                                              self.ai_model_label,
+                                                                                              self.list_box,
                                                                                               self.t_button,
                                                                                               self.ah_button,
                                                                                               self.rh_button))
@@ -116,7 +123,8 @@ class ModelVisWidget:
                                                command=lambda: self.modelVisFunction.choose_method('predicted',
                                                                                                    self.visualisation_chosen_label,
                                                                                                    self.variable_label,
-                                                                                                   self.ai_model_label, self.list_box,
+                                                                                                   self.ai_model_label,
+                                                                                                   self.list_box,
                                                                                                    self.t_button,
                                                                                                    self.ah_button,
                                                                                                    self.rh_button))
@@ -143,27 +151,29 @@ class ModelVisWidget:
 
     def choose_visualise_variable(self, row, frame):
         # Choose Variable Button and ListBox
-        variable_box = tk.Listbox(frame, height=19, width=25, selectmode='single',
-                                  activestyle='none', justify='center', bg='lightskyblue', highlightbackground='lightskyblue',
-                                  relief='flat', bd=0, state='disabled')
-        variable_box.grid(row=row + 1, column=0, rowspan=4)
+        self.list_box = tk.Listbox(frame, height=19, width=25, selectmode='single', highlightthickness=0,
+                                   activestyle='none', justify='center', bg='lightskyblue',
+                                   highlightbackground='lightskyblue',
+                                   relief='flat', bd=0, state='disabled')
+        self.list_box.grid(row=row + 1, column=0, rowspan=4)
 
-        t_button = tk.Button(frame, text='', width=22, height=2, bd=0,
-                             font=('Raleway', 10, 'bold'), bg='lightskyblue', activebackground='cornflowerblue', state='disabled',
-                             command=lambda: self.modelVisFunction.choose_model('t', self.model_chosen_label))
-        t_button.grid(row=row + 1, column=1)
+        self.t_button = tk.Button(frame, text='', width=22, height=2, bd=0,
+                                  font=('Raleway', 10, 'bold'), bg='lightskyblue', activebackground='cornflowerblue',
+                                  state='disabled',
+                                  command=lambda: self.modelVisFunction.choose_model('t', self.model_chosen_label))
+        self.t_button.grid(row=row + 1, column=1)
 
-        ah_button = tk.Button(frame, text='', width=22, height=2, bd=0,
-                              font=('Raleway', 10, 'bold'), bg='lightskyblue', activebackground='cornflowerblue', state='disabled',
-                              command=lambda: self.modelVisFunction.choose_model('ah', self.model_chosen_label))
-        ah_button.grid(row=row + 2, column=1)
+        self.ah_button = tk.Button(frame, text='', width=22, height=2, bd=0,
+                                   font=('Raleway', 10, 'bold'), bg='lightskyblue', activebackground='cornflowerblue',
+                                   state='disabled',
+                                   command=lambda: self.modelVisFunction.choose_model('ah', self.model_chosen_label))
+        self.ah_button.grid(row=row + 2, column=1)
 
-        rh_button = tk.Button(frame, text='', width=22, height=2, bd=0,
-                              font=('Raleway', 10, 'bold'), bg='lightskyblue', activebackground='cornflowerblue', state='disabled',
-                              command=lambda: self.modelVisFunction.choose_model('rh', self.model_chosen_label))
-        rh_button.grid(row=row + 3, column=1)
-
-        return variable_box, t_button, ah_button, rh_button
+        self.rh_button = tk.Button(frame, text='', width=22, height=2, bd=0,
+                                   font=('Raleway', 10, 'bold'), bg='lightskyblue', activebackground='cornflowerblue',
+                                   state='disabled',
+                                   command=lambda: self.modelVisFunction.choose_model('rh', self.model_chosen_label))
+        self.rh_button.grid(row=row + 3, column=1)
 
     def show_chosen(self, row, frame):
         # Show all the button pressed
