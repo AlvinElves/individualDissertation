@@ -55,13 +55,18 @@ class HistoricalDataVisualisation:
         df = df[column_name]
         saved_df = df.copy()
         df = df.set_index('Date')
+        if len(df.columns) < 2:
+            column_label = df.columns[0]
+        else:
+            column_label = df.columns
 
         if method != 'dataset':
             fig = plt.figure()
+            fig.canvas.manager.set_window_title('Animated Line Graph Visualisation')
 
             def build(i=int):
                 plt.clf()
-                plt.plot(df[:i].index, df[:i].values, label=df.columns)
+                plt.plot(df[:i].index, df[:i].values, label=column_label)
                 plt.legend()
                 plt.xticks(rotation=45, ha="right", rotation_mode="anchor")
                 plt.subplots_adjust(bottom=0.2, top=0.9)
@@ -79,6 +84,7 @@ class HistoricalDataVisualisation:
         if method != 'dataset':
             fig, ax = plt.subplots()
             explode = [0.01, 0.01]
+            fig.canvas.manager.set_window_title('Animated Pie Chart Visualisation')
 
             def buildpie(i):
                 def absolute_value(val):  # turn % back to the value
@@ -101,6 +107,7 @@ class HistoricalDataVisualisation:
 
         if method != 'dataset':
             fig = plt.figure()
+            fig.canvas.manager.set_window_title('Animated Bar Graph Visualisation')
 
             def buildbar(i=int):
                 plt.clf()
@@ -110,7 +117,7 @@ class HistoricalDataVisualisation:
                 y_pos = np.arange(len(objects))
                 performance = final_df.iloc[[number]].values.tolist()[0]
 
-                plt.bar(y_pos, performance, align='center', label=final_df.columns, color=['blue', 'orange'])
+                plt.bar(y_pos, performance, align='center', label=final_df.columns.values, color=['blue', 'orange'])
                 plt.legend()
 
                 plt.xticks(y_pos, objects)

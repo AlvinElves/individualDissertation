@@ -73,19 +73,21 @@ class ModelVisFunction:
                 features_used = [original_features, processed_features]
 
             if self.visualisation_text == 'Normalised Data':
-                self.aiModelVis.visualise_variable('normalised', features_used, model_variable, scalar)
+                dataset = self.aiModelVis.visualise_variable('normalised', features_used, model_variable, scalar,
+                                                             method)
 
             elif self.visualisation_text == 'Outliers Data':
-                self.aiModelVis.visualise_variable('outliers', features_used, model_variable, scalar)
+                dataset = self.aiModelVis.visualise_variable('outliers', features_used, model_variable, scalar, method)
 
             elif self.visualisation_text == 'Feature Correlation':
-                self.aiModelVis.visualise_variable('feature', None, model_variable, scalar)
+                dataset = self.aiModelVis.visualise_variable('feature', None, model_variable, scalar, method)
 
             elif self.visualisation_text == 'Feature Importance':
-                self.aiModelVis.visualise_feature_importance(aiModel, train_df, model_variable)
+                self.aiModelVis.visualise_feature_importance(aiModel, train_df, model_variable, method)
+                dataset = train_df
 
             elif self.visualisation_text == 'Learning Curve':
-                self.aiModelVis.visualise_learning_rate(aiModel, all_df, model_variable)
+                dataset = self.aiModelVis.visualise_learning_rate(aiModel, all_df, model_variable, method)
 
             elif self.visualisation_text == 'Hyperparameter Tuning':
                 print(self.visualisation_text)
@@ -94,13 +96,29 @@ class ModelVisFunction:
                 print(self.visualisation_text)
 
             elif self.visualisation_text == 'Actual VS Predicted':
-                self.aiModelVis.visualise_actual_and_predicted(actual_df, predicted_df, model_variable)
+                dataset = self.aiModelVis.visualise_actual_and_predicted(actual_df, predicted_df, model_variable,
+                                                                         method)
 
             elif self.visualisation_text == 'All Decision\nTree Prediction':
-                self.aiModelVis.visualise_tree_result(aiModel, test_df, actual_df, model_variable, listbox_index[0])
+                dataset = self.aiModelVis.visualise_tree_result(aiModel, test_df, actual_df, model_variable,
+                                                                listbox_index[0], method)
 
-            self.clear(model_label, visualisation_label, variable_label, model_choose_label, listbox, button1,
-                       button2, button3)
+            if method == 'dataset':
+                if file_passed:
+                    path = self.aiModel.historical_data.create_folder('SavedDataset')
+                    try:
+                        dataset.to_excel(path + '/' + file_name + '.xlsx', index=False)
+                    except:
+                        label = tk.Label(right_inside_frame, text='Please Enter a\n Valid Filename', foreground='red',
+                                         bg='lightskyblue')
+                        label.grid(row=9, column=1)
+                        label.after(3000, lambda: label.destroy())
+
+                    self.clear(model_label, visualisation_label, variable_label, model_choose_label, listbox, button1,
+                               button2, button3)
+            else:
+                self.clear(model_label, visualisation_label, variable_label, model_choose_label, listbox, button1,
+                           button2, button3)
 
     def check_filename(self, right_inside_frame, listbox, entry, method):
         listbox_index, features, checked_passed = self.check_visualise(right_inside_frame, listbox)
