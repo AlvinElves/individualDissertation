@@ -130,6 +130,19 @@ class ModelVisWidget:
                                                                                                    self.rh_button))
         actual_vs_predicted_button.grid(row=row + 1, column=2, pady=(10, 0), padx=(5, 5))
 
+        tree_prediction_button = tk.Button(frame, text="ALL DECISION\nTREE PREDICTION", width=22, height=2,
+                                           font=('Raleway', 10, 'bold'), bg='lightskyblue',
+                                           activebackground='cornflowerblue',
+                                           command=lambda: self.modelVisFunction.choose_method('all_tree',
+                                                                                               self.visualisation_chosen_label,
+                                                                                               self.variable_label,
+                                                                                               self.ai_model_label,
+                                                                                               self.list_box,
+                                                                                               self.t_button,
+                                                                                               self.ah_button,
+                                                                                               self.rh_button))
+        tree_prediction_button.grid(row=row + 1, column=3, pady=(10, 0), padx=(5, 5))
+
     @staticmethod
     def draw_line(row, frame):
         # Draw line
@@ -160,19 +173,22 @@ class ModelVisWidget:
         self.t_button = tk.Button(frame, text='', width=22, height=2, bd=0,
                                   font=('Raleway', 10, 'bold'), bg='lightskyblue', activebackground='cornflowerblue',
                                   state='disabled',
-                                  command=lambda: self.modelVisFunction.choose_model('t', self.model_chosen_label))
+                                  command=lambda: self.modelVisFunction.choose_model('t', self.model_chosen_label,
+                                                                                     self.list_box))
         self.t_button.grid(row=row + 1, column=1)
 
         self.ah_button = tk.Button(frame, text='', width=22, height=2, bd=0,
                                    font=('Raleway', 10, 'bold'), bg='lightskyblue', activebackground='cornflowerblue',
                                    state='disabled',
-                                   command=lambda: self.modelVisFunction.choose_model('ah', self.model_chosen_label))
+                                   command=lambda: self.modelVisFunction.choose_model('ah', self.model_chosen_label,
+                                                                                      self.list_box))
         self.ah_button.grid(row=row + 2, column=1)
 
         self.rh_button = tk.Button(frame, text='', width=22, height=2, bd=0,
                                    font=('Raleway', 10, 'bold'), bg='lightskyblue', activebackground='cornflowerblue',
                                    state='disabled',
-                                   command=lambda: self.modelVisFunction.choose_model('rh', self.model_chosen_label))
+                                   command=lambda: self.modelVisFunction.choose_model('rh', self.model_chosen_label,
+                                                                                      self.list_box))
         self.rh_button.grid(row=row + 3, column=1)
 
     def show_chosen(self, row, frame):
@@ -204,21 +220,37 @@ class ModelVisWidget:
                              font=('Raleway', 10, 'bold'), bg='lightskyblue')
         save_text.grid(row=row + 2, column=2, pady=(50, 0))
 
-        save_entry = tk.Entry(frame, width=24, font=('Raleway', 10, 'bold'), bg='royalblue')
-        save_entry.grid(row=row + 2, column=3, pady=(50, 0))
+        self.save_entry = tk.Entry(frame, width=24, font=('Raleway', 10, 'bold'), bg='royalblue')
+        self.save_entry.grid(row=row + 2, column=3, pady=(50, 0))
 
     def download_visualise_button(self, row, frame):
-        download_dataset_button = tk.Button(frame, text="Download\nPreprocessed Data", width=21,
+        download_dataset_button = tk.Button(frame, text="Download Dataset\nUsed in Visualisation", width=21,
                                             height=2,
                                             font=('Raleway', 10, 'bold'), bg='dodgerblue',
-                                            activebackground='cornflowerblue')
+                                            activebackground='cornflowerblue',
+                                            command=lambda: self.modelVisFunction.visualise(frame,
+                                                                                            self.model_chosen_label,
+                                                                                            self.visualisation_chosen_label,
+                                                                                            self.variable_label,
+                                                                                            self.ai_model_label,
+                                                                                            self.list_box,
+                                                                                            self.t_button,
+                                                                                            self.ah_button,
+                                                                                            self.rh_button,
+                                                                                            self.save_entry, 'dataset'))
         download_dataset_button.grid(row=row, column=2, padx=(4, 2), pady=(20, 0))
 
-        save_tree_button = tk.Button(frame, text="Save Tree & Visualise", width=21, height=2,
-                                     font=('Raleway', 10, 'bold'), bg='dodgerblue',
-                                     activebackground='cornflowerblue',
-                                     command=lambda: self.modelVisFunction.visualise(frame, 'save'))
-        save_tree_button.grid(row=row, column=3, padx=(2, 2), pady=(20, 0))
+        save_button = tk.Button(frame, text="Save Visualisation", width=21, height=2,
+                                font=('Raleway', 10, 'bold'), bg='dodgerblue',
+                                activebackground='cornflowerblue',
+                                command=lambda: self.modelVisFunction.visualise(frame, self.model_chosen_label,
+                                                                                self.visualisation_chosen_label,
+                                                                                self.variable_label,
+                                                                                self.ai_model_label, self.list_box,
+                                                                                self.t_button,
+                                                                                self.ah_button, self.rh_button,
+                                                                                self.save_entry, 'save'))
+        save_button.grid(row=row, column=3, padx=(2, 2), pady=(20, 0))
 
         clear_button = tk.Button(frame, text="Clear All", width=21, height=2,
                                  font=('Raleway', 10, 'bold'), bg='dodgerblue', activebackground='cornflowerblue',
@@ -233,5 +265,11 @@ class ModelVisWidget:
         visualise_button = tk.Button(frame, text="Visualise the Model", width=21, height=2,
                                      font=('Raleway', 10, 'bold'), bg='dodgerblue',
                                      activebackground='cornflowerblue',
-                                     command=lambda: self.modelVisFunction.visualise(frame, 'normal'))
+                                     command=lambda: self.modelVisFunction.visualise(frame, self.model_chosen_label,
+                                                                                     self.visualisation_chosen_label,
+                                                                                     self.variable_label,
+                                                                                     self.ai_model_label, self.list_box,
+                                                                                     self.t_button,
+                                                                                     self.ah_button, self.rh_button,
+                                                                                     self.save_entry, 'visualise'))
         visualise_button.grid(row=row + 1, column=3, padx=(2, 2), pady=(20, 16))

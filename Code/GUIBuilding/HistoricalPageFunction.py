@@ -37,7 +37,7 @@ class HistoricalPageFunction:
                 path = self.historicalVis.historical_data.create_folder('SavedVisualisation')
                 file = path + '/' + file_name + '.html'
 
-            if self.visualisation_type_text == 'Animated':
+            if self.visualisation_type_text == 'Animated' and file_passed:
                 if self.visualisation_text == 'Line Graph':
                     dataset = self.historicalVis.animated_line_graph(self.historicalVis.historical_data, features, method)
 
@@ -47,7 +47,7 @@ class HistoricalPageFunction:
                 elif self.visualisation_text == 'Pie Chart':
                     dataset = self.historicalVis.animated_pie_chart(self.historicalVis.historical_data, features[0], method)
 
-            elif self.visualisation_type_text == 'Normal':
+            elif self.visualisation_type_text == 'Normal' and file_passed:
                 if self.visualisation_text == 'All Data':
                     dataset = self.historicalVis.plot_line_all(self.historicalVis.historical_data, features, method, file)
 
@@ -57,8 +57,12 @@ class HistoricalPageFunction:
                 elif self.visualisation_text == 'Monthly Data':
                     dataset = self.historicalVis.plot_Bar_by_Month(self.historicalVis.historical_data, features[0], method, file)
 
-            if method == 'dataset':
-                if file_passed:
+            if file_passed:
+                if method == 'dataset':
+                    label = tk.Label(right_inside_frame, text='Saving the File', foreground='green', bg='lightskyblue')
+                    label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
+                    label.after(3000, lambda: label.destroy())
+
                     path = self.historicalVis.historical_data.create_folder('SavedDataset')
                     try:
                         dataset.to_excel(path + '/' + file_name + '.xlsx', index=False)
@@ -67,8 +71,11 @@ class HistoricalPageFunction:
                                          bg='lightskyblue')
                         label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
                         label.after(3000, lambda: label.destroy())
-            else:
-                self.clear(variable_label, visualisation_label, vis_type_label, listbox, entry)
+                else:
+                    label = tk.Label(right_inside_frame, text='Loading, Please wait', foreground='green', bg='lightskyblue')
+                    label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
+                    label.after(3000, lambda: label.destroy())
+                    self.clear(variable_label, visualisation_label, vis_type_label, listbox, entry)
 
     def check_filename(self, right_inside_frame, listbox, entry, method):
         features, checked_passed = self.check_visualise(right_inside_frame, listbox, method)
@@ -91,10 +98,9 @@ class HistoricalPageFunction:
                     label.after(3000, lambda: label.destroy())
                     file_passed = False
                 else:
-                    label = tk.Label(right_inside_frame, text='Saving the File', foreground='green', bg='lightskyblue')
-                    label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
-                    label.after(3000, lambda: label.destroy())
                     file_passed = True
+        elif method == 'visualise':
+            file_passed = True
 
         return features, checked_passed, file_name, file_passed
 
@@ -116,10 +122,6 @@ class HistoricalPageFunction:
 
         else:
             checked = True
-            if method != 'dataset' and method != 'save':
-                label = tk.Label(right_inside_frame, text='Loading, Please wait', foreground='green', bg='lightskyblue')
-                label.grid(row=10, column=1, padx=(10, 0), pady=(0, 5))
-                label.after(3000, lambda: label.destroy())
 
         return variables, checked
 

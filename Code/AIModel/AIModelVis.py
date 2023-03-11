@@ -40,14 +40,14 @@ class AIModelVis:
         result_df = pd.DataFrame(result, columns=['Predicted Result'])
 
         if variable == 'T':
-            y_label = 'Temperature '
+            y_label = 'T (Temperature) '
         elif variable == 'AH':
-            y_label = 'Absolute Humidity '
-        elif variable == 'RH':
-            y_label = 'Relative Humidity '
+            y_label = 'AH (Absolute Humidity) '
+        else:
+            y_label = 'RH (Relative Humidity) '
 
         fig, ax = plt.subplots()
-        fig.canvas.manager.set_window_title('All Tree Prediction')
+        fig.canvas.manager.set_window_title('All Decision Tree Prediction')
 
         # Allow panning and zooming using a mouse
         pan_handler = panhandler(fig, 1)
@@ -58,9 +58,9 @@ class AIModelVis:
         plt.minorticks_on()
         ax.set_xticklabels(ax.get_xticks(), rotation=0)
         ax.tick_params(axis='x', which='minor', bottom='off')
-        ax.set_xlabel("Decision Tree Number")
-        ax.set_ylabel(y_label + " Value")
-        ax.set_title("Decision Tree Prediction & Average Value")
+        ax.set_xlabel("Decision Tree #")
+        ax.set_ylabel(y_label + " Feature Value")
+        ax.set_title("Every Decision Tree Prediction VS Average Value VS Actual Value\nfor feature " + y_label)
 
         plt.xlim([0, 30])
         plt.ylim([min(result_df['Predicted Result']) - 2, max(result_df['Predicted Result']) + 2])
@@ -90,7 +90,7 @@ class AIModelVis:
         pan_handler = panhandler(fig, 1)
         self.interact.zoom_factory(ax, base_scale=1.2)
 
-        visualizer = ValidationCurve(ai_model, param_name=param_name, n_jobs=-1,
+        visualiser = ValidationCurve(ai_model, param_name=param_name, n_jobs=-1,
                                      param_range=param_range, cv=5, scoring="r2")
 
         x = dataset.drop([variable], axis=1)
@@ -99,9 +99,9 @@ class AIModelVis:
         plt.xlabel(param_name)
         plt.ylabel("R2 Score (Scoring)")
 
-        visualizer.fit(x, y)
+        visualiser.fit(x, y)
 
-        visualizer.show()
+        visualiser.show()
 
     def visualise_learning_rate(self, ai_model, dataset, variable):
         fig, ax = plt.subplots(figsize=(10, 5))
@@ -111,17 +111,25 @@ class AIModelVis:
         pan_handler = panhandler(fig, 1)
         self.interact.zoom_factory(ax, base_scale=1.2)
 
-        visualizer = LearningCurve(ai_model, n_jobs=-1, cv=10, scoring="r2")
-
         x = dataset.drop([variable], axis=1)
         y = dataset[variable]
+
+        if variable == 'T':
+            variable = 'T (Temperature)'
+        elif variable == 'AH':
+            variable = 'AH (Absolute Humidity)'
+        else:
+            variable = 'RH (Relative Humidity)'
+
+        visualiser = LearningCurve(ai_model, n_jobs=-1, cv=10, scoring="r2",
+                                   title='Number of data Learning Curve\nfor feature ' + variable)
 
         plt.xlabel("Number of Data")
         plt.ylabel("R2 Score (Scoring)")
 
-        visualizer.fit(x, y)
+        visualiser.fit(x, y)
 
-        visualizer.show()
+        visualiser.show()
 
     def visualise_variable(self, method, column, variable, normaliser):
         original_dataset = self.ai_model.model_dataset.copy()
@@ -146,14 +154,14 @@ class AIModelVis:
         feature_dataset, _ = self.ai_model.null_value('delete', outliers_dataset, pd.DataFrame())
 
         if method == 'normalised':
-            self.visualise_normalised_data(original_dataset, normalised_dataset, column)
+            self.visualise_normalised_data(original_dataset, normalised_dataset, column, variable)
         elif method == 'outliers':
             self.visualise_outliers_data(original_normalised_dataset, outliers_dataset, column, variable)
         elif method == 'feature':
-            self.visualise_feature_correlation(feature_dataset)
+            self.visualise_feature_correlation(feature_dataset, variable)
 
     @staticmethod
-    def visualise_feature_correlation(dataset):
+    def visualise_feature_correlation(dataset, variable):
         # Correlation matrix for preprocessed data
         cor_df = dataset.copy()
         cor_df = cor_df.iloc[:, 1:10]
@@ -163,9 +171,16 @@ class AIModelVis:
         mask = np.zeros_like(corrMatt)
         mask[np.triu_indices_from(mask)] = True
 
+        if variable == 'T':
+            variable = 'T (Temperature)'
+        elif variable == 'AH':
+            variable = 'AH (Absolute Humidity)'
+        else:
+            variable = 'RH (Relative Humidity)'
+
         # Set up the matplotlib figure
         fig, ax = plt.subplots(figsize=(10, 8))
-        plt.title('Feature Correlation between all features')
+        plt.title('Feature Correlation between all features\nfor feature ' + variable)
         fig.canvas.manager.set_window_title('Correlation Visualisation')
 
         # Generate a custom diverging colormap
@@ -197,6 +212,8 @@ class AIModelVis:
                                                   'NOx(GT) (Processed)', 'PT08.S3(NOx) (Processed)',
                                                   'NO2(GT) (Processed)',
                                                   'PT08.S4(NO2) (Processed)', 'PT08.S5(O3) (Processed)']
+            variable = 'T (Temperature)'
+
         elif variable == 'AH':
             combined_visualise_dataset.columns = ['AH (Original)', 'CO(GT) (Original)', 'PT08.S1(CO) (Original)',
                                                   'C6H6(GT) (Original)', 'PT08.S2(NMHC) (Original)',
@@ -209,6 +226,8 @@ class AIModelVis:
                                                   'NOx(GT) (Processed)', 'PT08.S3(NOx) (Processed)',
                                                   'NO2(GT) (Processed)',
                                                   'PT08.S4(NO2) (Processed)', 'PT08.S5(O3) (Processed)']
+            variable = 'AH (Absolute Humidity)'
+
         elif variable == 'RH':
             combined_visualise_dataset.columns = ['RH (Original)', 'CO(GT) (Original)', 'PT08.S1(CO) (Original)',
                                                   'C6H6(GT) (Original)', 'PT08.S2(NMHC) (Original)',
@@ -221,18 +240,21 @@ class AIModelVis:
                                                   'NOx(GT) (Processed)', 'PT08.S3(NOx) (Processed)',
                                                   'NO2(GT) (Processed)',
                                                   'PT08.S4(NO2) (Processed)', 'PT08.S5(O3) (Processed)']
+            variable = 'RH (Relative Humidity)'
 
         # Rename the dataset
 
         combined_visualise_dataset = combined_visualise_dataset[column_name]
 
-        combined_visualise_dataset.plot(kind='box', subplots=True, layout=(1, 2), sharex=False, sharey=False,
+        combined_visualise_dataset.plot(kind='box', subplots=True, layout=(1, 2), sharex=False, sharey=True,
                                         fontsize=12, figsize=(10, 6))
 
         plt.get_current_fig_manager().canvas.manager.set_window_title('Outliers Visualisation')
+        plt.ylabel(column_name[0] + " VS " + column_name[1] + " Values")
+        plt.title('Outliers Visualisation for\nfeature ' + variable)
         plt.show()
 
-    def visualise_normalised_data(self, original_dataset, normalised_dataset, column_name):
+    def visualise_normalised_data(self, original_dataset, normalised_dataset, column_name, variable):
         # Combine the dataset to visualise more easily
         combined_normalised_dataset = pd.concat([normalised_dataset, original_dataset], axis=1)
 
@@ -256,6 +278,13 @@ class AIModelVis:
              'NO2(GT) (Original)', 'NO2(GT) (Processed)', 'PT08.S4(NO2) (Original)', 'PT08.S4(NO2) (Processed)',
              'PT08.S5(O3) (Original)', 'PT08.S5(O3) (Processed)']]
 
+        if variable == 'T':
+            variable = 'T (Temperature)'
+        elif variable == 'AH':
+            variable = 'AH (Absolute Humidity)'
+        else:
+            variable = 'RH (Relative Humidity)'
+
         visualise = combined_normalised_dataset[column_name]
         visualise = visualise.dropna().reset_index(drop=True)
         maximum = max(visualise[column_name[0]])
@@ -272,14 +301,22 @@ class AIModelVis:
         plt.xlim([0, 100])
         plt.xlabel("Data Number")
         plt.ylabel(column_name[0] + " VS " + column_name[1] + " Values")
+        plt.title('Normalised Visualisation for feature ' + variable)
 
         visualise.plot(kind='line', fontsize=10, ax=ax, ylim=(minimum - 1, maximum))
         plt.show()
 
     @staticmethod
-    def visualise_feature_importance(AI_model, dataset):
+    def visualise_feature_importance(AI_model, dataset, variable):
+        if variable == 'T':
+            variable = 'T (Temperature)'
+        elif variable == 'AH':
+            variable = 'AH (Absolute Humidity)'
+        else:
+            variable = 'RH (Relative Humidity)'
+
         plt.figure().set_figwidth(10)
-        plt.title('Relative Importance between the features used')
+        plt.title('Relative Importance between the features\nused for feature ' + variable)
         plt.get_current_fig_manager().canvas.manager.set_window_title('Relative Importance Visualisation')
 
         feature_importance = pd.Series(AI_model.feature_importances_, index=dataset.columns)
@@ -303,12 +340,19 @@ class AIModelVis:
         pan_handler = panhandler(fig, 1)
         self.interact.zoom_factory(ax, base_scale=1.2)
 
+        if variable == 'T':
+            variable = 'T (Temperature)'
+        elif variable == 'AH':
+            variable = 'AH (Absolute Humidity)'
+        else:
+            variable = 'RH (Relative Humidity)'
+
         # Creating axis limits and title
         plt.xlim([0, 50])
-        plt.xlabel("Prediction Number")
+        plt.xlabel("Prediction #")
         plt.ylabel(variable + " Values")
 
-        plt.title("Actual vs Predicted " + variable + " variable")
+        plt.title("Actual vs Predicted for feature " + variable)
 
         combined.plot(kind='line', fontsize=10, ax=ax)
         plt.show()
