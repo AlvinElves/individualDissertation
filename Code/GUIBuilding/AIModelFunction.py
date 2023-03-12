@@ -82,6 +82,16 @@ class AIModelFunction:
             dependent_label.config(text='CHOOSE THE DEPENDENT FEATURE(S) FOR PREDICTION')
             row_entry.delete(0, 'end')
 
+    def save_file(self, frame, prediction_result, file_name):
+        path = self.aiModel.historical_data.create_folder('SavedPrediction')
+        try:
+            prediction_result.to_excel(path + '/' + file_name + '.xlsx', index=False)
+        except:
+            label = tk.Label(frame, text='Please Enter a\n Valid Filename', foreground='red',
+                             bg='lightskyblue')
+            label.grid(row=9, column=1)
+            label.after(3000, lambda: label.destroy())
+
     def single_destroy(self, entry_input, label_input):
         for label in label_input:
             label.destroy()
@@ -206,23 +216,15 @@ class AIModelFunction:
 
         return passed
 
-    def prediction(self, frame, result_label, pred_func):
-        label = tk.Label(frame, text='Loading, Please wait', foreground='green', bg='lightskyblue')
-        label.grid(row=13, column=2)
-        label.after(3000, lambda: label.destroy())
-
-        self.result = 'RESULTS'
-        self.prediction_options = True
-        result_label.config(text=self.result)
-
+    def get_dataframe_len(self):
         if self.view_options == 'file':
             df = self.input_dataframe.copy()
             df[df == -200] = np.NaN
 
-            result_df = self.input_dataframe.copy()
-            result_df[result_df == -200] = np.NaN
-            result_df = result_df.drop(columns=['NMHC(GT)'])
-            result_df = result_df.dropna().reset_index(drop=True)
+            self.result_df = self.input_dataframe.copy()
+            self.result_df[self.result_df == -200] = np.NaN
+            self.result_df = self.result_df.drop(columns=['NMHC(GT)'])
+            self.result_df = self.result_df.dropna().reset_index(drop=True)
 
         if self.t_variable.get() == 1:
             normalised_t_df = self.aiModel.T_normalise.transform(df)
@@ -237,7 +239,7 @@ class AIModelFunction:
             predicted_t = self.aiModel.T_model.predict(input_t_df)
             predicted_t = pd.DataFrame(predicted_t, columns=['T'])
 
-            result_df = pd.concat([result_df, predicted_t], axis=1)
+            self.result_df = pd.concat([self.result_df, predicted_t], axis=1)
 
         if self.ah_variable.get() == 1:
             normalised_ah_df = self.aiModel.AH_normalise.transform(df)
@@ -249,7 +251,7 @@ class AIModelFunction:
             predicted_ah = self.aiModel.AH_model.predict(input_ah_df)
             predicted_ah = pd.DataFrame(predicted_ah, columns=['AH'])
 
-            result_df = pd.concat([result_df, predicted_ah], axis=1)
+            self.result_df = pd.concat([self.result_df, predicted_ah], axis=1)
 
         if self.rh_variable.get() == 1:
             normalised_rh_df = self.aiModel.RH_normalise.transform(df)
@@ -264,9 +266,20 @@ class AIModelFunction:
             predicted_rh = self.aiModel.RH_model.predict(input_rh_df)
             predicted_rh = pd.DataFrame(predicted_rh, columns=['RH'])
 
-            result_df = pd.concat([result_df, predicted_rh], axis=1)
+            self.result_df = pd.concat([self.result_df, predicted_rh], axis=1)
 
-        print(result_df)
+        length = len(self.result_df.columns)
+
+        return length, self.result_df
+
+    def prediction(self, frame, result_label, prediction_func):
+        label = tk.Label(frame, text='Loading, Please wait', foreground='green', bg='lightskyblue')
+        label.grid(row=13, column=2)
+        label.after(3000, lambda: label.destroy())
+
+        self.result = 'RESULTS'
+        self.prediction_options = True
+        result_label.config(text=self.result)
 
     def clear_all(self, frame, canvas, canvas_func, independent_label, dependent_label, result_label,
                   file_entry, entry_input, label_input, file_input, result, t_Button, ah_Button, rh_Button):
@@ -286,7 +299,6 @@ class AIModelFunction:
 
         independent_label.config(text='')
         dependent_label.config(text='')
-        result_label.config(text='')
 
         file_entry.delete(0, 'end')
 

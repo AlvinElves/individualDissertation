@@ -43,7 +43,7 @@ class AIModelWidget:
         self.result_label = self.heading(row=11, frame=self.result_frame, text=self.aiModelFunction.result)
 
         self.draw_canvas2(row=12, frame=self.result_frame)
-        self.prediction_result(row=12, frame=self.result_frame)
+        self.prediction_result(row=12, frame=self.result_frame, number=0, result_df=None)
         self.aiModelFunction.result_destroy(self.result)
 
         self.final_button(row=13, frame=self.bottom_frame)
@@ -236,42 +236,61 @@ class AIModelWidget:
                                         height=3, width=15)
         self.rh_Button.grid(row=row, column=4, pady=(3, 3))
 
-    def prediction_result(self, row, frame):
+    def prediction_result(self, row, frame, number, result_df):
         self.result_view = ttk.Treeview(frame, selectmode='browse', height=5,
                                         show='headings',
                                         columns=['test'])
         self.result_view.grid(row=row, column=0, columnspan=5, pady=(10, 0))
 
-        self.result_view['columns'] = ('test', 'test', 'test', 'test', 'test', 'test',
-                                       'test', 'test', 'test', 'test', 'test', 'test', 'test')
+        if number == 0:
+            self.result_view.column("0", width=600, anchor='c')
 
-        self.result_view.column("0", width=50, anchor='c')
-        self.result_view.column("1", width=50, anchor='c')
-        self.result_view.column("2", width=50, anchor='c')
-        self.result_view.column("3", width=45, anchor='c')
-        self.result_view.column("4", width=45, anchor='c')
-        self.result_view.column("5", width=45, anchor='c')
-        self.result_view.column("6", width=45, anchor='c')
-        self.result_view.column("7", width=45, anchor='c')
-        self.result_view.column("8", width=45, anchor='c')
-        self.result_view.column("9", width=45, anchor='c')
-        self.result_view.column("10", width=45, anchor='c')
-        self.result_view.column("11", width=45, anchor='se')
-        self.result_view.column("12", width=45, anchor='se')
+        elif number == 1:
+            self.result_view['columns'] = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
 
-        self.result_view.heading("0", text="Name")
-        self.result_view.heading("1", text="Sex")
-        self.result_view.heading("2", text="Age")
-        self.result_view.heading("3", text="Sex")
-        self.result_view.heading("4", text="Age")
-        self.result_view.heading("5", text="Sex")
-        self.result_view.heading("6", text="Last")
-        self.result_view.heading("7", text="Age")
-        self.result_view.heading("8", text="Sex")
-        self.result_view.heading("9", text="Last")
-        self.result_view.heading("10", text="Age")
-        self.result_view.heading("11", text="Sex")
-        self.result_view.heading("12", text="Last")
+            for i in range(0, 10):
+                self.result_view.column(i, width=60, anchor='c')
+
+            for i in range(0, 10):
+                self.result_view.heading(i, text=self.aiModelFunction.result_df.columns[i])
+
+            result_list = result_df.to_numpy().tolist()
+
+            for item_list in result_list:
+                values = [item for item in item_list]
+                self.result_view.insert("", 'end', values=values)
+
+        elif number == 2:
+            self.result_view['columns'] = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10')
+
+            for i in range(0, 10):
+                self.result_view.column(i, width=55, anchor='c')
+
+            self.result_view.column("10", width=50, anchor='c')
+
+            for i in range(0, 11):
+                self.result_view.heading(i, text=self.aiModelFunction.result_df.columns[i])
+
+            result_list = result_df.to_numpy().tolist()
+
+            for item_list in result_list:
+                values = [item for item in item_list]
+                self.result_view.insert("", 'end', values=values)
+
+        elif number == 3:
+            self.result_view['columns'] = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11')
+
+            for i in range(0, 12):
+                self.result_view.column(i, width=50, anchor='c')
+
+            for i in range(0, 12):
+                self.result_view.heading(i, text=self.aiModelFunction.result_df.columns[i])
+
+            result_list = result_df.to_numpy().tolist()
+
+            for item_list in result_list:
+                values = [item for item in item_list]
+                self.result_view.insert("", 'end', values=values)
 
         vertical_scrollbar = tk.Scrollbar(frame, orient="vertical", command=self.result_view.yview)
         self.result_view.configure(yscrollcommand=vertical_scrollbar.set)
@@ -310,8 +329,19 @@ class AIModelWidget:
         if self.aiModelFunction.view_options != 'initial':
             if self.aiModelFunction.prediction_options is False:
                 if self.aiModelFunction.check_prediction(frame, self.entry):
-                    self.aiModelFunction.prediction(frame, result_label,
-                                                    self.prediction_result(row=12, frame=self.result_frame))
+                    length, self.prediction_result = self.aiModelFunction.get_dataframe_len()
+                    if length == 10:
+                        self.aiModelFunction.prediction(frame, result_label,
+                                                        self.prediction_result(row=12, frame=self.result_frame,
+                                                                               number=1, result_df=self.prediction_result))
+                    elif length == 11:
+                        self.aiModelFunction.prediction(frame, result_label,
+                                                        self.prediction_result(row=12, frame=self.result_frame,
+                                                                               number=2, result_df=self.prediction_result))
+                    else:
+                        self.aiModelFunction.prediction(frame, result_label,
+                                                        self.prediction_result(row=12, frame=self.result_frame,
+                                                                               number=3, result_df=self.prediction_result))
         else:
             label = tk.Label(frame, text='Please Select\nthe Input type', foreground='red', bg='lightskyblue')
             label.grid(row=13, column=2)
