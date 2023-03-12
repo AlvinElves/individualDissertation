@@ -4,8 +4,8 @@ from Code.AIModel.AIModelVis import *
 
 class ModelVisFunction:
     def __init__(self):
-        self.aiModelVis = AIModelVis()
-        self.aiModel = self.aiModelVis.ai_model
+        """self.aiModelVis = AIModelVis()
+        self.aiModel = self.aiModelVis.ai_model"""
 
         self.model_text = ''
         self.visualisation_text = ''
@@ -91,7 +91,7 @@ class ModelVisFunction:
 
             elif self.visualisation_text == 'Feature Importance':
                 self.aiModelVis.visualise_feature_importance(aiModel, train_df, model_variable, file, method)
-                dataset = train_df
+                dataset = all_df
 
             elif self.visualisation_text == 'Learning Curve':
                 dataset = self.aiModelVis.visualise_learning_rate(aiModel, all_df, model_variable, file, method)
@@ -107,11 +107,11 @@ class ModelVisFunction:
                     hyperparameter = 'criterion'
 
                 self.aiModelVis.visualise_hyperparameter(aiModel, all_df, model_variable, hyperparameter, file, method)
-                dataset = train_df
+                dataset = all_df
 
             elif self.visualisation_text == 'Decision Tree':
-                self.aiModelVis.generate_tree(aiModel, train_df, listbox_index[0], file, method)
-                dataset = train_df
+                self.aiModelVis.generate_tree(aiModel, train_df, listbox_index[0], model_variable, file, method)
+                dataset = all_df
 
             elif self.visualisation_text == 'Actual VS Predicted':
                 dataset = self.aiModelVis.visualise_actual_and_predicted(actual_df, predicted_df, model_variable, file,
@@ -269,8 +269,8 @@ class ModelVisFunction:
             self.visualisation_text = 'Decision Tree'
             self.choose_variable_text = 'Choose the\nDecision Tree #'
             listbox.config(state='normal', bg='white', highlightbackground='white')
-            for i in range(0, 51):
-                listbox.insert('end', "test" + str(i))
+            for i in range(1, 21):
+                listbox.insert('end', "Decision Tree " + str(i))
             self.choose_model_text = 'Choose the AI Model'
 
         elif method == 'predicted':

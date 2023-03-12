@@ -1,5 +1,3 @@
-import numpy as np
-
 from Code.GUIBuilding.AIModelFunction import *
 from tkinter import ttk
 
@@ -22,8 +20,8 @@ class AIModelWidget:
         self.result_frame = tk.Frame(right_inside_frame, width=767, height=268, bg='lightskyblue')
         self.result_frame.grid(row=10, column=0, columnspan=5, rowspan=3)
 
-        bottom_frame = tk.Frame(right_inside_frame, width=767, height=268, bg='lightskyblue')
-        bottom_frame.grid(row=13, column=0, columnspan=5)
+        self.bottom_frame = tk.Frame(right_inside_frame, width=767, height=268, bg='lightskyblue')
+        self.bottom_frame.grid(row=13, column=0, columnspan=5)
 
         self.choose_input_type(row=0, frame=top_frame)
         self.draw_line(row=1, frame=top_frame)
@@ -34,7 +32,7 @@ class AIModelWidget:
         self.single_input(row=4, frame=self.frame)
         self.aiModelFunction.single_destroy(self.entry, self.label)
 
-        self.file_input(row=4, frame=self.frame)
+        self.file_input(row=4, frame=self.frame, frame2=self.bottom_frame)
         self.aiModelFunction.file_destroy(self.file)
 
         self.dependent_label = self.heading(row=8, frame=dependent_frame,
@@ -48,7 +46,7 @@ class AIModelWidget:
         self.prediction_result(row=12, frame=self.result_frame)
         self.aiModelFunction.result_destroy(self.result)
 
-        self.final_button(row=13, frame=bottom_frame)
+        self.final_button(row=13, frame=self.bottom_frame)
 
     def choose_input_type(self, row, frame):
         # Choose input type, single point or file
@@ -104,43 +102,43 @@ class AIModelWidget:
 
     def single_independent_feature_input(self, row, frame):
         # Independent Feature Input
-        self.input_1_entry = tk.Entry(frame, width=16,
+        self.input_1_entry = tk.Entry(frame, width=16, textvariable=self.aiModelFunction.input1,
                                       font=('Raleway', 10, 'bold'))
         self.input_1_entry.grid(row=row, column=0)
 
-        self.input_2_entry = tk.Entry(frame, width=16,
+        self.input_2_entry = tk.Entry(frame, width=16, textvariable=self.aiModelFunction.input2,
                                       font=('Raleway', 10, 'bold'))
         self.input_2_entry.grid(row=row, column=1)
 
-        self.input_3_entry = tk.Entry(frame, width=16,
+        self.input_3_entry = tk.Entry(frame, width=16, textvariable=self.aiModelFunction.input3,
                                       font=('Raleway', 10, 'bold'))
         self.input_3_entry.grid(row=row, column=2)
 
-        self.input_4_entry = tk.Entry(frame, width=16,
+        self.input_4_entry = tk.Entry(frame, width=16, textvariable=self.aiModelFunction.input4,
                                       font=('Raleway', 10, 'bold'))
         self.input_4_entry.grid(row=row, column=3)
 
-        self.input_5_entry = tk.Entry(frame, width=16,
+        self.input_5_entry = tk.Entry(frame, width=16, textvariable=self.aiModelFunction.input5,
                                       font=('Raleway', 10, 'bold'))
         self.input_5_entry.grid(row=row, column=4)
 
-        self.input_6_entry = tk.Entry(frame, width=16,
+        self.input_6_entry = tk.Entry(frame, width=16, textvariable=self.aiModelFunction.input6,
                                       font=('Raleway', 10, 'bold'))
         self.input_6_entry.grid(row=row + 2, column=0)
 
-        self.input_7_entry = tk.Entry(frame, width=16,
+        self.input_7_entry = tk.Entry(frame, width=16, textvariable=self.aiModelFunction.input7,
                                       font=('Raleway', 10, 'bold'))
         self.input_7_entry.grid(row=row + 2, column=1)
 
-        self.input_8_entry = tk.Entry(frame, width=16,
+        self.input_8_entry = tk.Entry(frame, width=16, textvariable=self.aiModelFunction.input8,
                                       font=('Raleway', 10, 'bold'))
         self.input_8_entry.grid(row=row + 2, column=2)
 
-        self.input_9_entry = tk.Entry(frame, width=16,
+        self.input_9_entry = tk.Entry(frame, width=16, textvariable=self.aiModelFunction.input9,
                                       font=('Raleway', 10, 'bold'))
         self.input_9_entry.grid(row=row + 2, column=3)
 
-        self.input_10_entry = tk.Entry(frame, width=16,
+        self.input_10_entry = tk.Entry(frame, width=16, textvariable=self.aiModelFunction.input10,
                                        font=('Raleway', 10, 'bold')
                                        )
         self.input_10_entry.grid(row=row + 2, column=4)
@@ -187,30 +185,35 @@ class AIModelWidget:
                                  font=('Raleway', 10, 'bold'), bg='lightskyblue')
         self.input_10.grid(row=row + 2, column=4)
 
-    def file_input(self, row, frame):
-        self.browse_file = tk.Button(frame, text="Browse File", width=15, height=1,
+    def file_input(self, row, frame, frame2):
+        self.browse_file = tk.Button(frame, text="Browse File", width=10, height=1,
                                      font=('Raleway', 10, 'bold'), bg='lightskyblue',
-                                     activebackground='cornflowerblue')
+                                     activebackground='cornflowerblue',
+                                     command=lambda: self.aiModelFunction.get_file_data(frame2, self.file_path,
+                                                                                        self.input_view))
         self.browse_file.grid(row=row, column=0, padx=(65, 10), pady=(5, 0))
 
-        self.file_text = tk.Label(frame, text='Inputted File Path: ', width=15, height=1,
-                                  font=('Raleway', 12, 'bold'), bg='lightskyblue')
-        self.file_text.grid(row=row, column=1, padx=(3, 3), pady=(5, 0))
+        self.file_text = tk.Label(frame, text='File Path: ', width=8, height=1,
+                                  font=('Raleway', 10, 'bold'), bg='lightskyblue')
+        self.file_text.grid(row=row, column=1, pady=(5, 0))
 
-        self.file_path = tk.Label(frame, text=self.aiModelFunction.file_inputted, width=29, height=1,
-                                  font=('Raleway', 12, 'bold', 'underline'), bg='white', anchor='w')
+        self.file_path = tk.Label(frame, text=self.aiModelFunction.file_inputted, width=60, height=1,
+                                  font=('Raleway', 8, 'bold', 'underline'), bg='white', anchor='w')
         self.file_path.grid(row=row, column=2, padx=(3, 65), columnspan=3, pady=(5, 0))
 
         self.input_view = ttk.Treeview(frame, selectmode='browse', height=4,
                                        show='headings',
-                                       columns=['test'])
+                                       columns=['CO(GT)', 'PT08.S1(CO)', 'NMHC(GT)', 'C6H6(GT)', 'PT08.S2(NMHC)',
+                                                'NOx(GT)',
+                                                'PT08.S3(NOx)', 'NO2(GT)', 'PT08.S4(NO2)', 'PT08.S5(O3)'])
         self.input_view.grid(row=row + 1, column=0, columnspan=5, pady=(5, 0))
 
-        self.input_view.column("0", width=600, anchor='c')
+        for i in range(0, 10):
+            self.input_view.column(i, minwidth=60, width=60, anchor='c', stretch=False)
 
         self.input_scrollbar = tk.Scrollbar(frame, orient="vertical", command=self.input_view.yview)
         self.input_view.configure(yscrollcommand=self.input_scrollbar.set)
-        self.input_scrollbar.grid(row=row + 1, column=4, sticky='ns', padx=(59, 0), pady=(6, 1))
+        self.input_scrollbar.grid(row=row + 1, column=4, sticky='ns', padx=(200, 0), pady=(6, 1))
 
         self.file = [self.browse_file, self.file_text, self.file_path, self.input_view, self.input_scrollbar]
 
@@ -234,47 +237,47 @@ class AIModelWidget:
         self.rh_Button.grid(row=row, column=4, pady=(3, 3))
 
     def prediction_result(self, row, frame):
-        result_view = ttk.Treeview(frame, selectmode='browse', height=5,
-                                   show='headings',
-                                   columns=['test'])
-        result_view.grid(row=row, column=0, columnspan=5, pady=(10, 0))
+        self.result_view = ttk.Treeview(frame, selectmode='browse', height=5,
+                                        show='headings',
+                                        columns=['test'])
+        self.result_view.grid(row=row, column=0, columnspan=5, pady=(10, 0))
 
-        # result_view['columns'] = ('test','test')
+        self.result_view['columns'] = ('test', 'test', 'test', 'test', 'test', 'test',
+                                       'test', 'test', 'test', 'test', 'test', 'test', 'test')
 
-        result_view.column("0", width=600, anchor='c')
-        # result_view.column("1", width=45, anchor='c')
-        # result_view.column("2", width=45, anchor='c')
-        # result_view.column("3", width=45, anchor='c')
-        # result_view.column("4", width=45, anchor='c')
-        # result_view.column("5", width=45, anchor='c')
-        # result_view.column("6", width=45, anchor='c')
-        # result_view.column("7", width=45, anchor='c')
-        # result_view.column("8", width=45, anchor='c')
-        # result_view.column("9", width=45, anchor='c')
-        # result_view.column("10", width=45, anchor='c')
-        # result_view.column("11", width=45, anchor='se')
-        # result_view.column("12", width=45, anchor='se')
+        self.result_view.column("0", width=50, anchor='c')
+        self.result_view.column("1", width=50, anchor='c')
+        self.result_view.column("2", width=50, anchor='c')
+        self.result_view.column("3", width=45, anchor='c')
+        self.result_view.column("4", width=45, anchor='c')
+        self.result_view.column("5", width=45, anchor='c')
+        self.result_view.column("6", width=45, anchor='c')
+        self.result_view.column("7", width=45, anchor='c')
+        self.result_view.column("8", width=45, anchor='c')
+        self.result_view.column("9", width=45, anchor='c')
+        self.result_view.column("10", width=45, anchor='c')
+        self.result_view.column("11", width=45, anchor='se')
+        self.result_view.column("12", width=45, anchor='se')
 
-        """
-        result_view.heading("0", text="Name")
-        result_view.heading("1", text="Sex")
-        result_view.heading("2", text="Age")
-        result_view.heading("3", text="Sex")
-        result_view.heading("4", text="Age")
-        result_view.heading("5", text="Sex")
-        result_view.heading("6", text="Last")
-        result_view.heading("7", text="Age")
-        result_view.heading("8", text="Sex")
-        result_view.heading("9", text="Last")
-        result_view.heading("10", text="Age")
-        #result_view.heading("11", text="Sex")
-        #result_view.heading("12", text="Last")"""
+        self.result_view.heading("0", text="Name")
+        self.result_view.heading("1", text="Sex")
+        self.result_view.heading("2", text="Age")
+        self.result_view.heading("3", text="Sex")
+        self.result_view.heading("4", text="Age")
+        self.result_view.heading("5", text="Sex")
+        self.result_view.heading("6", text="Last")
+        self.result_view.heading("7", text="Age")
+        self.result_view.heading("8", text="Sex")
+        self.result_view.heading("9", text="Last")
+        self.result_view.heading("10", text="Age")
+        self.result_view.heading("11", text="Sex")
+        self.result_view.heading("12", text="Last")
 
-        vertical_scrollbar = tk.Scrollbar(frame, orient="vertical", command=result_view.yview)
-        result_view.configure(yscrollcommand=vertical_scrollbar.set)
+        vertical_scrollbar = tk.Scrollbar(frame, orient="vertical", command=self.result_view.yview)
+        self.result_view.configure(yscrollcommand=vertical_scrollbar.set)
         vertical_scrollbar.grid(row=row, column=4, sticky='ns', padx=(90, 0), pady=(11, 1))
 
-        self.result = [result_view, vertical_scrollbar]
+        self.result = [self.result_view, vertical_scrollbar]
 
     def final_button(self, row, frame):
         clear_button = tk.Button(frame, text="Clear All", width=16,
@@ -291,40 +294,48 @@ class AIModelWidget:
         label = tk.Label(frame, text="", width=16, height=2, bg='lightskyblue')
         label.grid(row=row, column=2, pady=(8, 5), padx=(0, 0))
 
-        view_prediction_button = tk.Button(frame, text="View Prediction", width=16, height=2,
+        download_result_button = tk.Button(frame, text="Download\nPrediction Result", width=16, height=2,
                                            font=('Raleway', 10, 'bold'), bg='dodgerblue',
                                            activebackground='cornflowerblue')
-        view_prediction_button.grid(row=row, column=3, pady=(8, 5), padx=(5, 5))
+        download_result_button.grid(row=row, column=3, pady=(8, 5), padx=(5, 5))
 
-        self.row_label = tk.Label(frame, text='', width=10, height=3,
+        filename_label = tk.Label(frame, text='Enter a\nFilename', width=10, height=3,
                                   font=('Raleway', 8, 'bold'), bg='lightskyblue', anchor='w')
-        self.row_label.grid(row=row, column=4, pady=(8, 5), padx=(0, 70))
+        filename_label.grid(row=row, column=4, pady=(8, 5), padx=(0, 70))
 
-        self.row_entry = tk.Entry(frame, width=10, font=('Raleway', 10, 'bold'), bg='lightskyblue', relief='flat', cursor='arrow')
-        self.row_entry.grid(row=row, column=4, pady=(8, 5), padx=(80, 0))
+        self.filename_entry = tk.Entry(frame, width=15, font=('Raleway', 10, 'bold'), bg='dodgerblue')
+        self.filename_entry.grid(row=row, column=4, pady=(8, 5), padx=(80, 0))
 
     def predict(self, frame, result_label):
         if self.aiModelFunction.view_options != 'initial':
             if self.aiModelFunction.prediction_options is False:
-                self.aiModelFunction.prediction(frame, result_label, self.prediction_result(row=12, frame=self.result_frame))
+                if self.aiModelFunction.check_prediction(frame, self.entry):
+                    self.aiModelFunction.prediction(frame, result_label,
+                                                    self.prediction_result(row=12, frame=self.result_frame))
+        else:
+            label = tk.Label(frame, text='Please Select\nthe Input type', foreground='red', bg='lightskyblue')
+            label.grid(row=13, column=2)
+            label.after(3000, lambda: label.destroy())
 
     def view(self, method):
         if method == 'file':
             if self.aiModelFunction.view_options != 'file':
-                self.aiModelFunction.change_input('file', self.frame, self.file_input(row=4, frame=self.frame),
-                                                  self.canvas, self.independent_label, self.dependent_label, self.row_label,
-                                                  self.row_entry, self.entry, self.label, self.file,
+                self.aiModelFunction.change_input('file', self.frame, self.file_input(row=4, frame=self.frame,
+                                                                                      frame2=self.bottom_frame),
+                                                  self.canvas, self.independent_label, self.dependent_label, self.filename_entry,
+                                                  self.entry, self.label, self.file,
                                                   self.t_Button, self.ah_Button, self.rh_Button)
         elif method == 'single':
             if self.aiModelFunction.view_options != 'single':
                 self.aiModelFunction.change_input('single', self.frame, self.single_input(row=4, frame=self.frame),
-                                                  self.canvas, self.independent_label, self.dependent_label, self.row_label,
-                                                  self.row_entry, self.entry, self.label, self.file,
+                                                  self.canvas, self.independent_label, self.dependent_label, self.filename_entry,
+                                                  self.entry, self.label, self.file,
                                                   self.t_Button, self.ah_Button, self.rh_Button)
 
     def clear(self):
         if self.aiModelFunction.view_options != 'initial':
             self.aiModelFunction.clear_all(self.frame, self.canvas, self.draw_canvas(row=4, frame=self.frame),
-                                           self.independent_label, self.dependent_label, self.result_label, self.row_label,
-                                           self.row_entry, self.entry, self.label, self.file, self.result, self.t_Button,
-                                           self.ah_Button,  self.rh_Button)
+                                           self.independent_label, self.dependent_label, self.result_label, self.filename_entry,
+                                           self.entry, self.label, self.file, self.result,
+                                           self.t_Button,
+                                           self.ah_Button, self.rh_Button)

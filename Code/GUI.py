@@ -35,7 +35,7 @@ class GUI(tk.Tk):
         self.frames = {}
 
         # iterating through a tuple consisting of the different page layouts
-        for F in (HomePage, ModelVisPage):
+        for F in (HomePage, PredictionPage):
             frame = F(container, self)
 
             # initializing frame of that object from all the pages within the for loop
@@ -43,7 +43,7 @@ class GUI(tk.Tk):
 
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(ModelVisPage)
+        self.show_frame(PredictionPage)
 
     # to display the current frame passed as parameter
     def show_frame(self, cont):
@@ -140,8 +140,11 @@ class LiveDataPage(tk.Frame):
 
 # Prediction window frame
 class PredictionPage(tk.Frame):
+
     def __init__(self, parent, controller):
+
         aiModelWidget = AIModelWidget()
+
         tk.Frame.__init__(self, parent, bg='black')
 
         # Create left, right and inner right frames
@@ -162,7 +165,7 @@ class PredictionPage(tk.Frame):
                           lambda: controller.show_frame(LiveDataPage), lambda: controller.show_frame(PredictionPage),
                           lambda: controller.show_frame(ModelVisPage))
         right_frame_widget(right_frame, "Air Quality Prediction")
-        ModelVisPage.modelVisWidget.inner_modelvis_widget(right_inside_frame)
+        aiModelWidget.inner_aimodel_widget(right_inside_frame)
 
 
 # AI Model Vis window frame

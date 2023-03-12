@@ -22,9 +22,9 @@ class AIModel:
         self.RH_dataset = dataset.copy()
         self.model_dataset = dataset.copy()
 
-        self.T_normalise, self.T_scaling, self.T_train, self.T_test = self.train_test_data(self.T_dataset, 'T', 'delete', 'delete', 'lasso')
+        self.T_normalise, self.T_scaling, self.T_features, self.T_train, self.T_test = self.train_test_data(self.T_dataset, 'T', 'delete', 'delete', 'lasso')
         self.AH_normalise, self.AH_train, self.AH_test = self.train_test_data(self.AH_dataset, 'AH', 'delete', 'delete', 'none')
-        self.RH_normalise, self.RH_scaling, self.RH_train, self.RH_test = self.train_test_data(self.RH_dataset, 'RH', 'none', 'delete', 'lasso')
+        self.RH_normalise, self.RH_scaling, self.RH_features, self.RH_train, self.RH_test = self.train_test_data(self.RH_dataset, 'RH', 'none', 'delete', 'lasso')
 
         self.T_model = RandomForestRegressor(n_estimators=20, max_features=1.0, criterion='friedman_mse', max_depth=6,
                                              random_state=5, n_jobs=5)
@@ -49,8 +49,8 @@ class AIModel:
         normalise, train, test = self.data_preprocessing(dataset, variable)
         train, test = self.null_value(null_method, self.outliers(outlier_method, train), test)
         if scaling_method == 'lasso':
-            scaling_model, train, test = self.feature_scaling(scaling_method, variable, train, test)
-            return normalise, scaling_model, train, test
+            scaling_model, features_name, train, test = self.feature_scaling(scaling_method, variable, train, test)
+            return normalise, scaling_model, features_name, train, test
         elif scaling_method == 'none':
             train, test = self.feature_scaling(scaling_method, variable, train, test)
             return normalise, train, test
@@ -153,7 +153,7 @@ class AIModel:
             train_dataset = pd.concat([y_train, X_train], axis=1)
             test_dataset = pd.concat([y_test, X_test], axis=1)
 
-            return scaling_model, train_dataset, test_dataset
+            return scaling_model, features_name, train_dataset, test_dataset
 
         else:
             print("No Feature Scaling method found")

@@ -12,7 +12,7 @@ from yellowbrick.model_selection import ValidationCurve, LearningCurve
 class AIModelVis:
     def __init__(self):
         self.interact = HandlingInteractions()
-        self.ai_model = AIModel()
+        self.ai_model = AIModel(True)
 
         #path = self.create_Folder()
 
@@ -84,12 +84,26 @@ class AIModelVis:
     def visualise_hyperparameter(self, ai_model, dataset, variable, param_name, file_name, method):
         if param_name == 'n_estimators':
             param_range = np.arange(1, 36)
+            title = 'The Score of Model based on\nthe number of Decision Tree\nfor feature '
         elif param_name == 'max_depth':
             param_range = np.arange(5, 11)
+            title = 'The Score of Model based on\nthe maximum depth of Decision Tree\nfor feature '
         elif param_name == 'max_features':
             param_range = [1.0, 'log2', 'sqrt']
+            title = 'The Score of Model based on\nmaximum splitting features for\nfeature '
         elif param_name == 'criterion':
             param_range = ['poisson', 'squared_error', 'absolute_error', 'friedman_mse']
+            title = 'The Score of Model based on\nthe method of the splitting\nfor feature '
+
+        x = dataset.drop([variable], axis=1)
+        y = dataset[variable]
+
+        if variable == 'T':
+            variable = 'T (Temperature)'
+        elif variable == 'AH':
+            variable = 'AH (Absolute Humidity)'
+        else:
+            variable = 'RH (Relative Humidity)'
 
         if method != 'dataset':
             fig, ax = plt.subplots(figsize=(10, 5))
@@ -100,10 +114,8 @@ class AIModelVis:
             self.interact.zoom_factory(ax, base_scale=1.2)
 
             visualiser = ValidationCurve(ai_model, param_name=param_name, n_jobs=-1,
-                                         param_range=param_range, cv=5, scoring="r2")
-
-            x = dataset.drop([variable], axis=1)
-            y = dataset[variable]
+                                         param_range=param_range, cv=5, scoring="r2",
+                                         title=title + variable)
 
             plt.xlabel(param_name)
             plt.ylabel("R2 Score (Scoring)")
@@ -413,15 +425,24 @@ class AIModelVis:
             return combined
 
     @staticmethod
-    def generate_tree(AI_model, dataset, tree_number, file_name, method):
-        fig, ax = plt.subplots(figsize=(12, 6), dpi=800)
-        fig.canvas.manager.set_window_title('Tree ' + str(tree_number + 1) + ' Estimator Visualisation')
+    def generate_tree(AI_model, dataset, tree_number, variable, file_name, method):
+        if method != 'dataset':
+            if variable == 'T':
+                variable = 'T (Temperature)'
+            elif variable == 'AH':
+                variable = 'AH (Absolute Humidity)'
+            else:
+                variable = 'RH (Relative Humidity)'
 
-        tree.plot_tree(AI_model.estimators_[tree_number], feature_names=dataset.columns, filled=True)
-        if method == 'save':
-            plt.savefig(file_name)
-        else:
-            plt.show()
+            fig, ax = plt.subplots(figsize=(12, 6), dpi=800)
+            fig.canvas.manager.set_window_title('Tree ' + str(tree_number + 1) + ' Estimator Visualisation')
+
+            tree.plot_tree(AI_model.estimators_[tree_number], feature_names=dataset.columns, filled=True)
+            plt.title('Decision Tree Number ' + str(tree_number + 1) + ' for feature ' + variable, fontsize=2)
+            if method == 'save':
+                plt.savefig(file_name)
+            else:
+                plt.show()
 
 
 if __name__ == '__main__':
