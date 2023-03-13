@@ -20,19 +20,19 @@ class LiveDataVisualisation:
         self.dataset_in_pollutant_order = pd.DataFrame()
         self.pop_up_df = pd.DataFrame(columns=['City', 'html_file', 'Latitude', 'Longitude'])
 
-        live_data = LiveData()
+        self.live_data = LiveData()
 
         self.create_Folder()
 
-        #self.pop_up_graph(live_data)
-        #self.create_Map(live_data)
+        self.pop_up_graph(self.live_data)
+        self.create_Map(self.live_data)
 
         # Remove the matplotlib toolbar
         plt.rcParams['toolbar'] = 'None'
 
-        #self.bubble_map(live_data, 'CO')
-        #self.bar_graph_on_map(live_data, 'CO', 'most_frequent')
-        #self.pie_chart_on_map(live_data, 'BC', 'last_updated')
+        #self.bubble_map(self.live_data, 'CO')
+        #self.bar_graph_on_map(self.live_data, 'CO', 'most_frequent')
+        #self.pie_chart_on_map(self.live_data, 'BC', 'last_updated')
 
     # Use scatter map to produce a bubble map
     def bubble_map(self, live_data, pollutant_type):
@@ -407,7 +407,7 @@ class LiveDataVisualisation:
 
     def create_Folder(self):
         new_directory = "Visualisation"  # New folder name
-        current_path = os.path.dirname(os.path.dirname(os.getcwd()))  # Get current file path
+        current_path = os.path.dirname(os.getcwd())  # Get current file path
         self.live_path = os.path.join(current_path, new_directory)
 
         # Create new folder

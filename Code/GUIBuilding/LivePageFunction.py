@@ -1,14 +1,18 @@
 import tkinter as tk
+from Code.LiveData.LiveDataVis import *
 
 
 class LivePageFunction:
     def __init__(self):
+        self.liveDataVis = LiveDataVisualisation()
+
         self.visualisation_type = ''
         self.choose_type_text = ''
         self.choose_pollutant_text = ''
         self.visualisation_text = ''
         self.map_text = ''
         self.last_updated_text = ''
+        self.last_updated_text = self.liveDataVis.live_data.last_updated
 
         self.pollutant_type = ['PM2.5', 'PM10', 'O3', 'NO2', ' SO2', 'CO', 'BC']
 
@@ -19,13 +23,22 @@ class LivePageFunction:
             label.grid(row=11, column=1)
             label.after(3000, lambda: label.destroy())
         else:
+            """if self.visualisation_text == 'Bubble Map':
+                """
             label = tk.Label(frame, text='Loading, Please wait', foreground='green', bg='lightskyblue')
             label.grid(row=11, column=1)
             label.after(3000, lambda: label.destroy())
 
+    def get_listbox(self, listbox):
+        index = listbox.curselection()
+
+        items = self.pollutant_type[index]
+
+        return items
+
     def choose_method(self, method, visualisation_label, choose_type_label, type_label, pollutant_label, listbox, button1, button2):
         listbox.delete(0, 'end')
-        if method != 'bar' and method != 'pie' and method != 'bubble':
+        if method != 'bar' and method != 'pie' and method != 'bubble' and method != 'normal':
             self.choose_type_text = ''
             self.choose_pollutant_text = ''
             listbox.config(state='disabled', bg='lightskyblue', highlightbackground='lightskyblue')
@@ -44,26 +57,8 @@ class LivePageFunction:
                 button1.config(text='Last Updated', state='normal', bd=2)
                 button2.config(text='Most Frequent', state='normal', bd=2)
 
-        if method == 'pm2.5':
-            self.visualisation_text = 'PM2.5 Map'
-
-        elif method == 'pm10':
-            self.visualisation_text = 'PM10 Map'
-
-        elif method == 'o3':
-            self.visualisation_text = 'O3 Map'
-
-        elif method == 'no2':
-            self.visualisation_text = 'NO2 Map'
-
-        elif method == 'so2':
-            self.visualisation_text = 'SO2 Map'
-
-        elif method == 'co':
-            self.visualisation_text = 'CO Map'
-
-        elif method == 'bc':
-            self.visualisation_text = 'BC Map'
+        if method == 'normal':
+            self.visualisation_text = 'Normal Map'
 
         elif method == 'enhanced':
             self.visualisation_text = 'Enhanced Map'

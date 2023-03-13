@@ -12,7 +12,7 @@ from yellowbrick.model_selection import ValidationCurve, LearningCurve
 class AIModelVis:
     def __init__(self):
         self.interact = HandlingInteractions()
-        self.ai_model = AIModel(True)
+        self.ai_model = AIModel()
 
         #path = self.create_Folder()
 
@@ -26,7 +26,7 @@ class AIModelVis:
 
         #graph = self.generate_tree(path, self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 0)
 
-        #self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, 'T', 'criterion')
+        #self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, 'T', 'max_features', None, 'normal')
         #self.visualise_learning_rate(self.ai_model.T_model, self.ai_model.T_train, 'T')
 
         #self.visualise_tree_result(self.ai_model.T_model, self.ai_model.T_test.drop(['T'], axis=1), self.ai_model.T_actual, 'T', 0)

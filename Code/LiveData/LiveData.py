@@ -21,6 +21,10 @@ class LiveData:
         self.live_dataset[["Date", "Timezone"]] = self.live_dataset["measurements_lastupdated"].str.split("+",
                                                                                                           expand=True)
         self.live_dataset[["Date", "Time"]] = self.live_dataset["Date"].str.split("T", expand=True)
+
+        data = self.live_dataset[["Date", "Time", 'Timezone']].iloc[0]
+        self.last_updated = data[0] + ', ' + data[1] + '\nGMT+' + data[2]
+
         self.live_dataset['Date'] = pd.to_datetime(self.live_dataset.Date, format='%Y-%m-%d')
         self.live_dataset['Day'] = self.live_dataset['Date'].dt.day
         self.live_dataset['Month'] = self.live_dataset['Date'].dt.month

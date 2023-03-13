@@ -316,7 +316,7 @@ class AIModelWidget:
         download_result_button = tk.Button(frame, text="Download\nPrediction Result", width=16, height=2,
                                            font=('Raleway', 10, 'bold'), bg='dodgerblue',
                                            activebackground='cornflowerblue',
-                                           command=lambda: self.save(frame, self.filename_entry))
+                                           command=lambda: self.aiModelFunction.save_file(frame, self.filename_entry))
         download_result_button.grid(row=row, column=3, pady=(8, 5), padx=(5, 5))
 
         filename_label = tk.Label(frame, text='Enter a\nFilename', width=10, height=3,
@@ -325,14 +325,6 @@ class AIModelWidget:
 
         self.filename_entry = tk.Entry(frame, width=15, font=('Raleway', 10, 'bold'), bg='dodgerblue')
         self.filename_entry.grid(row=row, column=4, pady=(8, 5), padx=(80, 0))
-
-    def save(self, frame, entry):
-        if self.aiModelFunction.prediction_options is False:
-            label = tk.Label(frame, text='Please Do the\nPrediction First', foreground='red', bg='lightskyblue')
-            label.grid(row=13, column=2)
-            label.after(3000, lambda: label.destroy())
-        else:
-            self.aiModelFunction.save_file(frame, self.prediction_df, entry)
 
     def predict(self, frame, result_label):
         if self.aiModelFunction.view_options != 'initial':

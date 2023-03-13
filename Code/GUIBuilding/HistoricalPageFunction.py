@@ -84,7 +84,7 @@ class HistoricalPageFunction:
                     self.clear(variable_label, visualisation_label, vis_type_label, listbox, entry)
 
     def check_filename(self, right_inside_frame, listbox, entry, method):
-        features, checked_passed = self.check_visualise(right_inside_frame, listbox, method)
+        features, checked_passed = self.check_visualise(right_inside_frame, listbox)
         file_name = entry.get()
         file_passed = False
 
@@ -110,7 +110,7 @@ class HistoricalPageFunction:
 
         return features, checked_passed, file_name, file_passed
 
-    def check_visualise(self, right_inside_frame, listbox, method):
+    def check_visualise(self, right_inside_frame, listbox):
         variables = self.get_listbox(listbox)
         if self.visualisation_text == '':
             label = tk.Label(right_inside_frame, text='Please Choose the\ntype of Visualisation', foreground='red',
