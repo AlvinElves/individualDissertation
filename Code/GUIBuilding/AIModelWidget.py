@@ -328,20 +328,25 @@ class AIModelWidget:
     def predict(self, frame, result_label):
         if self.aiModelFunction.view_options != 'initial':
             if self.aiModelFunction.prediction_options is False:
-                if self.aiModelFunction.check_prediction(frame, self.entry):
-                    length, self.prediction_result = self.aiModelFunction.get_dataframe_len()
+                passed, input_df = self.aiModelFunction.check_prediction(frame, self.entry)
+                if passed:
+                    length, self.prediction_df = self.aiModelFunction.do_prediction(input_df)
                     if length == 10:
                         self.aiModelFunction.prediction(frame, result_label,
                                                         self.prediction_result(row=12, frame=self.result_frame,
-                                                                               number=1, result_df=self.prediction_result))
+                                                                               number=1, result_df=self.prediction_df))
                     elif length == 11:
                         self.aiModelFunction.prediction(frame, result_label,
                                                         self.prediction_result(row=12, frame=self.result_frame,
-                                                                               number=2, result_df=self.prediction_result))
+                                                                               number=2, result_df=self.prediction_df))
                     else:
                         self.aiModelFunction.prediction(frame, result_label,
                                                         self.prediction_result(row=12, frame=self.result_frame,
-                                                                               number=3, result_df=self.prediction_result))
+                                                                               number=3, result_df=self.prediction_df))
+            else:
+                label = tk.Label(frame, text='Please Clear the\nScreen Before\nPredicting Again', foreground='red', bg='lightskyblue')
+                label.grid(row=13, column=2)
+                label.after(3000, lambda: label.destroy())
         else:
             label = tk.Label(frame, text='Please Select\nthe Input type', foreground='red', bg='lightskyblue')
             label.grid(row=13, column=2)
@@ -352,14 +357,16 @@ class AIModelWidget:
             if self.aiModelFunction.view_options != 'file':
                 self.aiModelFunction.change_input('file', self.frame, self.file_input(row=4, frame=self.frame,
                                                                                       frame2=self.bottom_frame),
-                                                  self.canvas, self.independent_label, self.dependent_label, self.filename_entry,
-                                                  self.entry, self.label, self.file,
+                                                  self.canvas, self.independent_label, self.dependent_label, self.result_label,
+                                                  self.filename_entry,
+                                                  self.entry, self.label, self.file, self.result,
                                                   self.t_Button, self.ah_Button, self.rh_Button)
         elif method == 'single':
             if self.aiModelFunction.view_options != 'single':
                 self.aiModelFunction.change_input('single', self.frame, self.single_input(row=4, frame=self.frame),
-                                                  self.canvas, self.independent_label, self.dependent_label, self.filename_entry,
-                                                  self.entry, self.label, self.file,
+                                                  self.canvas, self.independent_label, self.dependent_label, self.result_label,
+                self.filename_entry,
+                                                  self.entry, self.label, self.file, self.result,
                                                   self.t_Button, self.ah_Button, self.rh_Button)
 
     def clear(self):

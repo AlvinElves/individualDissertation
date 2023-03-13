@@ -52,8 +52,8 @@ class AIModelFunction:
             ah_Button.config(text='AH Variable\n(ABSOLUTE\nHUMIDITY)', state='normal', bd=2, indicatoron=True)
             rh_Button.config(text='RH Variable\n(RELATIVE\nHUMIDITY)', state='normal', bd=2, indicatoron=True)
 
-    def change_input(self, method, frame, input_func, canvas, independent_label, dependent_label, row_entry,
-                     entry_input, label_input, file_input, t_Button, ah_Button, rh_Button):
+    def change_input(self, method, frame, input_func, canvas, independent_label, dependent_label, result_label, row_entry,
+                     entry_input, label_input, file_input, result, t_Button, ah_Button, rh_Button):
         if self.view_options == 'initial':
             canvas.destroy()
 
@@ -64,6 +64,11 @@ class AIModelFunction:
             self.file_destroy(file_input)
 
         self.button_config('normal', t_Button, ah_Button, rh_Button)
+
+        if self.prediction_options is True:
+            result_label.config(text='')
+            self.result_destroy(result)
+            self.prediction_options = False
 
         if method == 'single':
             self.view_options = 'single'
@@ -165,7 +170,7 @@ class AIModelFunction:
                     if entry_value.isalpha():
                         entry_numeric = False
 
-        return entry_empty, entry_numeric
+        return entry_empty, entry_numeric, entry_result
 
     def check_file(self):
         file_input = True
@@ -186,7 +191,7 @@ class AIModelFunction:
         return chose
 
     def check_prediction(self, frame, entry_list):
-        entry_empty, entry_numeric = self.numeric_check_entry(entry_list)
+        entry_empty, entry_numeric, input_df = self.numeric_check_entry(entry_list)
         dependent_passed = self.check_dependent_var()
         file_passed = self.check_file()
         passed = False
@@ -214,15 +219,23 @@ class AIModelFunction:
         else:
             passed = True
 
-        return passed
+        return passed, input_df
 
-    def get_dataframe_len(self):
+    def do_prediction(self, input_df):
         if self.view_options == 'file':
             df = self.input_dataframe.copy()
             df[df == -200] = np.NaN
 
             self.result_df = self.input_dataframe.copy()
             self.result_df[self.result_df == -200] = np.NaN
+            self.result_df = self.result_df.drop(columns=['NMHC(GT)'])
+            self.result_df = self.result_df.dropna().reset_index(drop=True)
+
+        elif self.view_options == 'single':
+            df = pd.DataFrame([input_df], columns=self.input_column)
+            df[df == -200] = np.NaN
+
+            self.result_df = df.copy()
             self.result_df = self.result_df.drop(columns=['NMHC(GT)'])
             self.result_df = self.result_df.dropna().reset_index(drop=True)
 
