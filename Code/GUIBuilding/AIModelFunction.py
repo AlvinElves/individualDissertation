@@ -87,15 +87,36 @@ class AIModelFunction:
             dependent_label.config(text='CHOOSE THE DEPENDENT FEATURE(S) FOR PREDICTION')
             row_entry.delete(0, 'end')
 
-    def save_file(self, frame, prediction_result, file_name):
-        path = self.aiModel.historical_data.create_folder('SavedPrediction')
-        try:
-            prediction_result.to_excel(path + '/' + file_name + '.xlsx', index=False)
-        except:
-            label = tk.Label(frame, text='Please Enter a\n Valid Filename', foreground='red',
+    def check_save_file(self, frame, entry):
+        file_name = entry.get()
+        if file_name == '':
+            label = tk.Label(frame, text='Please Enter a\nFilename to Save', foreground='red',
                              bg='lightskyblue')
-            label.grid(row=9, column=1)
+            label.grid(row=13, column=2)
             label.after(3000, lambda: label.destroy())
+            file_passed = False
+        else:
+            file_passed = True
+
+        return file_passed, file_name
+
+    def save_file(self, frame, prediction_result, entry):
+        file_passed, file_name = self.check_save_file(frame, entry)
+
+        if file_passed:
+            try:
+                path = self.aiModel.historical_data.create_folder('SavedPrediction')
+                prediction_result.to_excel(path + '/' + file_name + '.xlsx', index=False)
+                label = tk.Label(frame, text='Saving the\nPrediction', foreground='green',
+                                 bg='lightskyblue')
+                label.grid(row=13, column=2)
+                label.after(3000, lambda: label.destroy())
+
+            except:
+                label = tk.Label(frame, text='Please Enter a\n Valid Filename', foreground='red',
+                                 bg='lightskyblue')
+                label.grid(row=13, column=2)
+                label.after(3000, lambda: label.destroy())
 
     def single_destroy(self, entry_input, label_input):
         for label in label_input:
