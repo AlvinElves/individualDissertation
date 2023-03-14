@@ -22,7 +22,7 @@ class AIModelVis:
         #self.visualise_variable('normalised', ['CO(GT) (Original)', 'CO(GT) (Processed)'], 'T', self.ai_model.T_normalise)
 
         #self.visualise_feature_importance(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1))
-        #self.visualise_actual_and_predicted(self.ai_model.T_actual, self.ai_model.T_prediction, 'T')
+        #self.visualise_actual_and_predicted(self.ai_model.T_actual, self.ai_model.T_prediction, 'T', None, 'visualise')
 
         #graph = self.generate_tree(path, self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 0)
 

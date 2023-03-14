@@ -57,6 +57,21 @@ class LiveData:
     def split_data_based_on_pollutant(dataset, name):
         return dataset.loc[dataset['measurements_parameter'] == name].reset_index(drop=True)
 
+    def on_map_data(self, pollutant_type, visual_type):
+        data = self.split_data_based_on_pollutant(self.all_live_dataset, pollutant_type)
+
+        if visual_type == 'most_frequent':
+            frequent_city = data['city'].value_counts().index.values
+            visual_city = frequent_city[:80]
+
+        elif visual_type == 'last_updated':
+            unique_city = data['city'].unique()
+            visual_city = unique_city[:80]
+
+        visual_data = data.loc[data['city'].isin(visual_city)].reset_index(drop=True)
+
+        return visual_data
+
     def remove_unwanted_data(self):
         # Drop the ppm data, only focus on µg/m³
         self.live_dataset = self.live_dataset.loc[

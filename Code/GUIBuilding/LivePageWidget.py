@@ -183,7 +183,8 @@ class LivePageWidget:
         download_dataset_button = tk.Button(frame, text="Download Dataset\nUsed in Visualisation",
                                             width=21,
                                             height=2, font=('Raleway', 10, 'bold'), bg='dodgerblue',
-                                            activebackground='cornflowerblue')
+                                            activebackground='cornflowerblue',
+                                            command=lambda: self.livePageFunction.save_dataset(frame, self.save_entry, self.list_box))
         download_dataset_button.grid(row=row, column=3, padx=(2, 2), pady=(5, 3))
 
         clear_button = tk.Button(frame, text="Clear All", width=21, height=2,

@@ -22,7 +22,7 @@ class LiveDataVisualisation:
 
         self.live_data = LiveData()
 
-        self.create_Folder()
+        self.create_Folder('LiveDataVisualisation', True)
 
         self.pop_up_graph(self.live_data)
         self.create_Map(self.live_data)
@@ -105,7 +105,7 @@ class LiveDataVisualisation:
             frequent_city = data['city'].value_counts().index.values
             visual_city = frequent_city[:80]
 
-            visual_data = data.loc[data['city'].isin(visual_city)].reset_index(drop=True)
+            visual_data = self.live_data.on_map_data(pollutant_type, 'most_frequent')
             unique_time = visual_data['Time'].unique()
 
             plt.title("Most Frequent Bar Graph on map for " + pollutant_type + " Pollutant")
@@ -113,7 +113,7 @@ class LiveDataVisualisation:
             unique_city = data['city'].unique()
             visual_city = unique_city[:80]
 
-            visual_data = data.loc[data['city'].isin(visual_city)].reset_index(drop=True)
+            visual_data = self.live_data.on_map_data(pollutant_type, 'last_updated')
             unique_time = visual_data['Time'].unique()
 
             plt.title("Last Updated Bar Graph on map for " + pollutant_type + " Pollutant")
@@ -405,8 +405,8 @@ class LiveDataVisualisation:
         else:
             self.update_text = self.update_text + 'Enhanced Map is not updated.\n'
 
-    def create_Folder(self):
-        new_directory = "Visualisation"  # New folder name
+    def create_Folder(self, directory_name, another):
+        new_directory = directory_name  # New folder name
         current_path = os.path.dirname(os.getcwd())  # Get current file path
         self.live_path = os.path.join(current_path, new_directory)
 
@@ -414,13 +414,16 @@ class LiveDataVisualisation:
         if not os.path.exists(self.live_path):
             os.mkdir(self.live_path)
 
-        # Create another folder to store enhanced vis
-        new_directory = "EnhancedLiveMapPopUp"  # New folder name
-        self.path = os.path.join(self.live_path, new_directory)
+        if another:
+            # Create another folder to store enhanced vis
+            new_directory = "EnhancedLiveMapPopUp"  # New folder name
+            self.path = os.path.join(self.live_path, new_directory)
 
-        # Create new folder
-        if not os.path.exists(self.path):
-            os.mkdir(self.path)
+            # Create new folder
+            if not os.path.exists(self.path):
+                os.mkdir(self.path)
+
+        return self.live_path
 
 
 if __name__ == '__main__':

@@ -4,8 +4,8 @@ from Code.AIModel.AIModelVis import *
 
 class ModelVisFunction:
     def __init__(self):
-        """self.aiModelVis = AIModelVis()
-        self.aiModel = self.aiModelVis.ai_model"""
+        self.aiModelVis = AIModelVis()
+        self.aiModel = self.aiModelVis.ai_model
 
         self.model_text = ''
         self.visualisation_text = ''

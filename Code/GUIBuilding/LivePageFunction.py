@@ -20,33 +20,41 @@ class LivePageFunction:
 
         file_name = entry.get()
 
-        if file_name == '':
-            label = tk.Label(frame, text='Please Enter a\nFilename to Save', foreground='red',
-                             bg='lightskyblue')
-            label.grid(row=11, column=1)
-            label.after(3000, lambda: label.destroy())
-
-        else:
-            file_passed = True
-            path = self.liveDataVis.create_Folder('SavedDataset', False)
-
-            if self.visualisation_text == 'Normal Map':
-                dataset = self.liveDataVis.live_data.split_data_based_on_pollutant(self.liveDataVis.live_data.live_dataset,
-                                                                                   variables)
-            elif self.visualisation_text == 'Enhanced Map':
-                dataset = self.liveDataVis.live_data.all_live_dataset
-
-            try:
-                dataset.to_excel(path + '/' + file_name + '.xlsx', index=False)
-
-                label = tk.Label(frame, text='Saving the Dataset', foreground='green', bg='lightskyblue')
-                label.grid(row=11, column=1)
-                label.after(3000, lambda: label.destroy())
-            except:
-                label = tk.Label(frame, text='Please Enter a\n Valid Filename', foreground='red',
+        if vis_passed:
+            if file_name == '':
+                label = tk.Label(frame, text='Please Enter a\nFilename to Save', foreground='red',
                                  bg='lightskyblue')
                 label.grid(row=11, column=1)
                 label.after(3000, lambda: label.destroy())
+
+            else:
+                path = self.liveDataVis.create_Folder('SavedDataset', False)
+
+                if self.visualisation_text == 'Normal Map' or self.visualisation_text == 'Bubble Map':
+                    dataset = self.liveDataVis.live_data.split_data_based_on_pollutant(self.liveDataVis.live_data.live_dataset,
+                                                                                       variables)
+                elif self.visualisation_text == 'Enhanced Map':
+                    dataset = self.liveDataVis.live_data.all_live_dataset
+
+                elif self.visualisation_text == 'Bar Graph On Map' or self.visualisation_text == 'Pie Chart On Map':
+                    if self.map_text == 'Last Updated':
+                        map_type = 'last_updated'
+                    elif self.map_text == 'Most Frequent':
+                        map_type = 'most_frequent'
+
+                    dataset = self.liveDataVis.live_data.on_map_data(variables, map_type)
+
+                try:
+                    dataset.to_excel(path + '/' + file_name + '.xlsx', index=False)
+
+                    label = tk.Label(frame, text='Saving the Dataset', foreground='green', bg='lightskyblue')
+                    label.grid(row=11, column=1)
+                    label.after(3000, lambda: label.destroy())
+                except:
+                    label = tk.Label(frame, text='Please Enter a\n Valid Filename', foreground='red',
+                                     bg='lightskyblue')
+                    label.grid(row=11, column=1)
+                    label.after(3000, lambda: label.destroy())
 
     def visualise(self, frame, listbox):
         variables, vis_passed = self.check_visualise(frame, listbox)
