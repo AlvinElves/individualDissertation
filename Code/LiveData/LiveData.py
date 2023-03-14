@@ -43,7 +43,7 @@ class LiveData:
 
     def write_dataset_to_excel(self):
         new_directory = "CleanedDataset"  # New folder name
-        path = os.path.dirname(os.path.dirname(os.getcwd()))  # Get current file path
+        path = os.path.dirname(os.getcwd())  # Get current file path
         data_path = os.path.join(path, new_directory)
 
         # Create new folder

@@ -198,5 +198,5 @@ class LivePageWidget:
         visualise_button = tk.Button(frame, text="Visualise the\nLive Data", width=21, height=2,
                                      font=('Raleway', 10, 'bold'), bg='dodgerblue',
                                      activebackground='cornflowerblue',
-                                     command=lambda: self.livePageFunction.visualise(frame, 'visualise'))
+                                     command=lambda: self.livePageFunction.visualise(frame, self.list_box))
         visualise_button.grid(row=row + 1, column=3, padx=(2, 2), pady=(5, 5))
