@@ -35,7 +35,7 @@ class GUI(tk.Tk):
         self.frames = {}
 
         # iterating through a tuple consisting of the different page layouts
-        for F in (HomePage, LiveDataPage):
+        for F in (HomePage, HistoricalDataPage, LiveDataPage, PredictionPage, ModelVisPage):
             frame = F(container, self)
 
             # initializing frame of that object from all the pages within the for loop
