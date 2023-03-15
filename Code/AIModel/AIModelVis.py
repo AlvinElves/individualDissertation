@@ -7,6 +7,8 @@ import seaborn as sns
 
 from sklearn import tree
 from yellowbrick.model_selection import ValidationCurve, LearningCurve
+from sklearn.metrics import r2_score
+from sklearn.model_selection import cross_val_score
 
 
 class AIModelVis:
@@ -14,22 +16,23 @@ class AIModelVis:
         self.interact = HandlingInteractions()
         self.ai_model = AIModel()
 
-        #path = self.create_Folder()
+        # path = self.create_Folder()
 
         # Remove the matplotlib toolbar
         plt.rcParams['toolbar'] = 'None'
 
-        #self.visualise_variable('normalised', ['CO(GT) (Original)', 'CO(GT) (Processed)'], 'T', self.ai_model.T_normalise)
+        # self.visualise_variable('normalised', ['CO(GT) (Original)', 'CO(GT) (Processed)'], 'T', self.ai_model.T_normalise)
 
-        #self.visualise_feature_importance(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1))
+        # self.visualise_feature_importance(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1))
         self.visualise_actual_and_predicted(self.ai_model.T_actual, self.ai_model.T_prediction, 'T', None, 'visualise')
 
-        #graph = self.generate_tree(path, self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 0)
+        # graph = self.generate_tree(path, self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 0)
 
-        #self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, 'T', 'max_features', None, 'normal')
-        #self.visualise_learning_rate(self.ai_model.T_model, self.ai_model.T_train, 'T')
+        # self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, self.ai_model.T_test, 'T',
+        #                              'max_features', None, 'normal')
+        # self.visualise_learning_rate(self.ai_model.T_model, self.ai_model.T_train, 'T')
 
-        #self.visualise_tree_result(self.ai_model.T_model, self.ai_model.T_test.drop(['T'], axis=1), self.ai_model.T_actual, 'T', 0)
+        # self.visualise_tree_result(self.ai_model.T_model, self.ai_model.T_test.drop(['T'], axis=1), self.ai_model.T_actual, 'T', 0)
 
     def visualise_tree_result(self, ai_model, dataset, actual_dataset, variable, prediction_number, file_name, method):
         tree_prediction = [decision_tree.predict(dataset) for decision_tree in ai_model.estimators_]
@@ -81,7 +84,7 @@ class AIModelVis:
             df = pd.concat([result_df, mean, actual_df], axis=1)
             return df
 
-    def visualise_hyperparameter(self, ai_model, dataset, variable, param_name, file_name, method):
+    def visualise_hyperparameter(self, ai_model, dataset, test_dataset, variable, param_name, file_name, method):
         if param_name == 'n_estimators':
             param_range = np.arange(1, 36)
             title = 'The Score of Model based on\nthe number of Decision Tree\nfor feature '
@@ -92,11 +95,14 @@ class AIModelVis:
             param_range = [1.0, 'log2', 'sqrt']
             title = 'The Score of Model based on\nmaximum splitting features for\nfeature '
         elif param_name == 'criterion':
-            param_range = ['poisson', 'squared_error', 'absolute_error', 'friedman_mse']
+            param_range = ['squared_error', 'absolute_error', 'friedman_mse']
             title = 'The Score of Model based on\nthe method of the splitting\nfor feature '
 
         x = dataset.drop([variable], axis=1)
         y = dataset[variable]
+
+        x_test = test_dataset.drop([variable], axis=1)
+        y_test = test_dataset[variable]
 
         if variable == 'T':
             variable = 'T (Temperature)'
@@ -113,19 +119,85 @@ class AIModelVis:
             pan_handler = panhandler(fig, 1)
             self.interact.zoom_factory(ax, base_scale=1.2)
 
-            visualiser = ValidationCurve(ai_model, param_name=param_name, n_jobs=-1,
-                                         param_range=param_range, cv=5, scoring="r2",
-                                         title=title + variable)
+            if param_name == 'n_estimators' or param_name == 'max_depth':
+                visualiser = ValidationCurve(ai_model, param_name=param_name, n_jobs=-1,
+                                             param_range=param_range, cv=5, scoring="r2",
+                                             title=title + variable)
 
-            plt.xlabel(param_name)
-            plt.ylabel("R2 Score (Scoring)")
+                plt.xlabel(param_name)
+                plt.ylabel("R2 Score (Scoring)")
 
-            visualiser.fit(x, y)
+                visualiser.fit(x, y)
 
-            if method == 'save':
-                plt.savefig(file_name)
+                if method == 'save':
+                    plt.savefig(file_name)
 
-            visualiser.show()
+                visualiser.show()
+
+            else:
+                if param_name == 'max_features':
+                    accuracy = []
+                    cross_val = []
+
+                    for param in param_range:
+                        params = {"max_features": param}
+                        ai_model.set_params(**params)
+                        ai_model.fit(x, y)
+                        predicted = ai_model.predict(x_test)
+
+                        accuracy.append(r2_score(y_test, predicted))
+                        cross_val.append(np.average(cross_val_score(ai_model, x_test, y_test, cv=5)))
+
+                    params = {"max_features": 1.0}
+                    ai_model.set_params(**params)
+
+                    parameter = pd.DataFrame(param_range, columns=['Hyperparameter'])
+                    accuracy_df = pd.DataFrame(accuracy, columns=['Training Score'])
+                    cv_df = pd.DataFrame(cross_val, columns=['Cross Validation Score'])
+
+                    result_df = pd.concat([accuracy_df, cv_df], axis=1)
+
+                    result_df = pd.concat([parameter, result_df], axis=1)
+
+                elif param_name == 'criterion':
+                    accuracy = []
+                    cross_val = []
+
+                    for param in param_range:
+                        params = {"criterion": param}
+                        ai_model.set_params(**params)
+                        ai_model.fit(x, y)
+                        predicted = ai_model.predict(x_test)
+
+                        accuracy.append(r2_score(y_test, predicted))
+                        cross_val.append(np.average(cross_val_score(ai_model, x_test, y_test, cv=5)))
+
+                    if variable == 'AH':
+                        params = {"criterion": 'squared_error'}
+                    else:
+                        params = {"criterion": 'friedman_mse'}
+
+                    ai_model.set_params(**params)
+
+                    parameter = pd.DataFrame(param_range, columns=['Hyperparameter'])
+                    accuracy_df = pd.DataFrame(accuracy, columns=['Training Score'])
+                    cv_df = pd.DataFrame(cross_val, columns=['Cross Validation Score'])
+
+                    result_df = pd.concat([accuracy_df, cv_df], axis=1)
+
+                    result_df = pd.concat([parameter, result_df], axis=1)
+
+                result_df.plot(x='Hyperparameter', kind='bar', stacked=False,
+                               title=title + variable, ax=ax)
+
+                plt.ylim(0, 1)
+                plt.ylabel("R2 Score (Scoring)")
+                plt.xticks(rotation=360)
+
+                if method == 'save':
+                    plt.savefig(file_name)
+
+                plt.show()
 
     def visualise_learning_rate(self, ai_model, dataset, variable, file_name, method):
         x = dataset.drop([variable], axis=1)
@@ -185,11 +257,13 @@ class AIModelVis:
         feature_dataset, _ = self.ai_model.null_value('delete', outliers_dataset, pd.DataFrame())
 
         if method == 'normalised':
-            df = self.visualise_normalised_data(original_dataset, normalised_dataset, column, variable, file_name, guimethod)
+            df = self.visualise_normalised_data(original_dataset, normalised_dataset, column, variable, file_name,
+                                                guimethod)
             return df
 
         elif method == 'outliers':
-            df = self.visualise_outliers_data(original_normalised_dataset, outliers_dataset, column, variable, file_name, guimethod)
+            df = self.visualise_outliers_data(original_normalised_dataset, outliers_dataset, column, variable,
+                                              file_name, guimethod)
             return df
 
         elif method == 'feature':
@@ -393,7 +467,8 @@ class AIModelVis:
         column_name = [variable + " (Actual)"] + [variable + " (Predicted)"]
         combined.columns = column_name
 
-        combined['Percentage'] = (abs(combined[variable + " (Actual)"] - combined[variable + " (Predicted)"]) / combined[variable + " (Actual)"]) * 100
+        combined['Percentage'] = (abs(combined[variable + " (Actual)"] - combined[variable + " (Predicted)"]) /
+                                  combined[variable + " (Actual)"]) * 100
 
         print(combined)
 
@@ -413,7 +488,7 @@ class AIModelVis:
             plt.ylabel(variable + " Values")
 
             combined[column_name].plot(kind='line', fontsize=10, ax=ax)
-            #combined['Percentage'].plot(kind='bar', fontsize=10, ax=ax)
+            # combined['Percentage'].plot(kind='bar', fontsize=10, ax=ax)
 
             if variable == 'T':
                 variable = 'T (Temperature)'

@@ -48,6 +48,7 @@ class ModelVisFunction:
                 model_variable = 'T'
                 scalar = self.aiModel.T_normalise
                 all_df = self.aiModel.T_train
+                all_test_df = self.aiModel.T_test
                 train_df = self.aiModel.T_train.drop(['T'], axis=1)
                 test_df = self.aiModel.T_test.drop(['T'], axis=1)
                 actual_df = self.aiModel.T_actual
@@ -58,6 +59,7 @@ class ModelVisFunction:
                 model_variable = 'AH'
                 scalar = self.aiModel.AH_normalise
                 all_df = self.aiModel.AH_train
+                all_test_df = self.aiModel.AH_test
                 train_df = self.aiModel.AH_train.drop(['AH'], axis=1)
                 test_df = self.aiModel.AH_test.drop(['AH'], axis=1)
                 actual_df = self.aiModel.AH_actual
@@ -68,6 +70,7 @@ class ModelVisFunction:
                 model_variable = 'RH'
                 scalar = self.aiModel.RH_normalise
                 all_df = self.aiModel.RH_train
+                all_test_df = self.aiModel.RH_test
                 train_df = self.aiModel.RH_train.drop(['RH'], axis=1)
                 test_df = self.aiModel.RH_test.drop(['RH'], axis=1)
                 actual_df = self.aiModel.RH_actual
@@ -106,7 +109,7 @@ class ModelVisFunction:
                 else:
                     hyperparameter = 'criterion'
 
-                self.aiModelVis.visualise_hyperparameter(aiModel, all_df, model_variable, hyperparameter, file, method)
+                self.aiModelVis.visualise_hyperparameter(aiModel, all_df, all_test_df, model_variable, hyperparameter, file, method)
                 dataset = all_df
 
             elif self.visualisation_text == 'Decision Tree':
