@@ -22,7 +22,7 @@ class AIModelVis:
         #self.visualise_variable('normalised', ['CO(GT) (Original)', 'CO(GT) (Processed)'], 'T', self.ai_model.T_normalise)
 
         #self.visualise_feature_importance(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1))
-        #self.visualise_actual_and_predicted(self.ai_model.T_actual, self.ai_model.T_prediction, 'T', None, 'visualise')
+        self.visualise_actual_and_predicted(self.ai_model.T_actual, self.ai_model.T_prediction, 'T', None, 'visualise')
 
         #graph = self.generate_tree(path, self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 0)
 
@@ -393,6 +393,10 @@ class AIModelVis:
         column_name = [variable + " (Actual)"] + [variable + " (Predicted)"]
         combined.columns = column_name
 
+        combined['Percentage'] = (abs(combined[variable + " (Actual)"] - combined[variable + " (Predicted)"]) / combined[variable + " (Actual)"]) * 100
+
+        print(combined)
+
         if method != 'dataset':
             fig, ax = plt.subplots(figsize=(12, 7))
             fig.canvas.manager.set_window_title('Prediction Visualisation')
@@ -401,6 +405,16 @@ class AIModelVis:
             pan_handler = panhandler(fig, 1)
             self.interact.zoom_factory(ax, base_scale=1.2)
 
+            # Creating axis limits and title
+            plt.xlim([0, 50])
+            plt.ylim([0, 150])
+
+            plt.xlabel("Prediction #")
+            plt.ylabel(variable + " Values")
+
+            combined[column_name].plot(kind='line', fontsize=10, ax=ax)
+            #combined['Percentage'].plot(kind='bar', fontsize=10, ax=ax)
+
             if variable == 'T':
                 variable = 'T (Temperature)'
             elif variable == 'AH':
@@ -408,14 +422,7 @@ class AIModelVis:
             else:
                 variable = 'RH (Relative Humidity)'
 
-            # Creating axis limits and title
-            plt.xlim([0, 50])
-            plt.xlabel("Prediction #")
-            plt.ylabel(variable + " Values")
-
             plt.title("Actual vs Predicted for feature " + variable)
-
-            combined.plot(kind='line', fontsize=10, ax=ax)
 
             if method == 'save':
                 plt.savefig(file_name)

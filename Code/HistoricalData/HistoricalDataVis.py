@@ -139,7 +139,21 @@ class HistoricalDataVisualisation:
         df['Date'] = pd.to_datetime(df.Date.astype(str) + ' ' + df.Time.astype(str))
 
         if method != 'dataset':
-            fig = px.line(df, x='Date', y=y_Value, title='Date VS Multiple Attributes', render_mode='webg1')
+            if len(y_Value) == 1:
+                if y_Value[0] == 'T':
+                    variable = 'T (Temperature)'
+                elif y_Value[0] == 'AH':
+                    variable = 'AH (Absolute Humidity)'
+                elif y_Value[0] == 'RH':
+                    variable = 'RH (Relative Humidity)'
+                else:
+                    variable = str(y_Value[0])
+
+                title = 'Date VS Feature ' + variable
+            else:
+                title = 'Date VS Multiple Features'
+
+            fig = px.line(df, x='Date', y=y_Value, title=title, render_mode='webg1')
             fig.update_xaxes(
                 rangeslider_visible=True,
                 rangeselector=dict(
@@ -167,8 +181,17 @@ class HistoricalDataVisualisation:
             for i in range(0, len(y_Value)):
                 visible = [j == i for j in list(range(0, len(y_Value)))]
 
-                button_list.append(dict(label=y_Value[i], method='update',
-                                        args=[{'visible': visible}, {'title': 'Date VS ' + str(y_Value[i])}]))
+                if y_Value[i] == 'T':
+                    variable = 'T (Temperature)'
+                elif y_Value[i] == 'AH':
+                    variable = 'AH (Absolute Humidity)'
+                elif y_Value[i] == 'RH':
+                    variable = 'RH (Relative Humidity)'
+                else:
+                    variable = str(y_Value[i])
+
+                button_list.append(dict(label=variable, method='update',
+                                        args=[{'visible': visible}, {'title': 'Date VS Feature ' + variable}]))
 
             fig.update_layout(
                 updatemenus=[

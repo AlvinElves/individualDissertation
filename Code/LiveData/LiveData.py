@@ -73,11 +73,20 @@ class LiveData:
         return visual_data
 
     def remove_unwanted_data(self):
-        # Drop the ppm data, only focus on µg/m³
-        self.live_dataset = self.live_dataset.loc[
-            self.live_dataset['measurements_unit'] == 'µg/m³'].reset_index(drop=True)
-        self.all_live_dataset = self.all_live_dataset.loc[
-            self.all_live_dataset['measurements_unit'] == 'µg/m³'].reset_index(drop=True)
+        # Change the ppm parameter to µg/m³, since 1ppm = 1000µg/m³
+        self.live_dataset.loc[
+            self.live_dataset['measurements_unit'] == 'ppm', ['measurements_value']] = self.live_dataset.loc[
+            self.live_dataset['measurements_unit'] == 'ppm']['measurements_value'] * 1000
+
+        self.live_dataset.loc[
+            self.live_dataset['measurements_unit'] == 'ppm', ['measurements_unit']] = 'µg/m³'
+
+        self.all_live_dataset.loc[
+            self.all_live_dataset['measurements_unit'] == 'ppm', ['measurements_value']] = self.all_live_dataset.loc[
+            self.all_live_dataset['measurements_unit'] == 'ppm']['measurements_value'] * 1000
+
+        self.all_live_dataset.loc[
+            self.all_live_dataset['measurements_unit'] == 'ppm', ['measurements_unit']] = 'µg/m³'
 
         # Check and drop the duplicate based on having the same type pollutant, country name, city name, and time
         self.live_dataset = self.live_dataset.drop_duplicates(

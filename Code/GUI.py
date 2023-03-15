@@ -35,7 +35,7 @@ class GUI(tk.Tk):
         self.frames = {}
 
         # iterating through a tuple consisting of the different page layouts
-        for F in (HomePage, HistoricalDataPage, LiveDataPage, PredictionPage, ModelVisPage):
+        for F in (HomePage, HistoricalDataPage):
             frame = F(container, self)
 
             # initializing frame of that object from all the pages within the for loop
@@ -43,7 +43,7 @@ class GUI(tk.Tk):
 
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(LiveDataPage)
+        self.show_frame(HomePage)
 
     # to display the current frame passed as parameter
     def show_frame(self, cont):

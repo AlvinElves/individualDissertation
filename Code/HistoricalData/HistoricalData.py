@@ -70,7 +70,7 @@ class HistoricalData:
         self.merged_date_dataset.to_excel(data_path + '/MergedHistoricalData.xlsx', index=False)
 
     def get_data_from_excel(self):
-        self.historical_dataset = pd.read_excel("../Dataset/AirQualityUCI.xlsx")
+        self.historical_dataset = pd.read_excel("../../Dataset/AirQualityUCI.xlsx")
         self.original_dataset = self.historical_dataset.copy()
 
 
