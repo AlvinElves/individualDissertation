@@ -4,6 +4,8 @@ from Code.HandlingInteractions import *
 import pandas as pd
 import numpy as np
 import seaborn as sns
+import plotly.express as px
+import plotly.graph_objects as go
 
 from sklearn import tree
 from yellowbrick.model_selection import ValidationCurve, LearningCurve
@@ -470,25 +472,15 @@ class AIModelVis:
         combined['Percentage'] = (abs(combined[variable + " (Actual)"] - combined[variable + " (Predicted)"]) /
                                   combined[variable + " (Actual)"]) * 100
 
-        print(combined)
-
         if method != 'dataset':
-            fig, ax = plt.subplots(figsize=(12, 7))
-            fig.canvas.manager.set_window_title('Prediction Visualisation')
+            from plotly.subplots import make_subplots
 
-            # Allow panning and zooming using a mouse
-            pan_handler = panhandler(fig, 1)
-            self.interact.zoom_factory(ax, base_scale=1.2)
+            # Create figure with secondary y-axis
+            fig = make_subplots(specs=[[{"secondary_y": True}]])
 
-            # Creating axis limits and title
-            plt.xlim([0, 50])
-            plt.ylim([0, 150])
-
-            plt.xlabel("Prediction #")
-            plt.ylabel(variable + " Values")
-
-            combined[column_name].plot(kind='line', fontsize=10, ax=ax)
-            # combined['Percentage'].plot(kind='bar', fontsize=10, ax=ax)
+            fig.add_trace(go.Bar(x=combined.index, y=combined['Percentage'], name="Percentage Difference"), secondary_y=True)
+            fig.add_trace(go.Scatter(x=combined.index, y=combined[variable + " (Actual)"], name="Actual Value"), secondary_y=False)
+            fig.add_trace(go.Scatter(x=combined.index, y=combined[variable + " (Predicted)"], name="Predicted Value"), secondary_y=False)
 
             if variable == 'T':
                 variable = 'T (Temperature)'
@@ -497,12 +489,18 @@ class AIModelVis:
             else:
                 variable = 'RH (Relative Humidity)'
 
-            plt.title("Actual vs Predicted for feature " + variable)
+            fig.update_layout(xaxis_range=[0, 50], yaxis_range=[0, 50], yaxis2_range=[0, 200],
+                              title="Actual vs Predicted for feature " + variable)
+            fig.update_xaxes(rangeslider_visible=True, title_text="Prediction #")
+
+            fig.update_yaxes(title_text="Feature Value for feature " + variable , secondary_y=False)
+            fig.update_yaxes(title_text="Difference between Actual and Predicted (%)", secondary_y=True)
 
             if method == 'save':
-                plt.savefig(file_name)
+                fig.write_html(file_name)
 
-            plt.show()
+            fig.show()
+
         else:
             return combined
 

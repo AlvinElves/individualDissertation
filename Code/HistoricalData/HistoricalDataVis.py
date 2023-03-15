@@ -9,6 +9,7 @@ class HistoricalDataVisualisation:
         self.historical_data = HistoricalData()
 
         # self.path = self.model_vis.create_Folder()
+        self.plot_line_all(self.historical_data, 'T', 'visualise', None)
 
     @staticmethod
     def date_index_dataset(historical_data, column):
