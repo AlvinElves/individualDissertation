@@ -88,6 +88,9 @@ class LiveData:
         self.all_live_dataset.loc[
             self.all_live_dataset['measurements_unit'] == 'ppm', ['measurements_unit']] = 'µg/m³'
 
+        self.live_dataset = self.live_dataset.loc[self.live_dataset["measurements_value"] > -1]
+        self.all_live_dataset = self.all_live_dataset.loc[self.all_live_dataset["measurements_value"] > -1]
+
         # Check and drop the duplicate based on having the same type pollutant, country name, city name, and time
         self.live_dataset = self.live_dataset.drop_duplicates(
             subset=['measurements_parameter', 'country_name_en', 'city', 'Time'],
@@ -104,7 +107,6 @@ class LiveData:
         self.all_live_dataset = self.all_live_dataset.dropna(axis=0, how='any').reset_index(drop=True)
 
         # Get API Data
-
     def get_data_using_api(self):
         record_fields = []
 
