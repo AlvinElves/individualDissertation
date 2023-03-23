@@ -1,13 +1,17 @@
 import tkinter as tk
 from tkinter import filedialog
-import pandas as pd
-
 
 from Code.AIModel.AIModel import *
 
 
 class AIModelFunction:
+    """
+    AIModelFunction Class to be imported into AIModelWidget files. This class contains the tkinter widgets functions..
+    """
     def __init__(self):
+        """
+        AIModelFunction Class Constructor that calls the AIModel Class and creates the list and variables used for the page.
+        """
         self.aiModel = AIModel()
 
         self.input_column = ['CO(GT)', 'PT08.S1(CO)', 'NMHC(GT)', 'C6H6(GT)', 'PT08.S2(NMHC)', 'NOx(GT)',
@@ -37,6 +41,14 @@ class AIModelFunction:
         self.prediction_options = False
 
     def button_config(self, method, t_Button, ah_Button, rh_Button):
+        """
+        A function that show or hide the buttons when called
+        :param method: To either disable or enable the buttons
+        :param t_Button: The button for dependent variable T
+        :param ah_Button: The button for dependent variable AH
+        :param rh_Button: The button for dependent variable RH
+        :return: Show or hide the buttons
+        """
 
         t_Button.deselect()
         ah_Button.deselect()
@@ -52,8 +64,27 @@ class AIModelFunction:
             ah_Button.config(text='AH Variable\n(ABSOLUTE\nHUMIDITY)', state='normal', bd=2, indicatoron=True)
             rh_Button.config(text='RH Variable\n(RELATIVE\nHUMIDITY)', state='normal', bd=2, indicatoron=True)
 
-    def change_input(self, method, frame, input_func, canvas, independent_label, dependent_label, result_label, row_entry,
+    def change_input(self, method, frame, input_func, canvas, independent_label, dependent_label, result_label, file_entry,
                      entry_input, label_input, file_input, result, t_Button, ah_Button, rh_Button):
+        """
+        A function that changes the user's view when being clicked
+        :param method: The user's input chosen from the input buttons
+        :param frame: The frame of the tkinter widgets
+        :param input_func: The function to create the tkinter widgets
+        :param canvas: The canvas created for the frame
+        :param independent_label: The heading for the independent variable
+        :param dependent_label: The heading for the dependent variable
+        :param result_label: The heading for the result
+        :param file_entry: The entry for the name of the file that want to be saved
+        :param entry_input: The list of input entry for single point prediction
+        :param label_input: The list of label for single point prediction
+        :param file_input: The list of widgets like buttons, label etc, for file prediction
+        :param result: The list of widgets like treeview for the prediction result
+        :param t_Button: The button for dependent variable T
+        :param ah_Button: The button for dependent variable AH
+        :param rh_Button: The button for dependent variable RH
+        :return: Change the user's view based on the button the user clicks
+        """
         if self.view_options == 'initial':
             canvas.destroy()
 
@@ -77,7 +108,7 @@ class AIModelFunction:
             independent_label.config(text='ENTER THE INDEPENDENT FEATURES FOR SINGLE POINT INPUT')
             dependent_label.config(text='CHOOSE THE DEPENDENT FEATURE(S) FOR PREDICTION')
 
-            row_entry.delete(0, 'end')
+            file_entry.delete(0, 'end')
 
         elif method == 'file':
             self.view_options = 'file'
@@ -85,9 +116,15 @@ class AIModelFunction:
 
             independent_label.config(text='UPLOAD A FILE WITH INDEPENDENT FEATURES FOR FILE INPUT')
             dependent_label.config(text='CHOOSE THE DEPENDENT FEATURE(S) FOR PREDICTION')
-            row_entry.delete(0, 'end')
+            file_entry.delete(0, 'end')
 
     def check_save_file(self, frame, entry):
+        """
+        A function that checks the filename inputted by the user
+        :param frame: The frame that puts the tkinter widgets
+        :param entry: The file entry for the user to enter the filename
+        :return: A boolean that checks the name of file and the file name string
+        """
         file_name = entry.get()
         if file_name == '':
             label = tk.Label(frame, text='Please Enter a\nFilename to Save', foreground='red',
@@ -101,6 +138,12 @@ class AIModelFunction:
         return file_passed, file_name
 
     def save_file(self, frame, entry):
+        """
+        A function that saves the prediction to the user's computer
+        :param frame: The frame that puts the tkinter widgets
+        :param entry: The file entry for the user to enter the filename
+        :return: An Excel file that has the predicted result
+        """
         file_passed, file_name = self.check_save_file(frame, entry)
 
         if file_passed:
@@ -125,6 +168,12 @@ class AIModelFunction:
                     label.after(3000, lambda: label.destroy())
 
     def single_destroy(self, entry_input, label_input):
+        """
+        A function that destroy the tkinter widget for the single page viewing
+        :param entry_input: The list of input entry for single point prediction
+        :param label_input: The list of label for single point prediction
+        :return: Clears the tkinter widget for single page viewing
+        """
         for label in label_input:
             label.destroy()
 
@@ -133,16 +182,33 @@ class AIModelFunction:
             entry.destroy()
 
     def file_destroy(self, file_input):
+        """
+        A function that destroy the tkinter widget for the file page viewing
+        :param file_input: The list of widgets like buttons, label etc, for file prediction
+        :return: Clears the tkinter widget for file page viewing
+        """
         for file in file_input:
             file.destroy()
 
         self.file_inputted = ''
 
     def result_destroy(self, result):
+        """
+        A function that destroy the tkinter widget for the result frame
+        :param result: The list of widgets like treeview for the prediction result
+        :return: Clears the tkinter widget for result frame
+        """
         for result in result:
             result.destroy()
 
     def get_file_data(self, frame, file_path, tree):
+        """
+        A function that gets the file inputs and show to the input treeview
+        :param frame: The frame that puts the tkinter widgets
+        :param file_path: The file path for the file inputted
+        :param tree: The input treeview that will show the input value
+        :return: A dataframe that consist the inputted data, treeview that shows the input value and the label for the file inputted
+        """
         try:
             f_types = [('XLSX files', "*.xlsx"), ('All', "*.*")]
             file = filedialog.askopenfilename(filetypes=f_types)
@@ -174,6 +240,11 @@ class AIModelFunction:
                 tree.insert("", 'end', values=values)
 
     def empty_check_entry(self, entry_list):
+        """
+        A function that checks if all the input entry are filled
+        :param entry_list: The list of input entry
+        :return: A boolean that checks all the input entry
+        """
         empty = False
         if self.view_options == 'single':
             for entry in entry_list:
@@ -183,6 +254,11 @@ class AIModelFunction:
         return empty
 
     def numeric_check_entry(self, entry_list):
+        """
+        A function that checks if all the input entry are numerical only
+        :param entry_list: The list of input entry
+        :return: A boolean that checks all the values of input entry and the input entry the user's inputted
+        """
         entry_empty = self.empty_check_entry(entry_list)
         entry_numeric = True
         entry_result = []
@@ -199,6 +275,10 @@ class AIModelFunction:
         return entry_empty, entry_numeric, entry_result
 
     def check_file(self):
+        """
+        A function that checks if the user has inputted the file for prediction
+        :return: A boolean that checks the file
+        """
         file_input = True
         if self.view_options == 'file':
             if self.file_inputted == '':
@@ -207,8 +287,10 @@ class AIModelFunction:
         return file_input
 
     def check_dependent_var(self):
-        chose = False
-
+        """
+        A function that checks if the user has chose the dependent variable for prediction
+        :return: A boolean that checks if any of the dependent variable is chosen
+        """
         if self.t_variable.get() == 0 and self.ah_variable.get() == 0 and self.rh_variable.get() == 0:
             chose = False
         else:
@@ -217,6 +299,12 @@ class AIModelFunction:
         return chose
 
     def check_prediction(self, frame, entry_list):
+        """
+        A function that checks if the user has inputted and chose the variables correctly
+        :param frame: The frame that puts the tkinter widgets
+        :param entry_list: The list of input entry
+        :return: A label for the user to know if any input fails, if passed, then give the input dataframe
+        """
         entry_empty, entry_numeric, input_df = self.numeric_check_entry(entry_list)
         dependent_passed = self.check_dependent_var()
         file_passed = self.check_file()
@@ -248,6 +336,11 @@ class AIModelFunction:
         return passed, input_df
 
     def do_prediction(self, input_df):
+        """
+        A function that process the inputted dataframe and predicts the inputs
+        :param input_df: A dataframe that the user inputted for prediction
+        :return: The length of the dataframe and the result of the prediction
+        """
         if self.view_options == 'file':
             df = self.input_dataframe.copy()
             df[df == -200] = np.NaN
@@ -312,6 +405,13 @@ class AIModelFunction:
         return length, self.result_df
 
     def prediction(self, frame, result_label, prediction_func):
+        """
+        A function that shows the user the software is predicting and show the heading for the result
+        :param frame: The frame that puts the tkinter widgets
+        :param result_label: The heading for the result
+        :param prediction_func: The function to create the prediction tkinter widgets
+        :return: The predicted result and the result heading
+        """
         label = tk.Label(frame, text='Loading, Please wait', foreground='green', bg='lightskyblue')
         label.grid(row=13, column=2)
         label.after(3000, lambda: label.destroy())
@@ -322,6 +422,24 @@ class AIModelFunction:
 
     def clear_all(self, frame, canvas, canvas_func, independent_label, dependent_label, result_label,
                   file_entry, entry_input, label_input, file_input, result, t_Button, ah_Button, rh_Button):
+        """
+        A function that clears all the user's input and prediction, set the page back to the initial page view
+        :param frame: The frame that puts the tkinter widgets
+        :param canvas: The canvas created for the frame
+        :param canvas_func: The function to create the tkinter widgets
+        :param independent_label: The heading for the independent variable
+        :param dependent_label: The heading for the dependent variable
+        :param result_label: The heading for the result
+        :param file_entry: The entry for the name of the file that want to be saved
+        :param entry_input: The list of input entry for single point prediction
+        :param label_input: The list of label for single point prediction
+        :param file_input: The list of widgets like buttons, label etc, for file prediction
+        :param result: The list of widgets like treeview for the prediction result
+        :param t_Button: The button for dependent variable T
+        :param ah_Button: The button for dependent variable AH
+        :param rh_Button: The button for dependent variable RH
+        :return: A clean initial page view that does not have any inputs and predictions
+        """
 
         if self.view_options == 'single':
             self.single_destroy(entry_input, label_input)

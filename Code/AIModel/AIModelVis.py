@@ -4,7 +4,6 @@ from Code.HandlingInteractions import *
 import pandas as pd
 import numpy as np
 import seaborn as sns
-import plotly.express as px
 import plotly.graph_objects as go
 
 from sklearn import tree
@@ -14,29 +13,45 @@ from sklearn.model_selection import cross_val_score
 
 
 class AIModelVis:
+    """
+    AIModelVis Class to be imported into GUI files. This class contains all the AI (RandomForestRegressor) Model Visualisation
+    functions that can be called in the GUI file easily.
+    """
     def __init__(self):
+        """
+        AIModelVis Class Constructor that calls the AIModel Class and Matplotlib Interaction Class and remove the matplotlib toolbar.
+        """
         self.interact = HandlingInteractions()
         self.ai_model = AIModel()
-
-        # path = self.create_Folder()
 
         # Remove the matplotlib toolbar
         plt.rcParams['toolbar'] = 'None'
 
         # self.visualise_variable('normalised', ['CO(GT) (Original)', 'CO(GT) (Processed)'], 'T', self.ai_model.T_normalise)
 
-        # self.visualise_feature_importance(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1))
-        self.visualise_actual_and_predicted(self.ai_model.T_actual, self.ai_model.T_prediction, 'T', None, 'visualise')
-
-        # graph = self.generate_tree(path, self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 0)
+        # self.visualise_feature_importance(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 'T', None, 'visualise')
+        # self.visualise_actual_and_predicted(self.ai_model.T_actual, self.ai_model.T_prediction, 'T', None, 'visualise')
+        # self.generate_tree(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 0, 'T', None, 'visualise')
 
         # self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, self.ai_model.T_test, 'T',
         #                              'max_features', None, 'normal')
         # self.visualise_learning_rate(self.ai_model.T_model, self.ai_model.T_train, 'T')
 
-        # self.visualise_tree_result(self.ai_model.T_model, self.ai_model.T_test.drop(['T'], axis=1), self.ai_model.T_actual, 'T', 0)
+        # self.visualise_tree_result(self.ai_model.T_model, self.ai_model.T_test.drop(['T'], axis=1),
+        #                           self.ai_model.T_actual, 'T', 0, None, 'visualise')
 
     def visualise_tree_result(self, ai_model, dataset, actual_dataset, variable, prediction_number, file_name, method):
+        """
+        A function that is used to visualise the predicted result for all the decision tree.
+        :param ai_model: The AI Model that the user want to visualise
+        :param dataset: The test dataset that is used to predict using the AI Model
+        :param actual_dataset: Actual value from the test dataset
+        :param variable: The dependent variable that the user want to predict with the AI Model
+        :param prediction_number: The row from the test dataset the user want to visualise
+        :param file_name: The name of the file that the user want to use to save the visualisation or dataset
+        :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+        :return: A matplotlib figure that shows the predicted result on all the decision tree using line graph and bar graph
+        """
         tree_prediction = [decision_tree.predict(dataset) for decision_tree in ai_model.estimators_]
         result = [element[prediction_number] for element in tree_prediction]
 
@@ -59,7 +74,8 @@ class AIModelVis:
             pan_handler = panhandler(fig, 1)
             self.interact.zoom_factory(ax, base_scale=1.2)
 
-            result_df.plot(kind="bar", ax=ax, color='g', figsize=(12, 7))
+            visualise = result_df.plot(kind="bar", ax=ax, color='g', figsize=(12, 7))
+            visualise.bar_label(ax.containers[0], fontsize=8)
 
             plt.minorticks_on()
             ax.set_xticklabels(ax.get_xticks(), rotation=0)
@@ -68,11 +84,15 @@ class AIModelVis:
             ax.set_ylabel(y_label + " Feature Value")
             ax.set_title("Every Decision Tree Prediction VS Average Value VS Actual Value\nfor feature " + y_label)
 
-            plt.xlim([0, 30])
+            plt.xlim([-0.5, 20.5])
             plt.ylim([min(result_df['Predicted Result']) - 2, max(result_df['Predicted Result']) + 2])
 
             ax.axhline(mean, linestyle='--', label='Average Result')
             ax.axhline(actual_df, linestyle='--', color='red', label='Actual Result')
+
+            yticks = [*ax.get_yticks(), mean, actual_df]
+            yticklabels = [*ax.get_yticklabels(), format(mean, ".2f"), format(actual_df, ".2f")]
+            ax.set_yticks(yticks, labels=yticklabels)
 
             plt.legend()
 
@@ -87,6 +107,17 @@ class AIModelVis:
             return df
 
     def visualise_hyperparameter(self, ai_model, dataset, test_dataset, variable, param_name, file_name, method):
+        """
+        A function that is used to visualise the score for each hyperparameter value.
+        :param ai_model: The AI Model that the user want to visualise
+        :param dataset: The training dataset that is used to train the AI Model
+        :param test_dataset: The test dataset that is used to test the AI Model
+        :param variable: The dependent variable that the user want to predict with the AI Model
+        :param param_name: The hyperparameter that the user want to visualise
+        :param file_name: The name of the file that the user want to use to save the visualisation or dataset
+        :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+        :return: A matplotlib figure that shows the training score for the hyperparameter using either line graph or bar graph
+        """
         if param_name == 'n_estimators':
             param_range = np.arange(1, 36)
             title = 'The Score of Model based on\nthe number of Decision Tree\nfor feature '
@@ -152,6 +183,7 @@ class AIModelVis:
 
                     params = {"max_features": 1.0}
                     ai_model.set_params(**params)
+                    ai_model.fit(x, y)
 
                     parameter = pd.DataFrame(param_range, columns=['Hyperparameter'])
                     accuracy_df = pd.DataFrame(accuracy, columns=['Training Score'])
@@ -180,6 +212,7 @@ class AIModelVis:
                         params = {"criterion": 'friedman_mse'}
 
                     ai_model.set_params(**params)
+                    ai_model.fit(x, y)
 
                     parameter = pd.DataFrame(param_range, columns=['Hyperparameter'])
                     accuracy_df = pd.DataFrame(accuracy, columns=['Training Score'])
@@ -202,6 +235,15 @@ class AIModelVis:
                 plt.show()
 
     def visualise_learning_rate(self, ai_model, dataset, variable, file_name, method):
+        """
+        A function that is used to visualise the learning curve based on the number of training data used.
+        :param ai_model: The AI Model that the user want to visualise
+        :param dataset: The dataset that is used to train the AI Model
+        :param variable: The dependent variable that the user want to predict with the AI Model
+        :param file_name: The name of the file that the user want to use to save the visualisation or dataset
+        :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+        :return: A matplotlib figure that shows the learning curve of the AI Model using a line graph
+        """
         x = dataset.drop([variable], axis=1)
         y = dataset[variable]
 
@@ -237,6 +279,16 @@ class AIModelVis:
             return df
 
     def visualise_variable(self, method, column, variable, normaliser, file_name, guimethod):
+        """
+        A function that calls the normalised, outliers and feature correlation visualisation since we had to get the data one by one
+        :param method: The type of visualisation the user chose, normalised, outliers or feature correlation
+        :param column: The feature that the user want to visualise
+        :param variable: The dependent variable that the user want to predict with the AI Model
+        :param normaliser: The normalisation scaler used to normalise the dataset
+        :param file_name: The name of the file that the user want to use to save the visualisation or dataset
+        :param guimethod: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+        :return: A matplotlib figure that the user had chose
+        """
         original_dataset = self.ai_model.model_dataset.copy()
         original_dataset[original_dataset == -200] = np.NaN
         original_dataset = original_dataset.dropna(subset=['T']).reset_index(drop=True)
@@ -274,6 +326,14 @@ class AIModelVis:
 
     @staticmethod
     def visualise_feature_correlation(dataset, variable, file_name, method):
+        """
+        A function that is used to visualise the correlation relationship between the feature.
+        :param dataset: The dataset used to generate the feature correlation
+        :param variable: The dependent variable that the user want to predict with the AI Model
+        :param file_name: The name of the file that the user want to use to save the visualisation or dataset
+        :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+        :return: A matplotlib figure that shows the correlation between the features using a heatmap
+        """
         # Correlation matrix for preprocessed data
         cor_df = dataset.copy()
         cor_df = cor_df.iloc[:, 1:10]
@@ -314,9 +374,19 @@ class AIModelVis:
             return corrMatt
 
     @staticmethod
-    def visualise_outliers_data(original_dataset, normalised_dataset, column_name, variable, file_name, method):
+    def visualise_outliers_data(original_dataset, outliers_dataset, column_name, variable, file_name, method):
+        """
+        A function that is used to visualise the difference between original and outliers data side by side.
+        :param original_dataset: Original Dataset that is used for AI Model
+        :param outliers_dataset: Outliers Dataset that removed the outliers from percentile
+        :param column_name: The feature that the user want to visualise
+        :param variable: The dependent variable that the user want to predict with the AI Model
+        :param file_name: The name of the file that the user want to use to save the visualisation or dataset
+        :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+        :return: A matplotlib figure that shows the before and after, original dataset and outliers dataset using a boxplot
+        """
         # Combine the dataset to visualise more easily
-        combined_visualise_dataset = pd.concat([original_dataset, normalised_dataset], axis=1)
+        combined_visualise_dataset = pd.concat([original_dataset, outliers_dataset], axis=1)
 
         # Rename the dataset
         if variable == 'T':
@@ -378,6 +448,16 @@ class AIModelVis:
             return combined_visualise_dataset
 
     def visualise_normalised_data(self, original_dataset, normalised_dataset, column_name, variable, file_name, method):
+        """
+        A function that is used to visualise the pattern of original and normalised data for the AI Model later.
+        :param original_dataset: Original Dataset that is used for AI Model
+        :param normalised_dataset: Normalised Dataset that has been normalised standard scalar
+        :param column_name: The feature that the user want to visualise
+        :param variable: The dependent variable that the user want to predict with the AI Model
+        :param file_name: The name of the file that the user want to use to save the visualisation or dataset
+        :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+        :return: A matplotlib figure that shows the before and after, original dataset and normalised dataset using a line graph
+        """
         # Combine the dataset to visualise more easily
         combined_normalised_dataset = pd.concat([normalised_dataset, original_dataset], axis=1)
 
@@ -439,6 +519,17 @@ class AIModelVis:
 
     @staticmethod
     def visualise_feature_importance(AI_model, dataset, variable, file_name, method):
+        """
+        A function that is used to visualise the feature importance of the AI Model. This function shows the user how each of the
+        independent variable affects the final outcome prediction, and which variable is important for it.
+        :param AI_model: The AI Model that the user want to visualise
+        :param dataset: The dataset that is used to train the AI Model
+        :param variable: The dependent variable that the user want to predict with the AI Model
+        :param file_name: The name of the file that the user want to use to save the visualisation or dataset
+        :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+        :return: A matplotlib figure that shows the feature importance using a horizontal bar graph
+        """
+
         if variable == 'T':
             variable = 'T (Temperature)'
         elif variable == 'AH':
@@ -447,14 +538,17 @@ class AIModelVis:
             variable = 'RH (Relative Humidity)'
 
         if method != 'dataset':
-            plt.figure().set_figwidth(10)
+            fig, ax = plt.subplots(figsize=(12, 6))
             plt.title('Relative Importance between the features\nused for feature ' + variable)
-            plt.get_current_fig_manager().canvas.manager.set_window_title('Relative Importance Visualisation')
+            fig.canvas.manager.set_window_title('Relative Importance Visualisation')
 
             feature_importance = pd.Series(AI_model.feature_importances_, index=dataset.columns)
-            feature_importance.plot(kind='barh')
+            visualise = feature_importance.plot(kind='barh', ax=ax)
+
+            visualise.bar_label(ax.containers[0], fontsize=8)
 
             plt.xlabel('Relative Importance')
+            plt.xlim(0, max(feature_importance) + 0.1)
 
             if method == 'save':
                 plt.savefig(file_name)
@@ -462,6 +556,18 @@ class AIModelVis:
             plt.show()
 
     def visualise_actual_and_predicted(self, actual, predicted, variable, file_name, method):
+        """
+        A function that is used to visualise the actual vs predicted value of the AI Model. This function shows the user the difference
+        between the actual test value and the predicted value from the AI Model. The function also show the percentage difference
+        between the two.
+        :param actual: Actual value from the test dataset
+        :param predicted: Predicted value from the AI Model
+        :param variable: The dependent variable that the user want to predict with the AI Model
+        :param file_name: The name of the file that the user want to use to save the visualisation or dataset
+        :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+        :return: A plotly HTML figure that shows the actual vs predicted value using line graph and the percentage difference with
+        bar graph
+        """
 
         predicted = pd.DataFrame(predicted, columns=[variable])
         combined = pd.concat([actual, predicted], axis=1)
@@ -478,9 +584,11 @@ class AIModelVis:
             # Create figure with secondary y-axis
             fig = make_subplots(specs=[[{"secondary_y": True}]])
 
-            fig.add_trace(go.Bar(x=combined.index, y=combined['Percentage'], name="Percentage Difference"), secondary_y=True)
             fig.add_trace(go.Scatter(x=combined.index, y=combined[variable + " (Actual)"], name="Actual Value"), secondary_y=False)
             fig.add_trace(go.Scatter(x=combined.index, y=combined[variable + " (Predicted)"], name="Predicted Value"), secondary_y=False)
+            fig.add_trace(go.Bar(x=combined.index, y=combined['Percentage'], name="Percentage Difference", marker_color='grey',
+                                 opacity=0.5),
+                          secondary_y=True)
 
             if variable == 'T':
                 variable = 'T (Temperature)'
@@ -489,11 +597,11 @@ class AIModelVis:
             else:
                 variable = 'RH (Relative Humidity)'
 
-            fig.update_layout(xaxis_range=[0, 50], yaxis_range=[0, 50], yaxis2_range=[0, 200],
-                              title="Actual vs Predicted for feature " + variable)
-            fig.update_xaxes(rangeslider_visible=True, title_text="Prediction #")
+            fig.update_layout(xaxis_range=[-0.5, 50], yaxis_range=[0, combined[column_name].max() + 1], yaxis2_range=[0, 200],
+                              title="Actual vs Predicted for feature " + variable, hovermode='x unified')
+            fig.update_xaxes(title_text="Prediction #", rangeslider_visible=True)
 
-            fig.update_yaxes(title_text="Feature Value for feature " + variable , secondary_y=False)
+            fig.update_yaxes(title_text="Feature Value for feature " + variable, secondary_y=False)
             fig.update_yaxes(title_text="Difference between Actual and Predicted (%)", secondary_y=True)
 
             if method == 'save':
@@ -506,6 +614,16 @@ class AIModelVis:
 
     @staticmethod
     def generate_tree(AI_model, dataset, tree_number, variable, file_name, method):
+        """
+        A function that is used to visualise the decision tree used for prediction.
+        :param AI_model: The AI Model that the user want to visualise
+        :param dataset: The dataset that is used to train the AI Model
+        :param tree_number: The decision tree the user want to visualise
+        :param variable: The dependent variable that the user want to predict with the AI Model
+        :param file_name: The name of the file that the user want to use to save the visualisation or dataset
+        :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+        :return: A matplotlib figure that shows the decision tree using a tree plot
+        """
         if method != 'dataset':
             if variable == 'T':
                 variable = 'T (Temperature)'
@@ -517,8 +635,9 @@ class AIModelVis:
             fig, ax = plt.subplots(figsize=(12, 6), dpi=800)
             fig.canvas.manager.set_window_title('Tree ' + str(tree_number + 1) + ' Estimator Visualisation')
 
-            tree.plot_tree(AI_model.estimators_[tree_number], feature_names=dataset.columns, filled=True)
+            tree.plot_tree(AI_model.estimators_[tree_number], feature_names=dataset.columns, ax=ax, filled=True)
             plt.title('Decision Tree Number ' + str(tree_number + 1) + ' for feature ' + variable, fontsize=2)
+
             if method == 'save':
                 plt.savefig(file_name)
             else:

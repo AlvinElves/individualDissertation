@@ -3,9 +3,23 @@ import matplotlib.pyplot as plt
 
 
 class HandlingInteractions:
+    """
+    HandlingInteractions Class to be imported into fils that allows the user to pan and zoom using a mouse.
+    """
     @staticmethod
     def zoom_factory(ax, base_scale=2.):
+        """
+        A function that can be called to matplotlib figure to allow the user to zoom in and out using a mouse.
+        :param ax: The subplot axes from the matplotlib figure. This axes allows the user to plot on it
+        :param base_scale: How much zooming the user wants each ticks
+        :return: The zoom_fun function to allow zooming for the matplotlib figure
+        """
         def zoom_fun(event):
+            """
+            A function that do the calculation of zooming in and out and change the view.
+            :param event: The position of the user's mouse arrow for calculation
+            :return: Redraw the matplotlib figure based on the user's zoom
+            """
             # get the current x and y limits
             cur_xlim = ax.get_xlim()
             cur_ylim = ax.get_ylim()

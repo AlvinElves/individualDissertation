@@ -12,7 +12,14 @@ from sklearn.ensemble import RandomForestRegressor
 
 
 class AIModel:
+    """
+    AIModel Class to be imported into GUI files. This class contains all the AI (RandomForestRegressor) Model functions that can
+    be called for prediction and model visualise in the GUI file easily.
+    """
     def __init__(self):
+        """
+        AIModel Class Constructor that calls the Historical Data Class and creates the all the AI Model and training, testing dataset.
+        """
         self.historical_data = HistoricalData()
 
         dataset = self.historical_data.original_dataset.copy()
@@ -46,6 +53,16 @@ class AIModel:
         self.RH_actual = self.RH_test['RH']
 
     def train_test_data(self, dataset, variable, outlier_method, null_method, scaling_method):
+        """
+        A function that is used to split the dataset into training and testing data.
+        :param dataset: The dataset that is used for the AI Model
+        :param variable: The dependent variable that want to be split for the AI Model
+        :param outlier_method: The method that deals with outlier which has been chosen in the AIModelComparison file
+        :param null_method: The method that deals with null value which has been chosen in the AIModelComparison file
+        :param scaling_method: The method that does feature scaling which has been chosen in the AIModelComparison file
+        :return: A normaliser that is used during normalisation and scaling model which is used for feature scaling, in addition to
+        training and testing dataset that has been split
+        """
         normalise, train, test = self.data_preprocessing(dataset, variable)
         train, test = self.null_value(null_method, self.outliers(outlier_method, train), test)
         if scaling_method == 'lasso':
@@ -57,6 +74,12 @@ class AIModel:
 
     @staticmethod
     def data_preprocessing(dataset, variable):
+        """
+        A function that is used to drop the unwanted column and do normalisation on the dataset
+        :param dataset: The dataset that is used for the AI Model
+        :param variable: The dependent variable that want to be split for the AI Model
+        :return: A normaliser that is used during normalisation, in addition to training and testing dataset that has been split
+        """
         dataset[dataset == -200] = np.NaN
         dataset = dataset.dropna(subset=['T']).reset_index(drop=True)
 
@@ -93,6 +116,12 @@ class AIModel:
     # Method to deal with outliers
     @staticmethod
     def outliers(method, dataset):
+        """
+        A function that is used to deal with the outliers value on the dataset
+        :param method: The method that deals with outlier which has been chosen by AIModelComparison file
+        :param dataset: The dataset that is used for the AI Model
+        :return: A dataset that is from the function parameter, which the outliers value has been dealt with based on the method chosen
+        """
         q1 = dataset.quantile(0.25)
         q3 = dataset.quantile(0.75)
         iqr = q3 - q1
@@ -112,6 +141,14 @@ class AIModel:
     # Method to deal with null values, data imputation
     @staticmethod
     def null_value(method, train_dataset, test_dataset):
+        """
+        A function that is used to deal with the null value on the training and testing dataset
+        :param method: The method that deals with null value which has been chosen by AIModelComparison file
+        :param train_dataset: The training dataset that is used to train the AI Model
+        :param test_dataset: The testing dataset that is used to test the AI Model
+        :return: A training and testing dataset that are from the function parameter, which the null value has been dealt with
+        based on the method chosen
+        """
         if method == "delete":
             train_dataset = train_dataset.dropna(axis=0, how='any').reset_index(drop=True)
             test_dataset = test_dataset.dropna(axis=0, how='any').reset_index(drop=True)
@@ -123,6 +160,15 @@ class AIModel:
     # Feature Scaling Method
     @staticmethod
     def feature_scaling(method, variable, train_dataset, test_dataset):
+        """
+        A function that does feature scaling on the training and testing dataset
+        :param method: The method that does feature scaling which has been chosen in the AIModelComparison file
+        :param variable: The dependent variable that want to be split for the AI Model
+        :param train_dataset: The training dataset that is used to train the AI Model
+        :param test_dataset: The testing dataset that is used to test the AI Model
+        :return: A scaling model which is used for feature scaling, in addition to training and testing dataset that have been dealt
+        with based on the method chosen
+        """
         if method == 'none':
             return train_dataset, test_dataset
 

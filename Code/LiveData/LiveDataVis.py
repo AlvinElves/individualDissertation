@@ -3,6 +3,7 @@ from Code.HandlingInteractions import *
 
 import folium
 import webbrowser
+import os
 
 import plotly.graph_objects as go
 
@@ -11,7 +12,15 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 
 class LiveDataVisualisation:
+    """
+    LiveDataVisualisation Class to be imported into GUI files. This class contains all Live Data Visualisation functions that can
+    be called in the GUI file easily.
+    """
     def __init__(self):
+        """
+        LiveDataVisualisation Class Constructor that calls the LiveData Class and Matplotlib Interaction Class, remove the matplotlib
+        toolbar and creates all the pop-up maps.
+        """
         self.interact = HandlingInteractions()
 
         self.path = None
@@ -35,7 +44,12 @@ class LiveDataVisualisation:
         #self.pie_chart_on_map(self.live_data, 'BC', 'last_updated')
 
     # Use scatter map to produce a bubble map
-    def bubble_map(self, live_data, pollutant_type):
+    def bubble_map(self, pollutant_type):
+        """
+        A function that creates a bubble map to visualise the pollutant chosen.
+        :param pollutant_type: The type of air pollutant the user want to visualise
+        :return: A matplotlib figure that shows the bubble map on the pollutant chosen using a scatter plot
+        """
         worldmap = gpd.read_file(gpd.datasets.get_path("naturalearth_lowres"))
 
         # Creating axes and plotting world map
@@ -48,7 +62,7 @@ class LiveDataVisualisation:
 
         worldmap.plot(ax=ax)
 
-        data = live_data.split_data_based_on_pollutant(live_data.live_dataset, pollutant_type)
+        data = self.live_data.split_data_based_on_pollutant(self.live_data.live_dataset, pollutant_type)
 
         # Plotting the measurements data with a color map
         x = data['longitude']
@@ -73,7 +87,13 @@ class LiveDataVisualisation:
         plt.show()
 
     # Bar Graph on world map
-    def bar_graph_on_map(self, live_data, pollutant_type, visual_type):
+    def bar_graph_on_map(self, pollutant_type, visual_type):
+        """
+        A function that allows the user to visualise the pollutant chosen using a bar graph and the graph is planted into a world map.
+        :param pollutant_type: The type of air pollutant the user want to visualise
+        :param visual_type: The type of measurement time the user want to visualise
+        :return: A matplotlib figure that shows the bar graph on map for the pollutant chosen using a bar graph
+        """
         colours = []
         time = []
         colour_number = 0
@@ -99,7 +119,7 @@ class LiveDataVisualisation:
         plt.ylabel("Latitude")
 
         # Plotting the measurements data with a color map
-        data = live_data.split_data_based_on_pollutant(live_data.all_live_dataset, pollutant_type)
+        data = self.live_data.split_data_based_on_pollutant(self.live_data.all_live_dataset, pollutant_type)
 
         if visual_type == 'most_frequent':
             frequent_city = data['city'].value_counts().index.values
@@ -158,7 +178,13 @@ class LiveDataVisualisation:
         plt.show()
 
     # Pie Chart on world map
-    def pie_chart_on_map(self, live_data, pollutant_type, visual_type):
+    def pie_chart_on_map(self, pollutant_type, visual_type):
+        """
+        A function that allows the user to visualise the pollutant chosen using a pie chart and the graph is planted into a world map.
+        :param pollutant_type: The type of air pollutant the user want to visualise
+        :param visual_type: The type of measurement time the user want to visualise
+        :return: A matplotlib figure that shows the bar graph on map for the pollutant chosen using a pie chart
+        """
         colours = []
         time = []
         colour_number = 0
@@ -183,7 +209,7 @@ class LiveDataVisualisation:
         plt.ylabel("Latitude")
 
         # Plotting the measurements data with a color map
-        data = live_data.split_data_based_on_pollutant(live_data.all_live_dataset, pollutant_type)
+        data = self.live_data.split_data_based_on_pollutant(self.live_data.all_live_dataset, pollutant_type)
 
         unique_time = data['Time'].unique()
 
@@ -234,13 +260,17 @@ class LiveDataVisualisation:
         plt.show()
 
     # Create the graph that will be shown when clicked on enhanced map
-    def pop_up_graph(self, live_data):
+    def pop_up_graph(self):
+        """
+        A function that creates the bar graph on the unique country for the enhanced pop-up map.
+        :return: A dataframe of html file for the enhanced map
+        """
         # Get the name of unique country in an array
-        unique_country = live_data.all_live_dataset['country_name_en'].unique()
+        unique_country = self.live_data.all_live_dataset['country_name_en'].unique()
 
         for a in range(0, len(unique_country)):
-            enhanced_data = live_data.all_live_dataset.loc[
-                live_data.all_live_dataset['country_name_en'] == unique_country[a]].reset_index(drop=True)
+            enhanced_data = self.live_data.all_live_dataset.loc[
+                self.live_data.all_live_dataset['country_name_en'] == unique_country[a]].reset_index(drop=True)
             median_latitude = enhanced_data['latitude'].median()
             median_longitude = enhanced_data['longitude'].median()
 
@@ -285,10 +315,15 @@ class LiveDataVisualisation:
             self.pop_up_df.loc[len(self.pop_up_df)] = [unique_country[a], text, median_latitude, median_longitude]
 
     # Markers for each type basic map
-    @staticmethod
-    def input_Basic_Marker(live_data, header_name, folium_Map):
+    def input_Basic_Marker(self, header_name, folium_Map):
+        """
+        A function that input the pop-up into the map chosen.
+        :param header_name: The type of air pollutant the user want to visualise
+        :param folium_Map: The map that want the pop-up to be inputted
+        :return: A folium map that has all the pop-up inputted based on the pollutant chosen
+        """
         # Split data into variable based on header_name of pollutant
-        data = live_data.split_data_based_on_pollutant(live_data.live_dataset, header_name)
+        data = self.live_data.split_data_based_on_pollutant(self.live_data.live_dataset, header_name)
 
         # Markers for pollutant based on header_name
         for i in range(0, len(data)):
@@ -312,6 +347,11 @@ class LiveDataVisualisation:
             ).add_to(folium_Map)
 
     def input_Enhanced_Marker(self, folium_Map):
+        """
+        A function that input the html bar graph pop-up into the enhanced map.
+        :param folium_Map: The map that want the pop-up to be inputted
+        :return: A folium map that has all the pop-up inputted
+        """
         for i in range(0, len(self.pop_up_df)):
             html = """
             <iframe src=\"""" + "EnhancedLiveMapPopUp/" + self.pop_up_df['html_file'][i] + """\" width="1000" height="750"  frameborder="0">    
@@ -321,19 +361,33 @@ class LiveDataVisualisation:
                           popup=popup, icon=folium.Icon(icon='home', prefix='fa')).add_to(folium_Map)
 
     def display_Map(self, filename):
+        """
+        A function that view the map.
+        :param filename: The name of the file the user want to visualise
+        :return: A HTML file based on the filename to view
+        """
         webbrowser.open(self.live_path + "/" + filename)
 
     def save_Map(self, map_name, filename):
+        """
+        A function that save the map as HTML.
+        :param map_name: The pop-up map that want to be saved
+        :param filename: The name of the file to be saved
+        :return: A HTML file that is saved to the computer
+        """
         map_name.save(self.live_path + "/" + filename)
 
-    def create_Map(self, live_data):
+    def create_Map(self):
+        """
+        A function that creates the pop-up maps.
+        :return: All the pop-up maps as HTML files
+        """
         pollutant_name = ['PM2.5', 'PM10', 'O3', 'NO2', 'SO2', 'CO', 'BC']
         location = []
-        self.update_text = ''
 
         for i in range(0, 7):
             # Rearrange the dataset based on the type of pollutant
-            data = live_data.split_data_based_on_pollutant(live_data.live_dataset, pollutant_name[i])
+            data = self.live_data.split_data_based_on_pollutant(self.live_data.live_dataset, pollutant_name[i])
             self.dataset_in_pollutant_order = pd.concat([self.dataset_in_pollutant_order, data], ignore_index=True,
                                                         sort=False)
             # Get the average location from the type of pollutant
@@ -343,69 +397,52 @@ class LiveDataVisualisation:
         # Display the map
         if location[0] and location[1] is not np.nan:
             map_PM2 = folium.Map(location=(location[0], location[1]), tiles="openstreetmap", min_zoom=2)
-            self.input_Basic_Marker(live_data, 'PM2.5', map_PM2)
+            self.input_Basic_Marker('PM2.5', map_PM2)
             self.save_Map(map_PM2, "PM2_dot_5.html")
-        else:
-            print("PM2.5 is empty")
-            self.update_text = self.update_text + 'PM2.5 Map is not updated.\n'
 
         if location[2] and location[3] is not np.nan:
             map_PM10 = folium.Map(location=(location[2], location[3]), tiles="openstreetmap", min_zoom=2)
-            self.input_Basic_Marker(live_data, 'PM10', map_PM10)
+            self.input_Basic_Marker('PM10', map_PM10)
             self.save_Map(map_PM10, "PM10.html")
-        else:
-            print("PM10 is empty")
-            self.update_text = self.update_text + 'PM10 Map is not updated.\n'
 
         if location[4] and location[5] is not np.nan:
             map_O3 = folium.Map(location=(location[4], location[5]), tiles="openstreetmap", min_zoom=2)
-            self.input_Basic_Marker(live_data, 'O3', map_O3)
+            self.input_Basic_Marker('O3', map_O3)
             self.save_Map(map_O3, "O3.html")
-        else:
-            print("O3 is empty")
-            self.update_text = self.update_text + 'O3 Map is not updated.\n'
 
         if location[6] and location[7] is not np.nan:
             map_NO2 = folium.Map(location=(location[6], location[7]), tiles="openstreetmap", min_zoom=2)
-            self.input_Basic_Marker(live_data, 'NO2', map_NO2)
+            self.input_Basic_Marker('NO2', map_NO2)
             self.save_Map(map_NO2, "NO2.html")
-        else:
-            print("NO2 is empty")
-            self.update_text = self.update_text + 'NO2 Map is not updated.\n'
 
         if location[8] and location[9] is not np.nan:
             map_SO2 = folium.Map(location=(location[8], location[9]), tiles="openstreetmap", min_zoom=2)
-            self.input_Basic_Marker(live_data, 'SO2', map_SO2)
+            self.input_Basic_Marker('SO2', map_SO2)
             self.save_Map(map_SO2, "SO2.html")
-        else:
-            print("SO2 is empty")
-            self.update_text = self.update_text + 'SO2 Map is not updated.\n'
 
         if location[10] and location[11] is not np.nan:
             map_CO = folium.Map(location=(location[10], location[11]), tiles="openstreetmap", min_zoom=2)
-            self.input_Basic_Marker(live_data, 'CO', map_CO)
+            self.input_Basic_Marker('CO', map_CO)
             self.save_Map(map_CO, "CO.html")
-        else:
-            print("CO is empty")
-            self.update_text = self.update_text + 'CO Map is not updated.\n'
 
         if location[12] and location[13] is not np.nan:
             map_BC = folium.Map(location=(location[12], location[13]), tiles="openstreetmap", min_zoom=2)
-            self.input_Basic_Marker(live_data, 'BC', map_BC)
+            self.input_Basic_Marker('BC', map_BC)
             self.save_Map(map_BC, "BC.html")
-        else:
-            print("BC is empty")
-            self.update_text = self.update_text + 'BC Map is not updated.\n'
 
         if self.pop_up_df['Latitude'][0] and self.pop_up_df['Longitude'][0] is not np.nan:
             map_enhanced = folium.Map(location=(self.pop_up_df['Latitude'][0], self.pop_up_df['Longitude'][0]),
                                            tiles="openstreetmap", min_zoom=2)
             self.input_Enhanced_Marker(map_enhanced)
             self.save_Map(map_enhanced, "Enhanced.html")
-        else:
-            self.update_text = self.update_text + 'Enhanced Map is not updated.\n'
 
     def create_Folder(self, directory_name, another):
+        """
+        A function that is used to create a folder in the user's computer.
+        :param directory_name: The name of the created folder
+        :param another: Check if the software need to create an inner folder
+        :return: Creates the folder and return the path of the folder
+        """
         new_directory = directory_name  # New folder name
         current_path = os.path.dirname(os.getcwd())  # Get current file path
         self.live_path = os.path.join(current_path, new_directory)

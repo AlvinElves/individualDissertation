@@ -7,9 +7,16 @@ from GUIBuilding.ModelVisWidget import *
 
 
 class GUI(tk.Tk):
-
+    """
+    The GUI Class is the main class where everything is imported. This class creates the software container and frames.
+    """
     # __init__ function for class GUI
     def __init__(self, *args, **kwargs):
+        """
+        GUI Class Constructor that creates the software frame based on its width and height
+        :param args: Non-keyword arguments that is passed through the tkinter page
+        :param kwargs: Keyword arguments that is passed through the tkinter page
+        """
         # __init__ function for class Tk
         tk.Tk.__init__(self, *args, **kwargs)
 
@@ -35,7 +42,7 @@ class GUI(tk.Tk):
         self.frames = {}
 
         # iterating through a tuple consisting of the different page layouts
-        for F in (HomePage, HistoricalDataPage):
+        for F in (HomePage, HistoricalDataPage, LiveDataPage, PredictionPage, ModelVisPage):
             frame = F(container, self)
 
             # initializing frame of that object from all the pages within the for loop
@@ -47,16 +54,30 @@ class GUI(tk.Tk):
 
     # to display the current frame passed as parameter
     def show_frame(self, cont):
+        """
+        A function that allows the user to navigate different pages.
+        :param cont: The page frame the user want to display
+        :return: Show the frame the user chose
+        """
         frame = self.frames[cont]
         frame.tkraise()
 
 
 # HomePage window frame
 class HomePage(tk.Frame):
+    """
+    HomePage Class to be used in GUI class. This class contains all page frames, widgets and their functions. The page greets the
+    user and show the instruction of the software.
+    """
 
     homePageWidget = HomePageWidget()
 
     def __init__(self, parent, controller):
+        """
+        HomePage Class Constructor that creates the page frame widget by calling the frame widget files.
+        :param parent: Parent frame from GUI class
+        :param controller: GUI class controller to change pages
+        """
         tk.Frame.__init__(self, parent, bg='black')
 
         # Create left, right and inner right frames
@@ -82,10 +103,19 @@ class HomePage(tk.Frame):
 
 # Historical Data window frame
 class HistoricalDataPage(tk.Frame):
+    """
+    HistoricalDataPage Class to be used in GUI class. This class contains all page frames, widgets and their functions. The page allows
+    the user to choose the type of Historical Dataset Visualisation.
+    """
 
     historicalPageWidget = HistoricalPageWidget()
 
     def __init__(self, parent, controller):
+        """
+        HistoricalDataPage Class Constructor that creates the page frame widget by calling the frame widget files.
+        :param parent: Parent frame from GUI class
+        :param controller: GUI class controller to change pages
+        """
         tk.Frame.__init__(self, parent, bg='black')
 
         # Create left, right and inner right frames
@@ -111,10 +141,19 @@ class HistoricalDataPage(tk.Frame):
 
 # Live Data window frame
 class LiveDataPage(tk.Frame):
+    """
+    LiveDataPage Class to be used in GUI class. This class contains all page frames, widgets and their functions. The page allows
+    the user to choose the type of Live Dataset Visualisation.
+    """
 
     livePageWidget = LivePageWidget()
 
     def __init__(self, parent, controller):
+        """
+        LiveDataPage Class Constructor that creates the page frame widget by calling the frame widget files.
+        :param parent: Parent frame from GUI class
+        :param controller: GUI class controller to change pages
+        """
         tk.Frame.__init__(self, parent, bg='black')
 
         # Create left, right and inner right frames
@@ -140,9 +179,17 @@ class LiveDataPage(tk.Frame):
 
 # Prediction window frame
 class PredictionPage(tk.Frame):
+    """
+    PredictionPage Class to be used in GUI class. This class contains all page frames, widgets and their functions. The page allows
+    the user to do prediction either using single point input or file input.
+    """
 
     def __init__(self, parent, controller):
-
+        """
+        PredictionPage Class Constructor that creates the page frame widget by calling the frame widget files.
+        :param parent: Parent frame from GUI class
+        :param controller: GUI class controller to change pages
+        """
         aiModelWidget = AIModelWidget()
 
         tk.Frame.__init__(self, parent, bg='black')
@@ -170,10 +217,19 @@ class PredictionPage(tk.Frame):
 
 # AI Model Vis window frame
 class ModelVisPage(tk.Frame):
+    """
+    ModelVisPage Class to be used in GUI class. This class contains all page frames, widgets and their functions. The page allows
+    the user to choose the type of AI Model Visualisation.
+    """
 
     modelVisWidget = ModelVisWidget()
 
     def __init__(self, parent, controller):
+        """
+        ModelVisPage Class Constructor that creates the page frame widget by calling the frame widget files.
+        :param parent: Parent frame from GUI class
+        :param controller: GUI class controller to change pages
+        """
         tk.Frame.__init__(self, parent, bg='black')
 
         # Create left, right and inner right frames

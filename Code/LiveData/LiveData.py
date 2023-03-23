@@ -2,11 +2,17 @@ import requests
 import json
 import numpy as np
 import pandas as pd
-import os
 
 
 class LiveData:
+    """
+    LiveData Class to be imported into GUI files. This class contains the API Air Quality (Live Data) that can be called for
+    LiveDataVis class. This class gets the dataset from API and clean the dataset.
+    """
     def __init__(self):
+        """
+        LiveData Class Constructor that calls the dataset from API and clean the dataset.
+        """
         self.live_dataset = pd.DataFrame()
         self.all_live_dataset = pd.DataFrame()
 
@@ -14,9 +20,12 @@ class LiveData:
         self.split_date()
         self.remove_unwanted_data()
         self.remove_null_data()
-        self.write_dataset_to_excel()
 
     def split_date(self):
+        """
+        A function that split the measurements_lastupdated column into several column, Date, Month, Year, Time, and Timezone column.
+        :return: A dataset that has Date, Month, Year, Time, and Timezone as column
+        """
         # Split the last_updated date and time into day, month, year, time and timezone column
         self.live_dataset[["Date", "Timezone"]] = self.live_dataset["measurements_lastupdated"].str.split("+",
                                                                                                           expand=True)
@@ -41,23 +50,23 @@ class LiveData:
 
         self.all_live_dataset = self.live_dataset.copy()
 
-    def write_dataset_to_excel(self):
-        new_directory = "CleanedDataset"  # New folder name
-        path = os.path.dirname(os.getcwd())  # Get current file path
-        data_path = os.path.join(path, new_directory)
-
-        # Create new folder
-        if not os.path.exists(data_path):
-            os.mkdir(data_path)
-
-        self.live_dataset.to_excel(data_path + '/CleanedLiveData.xlsx', index=False)
-        self.all_live_dataset.to_excel(data_path + '/CleanedAllLiveData.xlsx', index=False)
-
     @staticmethod
     def split_data_based_on_pollutant(dataset, name):
+        """
+        A function that splits the data based on the air pollutant
+        :param dataset: The dataset that is used to visualise
+        :param name: The type of air pollutant the user want to visualise
+        :return: A dataset that only contains the air pollutant chosen
+        """
         return dataset.loc[dataset['measurements_parameter'] == name].reset_index(drop=True)
 
     def on_map_data(self, pollutant_type, visual_type):
+        """
+        A function that gets the data based on the pollutant type and visual type chosen
+        :param pollutant_type: The type of air pollutant the user want to visualise
+        :param visual_type: The type of measurement time the user want to visualise
+        :return: A dataset that has only the pollutant type and in the type of measurement chosen
+        """
         data = self.split_data_based_on_pollutant(self.all_live_dataset, pollutant_type)
 
         if visual_type == 'most_frequent':
@@ -73,6 +82,10 @@ class LiveData:
         return visual_data
 
     def remove_unwanted_data(self):
+        """
+        A function that clean the data by preprocessing it, removing redundant values.
+        :return: A dataset that does not have redundant values
+        """
         # Change the ppm parameter to µg/m³, since 1ppm = 1000µg/m³
         self.live_dataset.loc[
             self.live_dataset['measurements_unit'] == 'ppm', ['measurements_value']] = self.live_dataset.loc[
@@ -101,6 +114,10 @@ class LiveData:
             keep="first").reset_index(drop=True)
 
     def remove_null_data(self):
+        """
+        A function that clean the data by preprocessing it, removing null values.
+        :return: A dataset that does not have null values
+        """
         self.live_dataset[self.live_dataset == 'N/A'] = np.NaN
 
         self.live_dataset = self.live_dataset.dropna(axis=0, how='any').reset_index(drop=True)
@@ -108,6 +125,10 @@ class LiveData:
 
         # Get API Data
     def get_data_using_api(self):
+        """
+        A function that gets the dataset from API and save it into a pandas dataframe.
+        :return: A dataset that contains the Live Air Quality Data from API
+        """
         record_fields = []
 
         # Connect to the API

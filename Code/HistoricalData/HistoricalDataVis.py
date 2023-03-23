@@ -5,15 +5,27 @@ import matplotlib.pyplot as plt
 
 
 class HistoricalDataVisualisation:
+    """
+    HistoricalDataVisualisation Class to be imported into GUI files. This class contains all Historical Data Visualisation functions
+    that can be called in the GUI file easily.
+    """
     def __init__(self):
+        """
+        HistoricalDataVisualisation Class Constructor that calls the HistoricalData Class.
+        """
         self.historical_data = HistoricalData()
 
+        self.animated_line_graph(['T'], 'visualise')
         # self.path = self.model_vis.create_Folder()
-        self.plot_line_all(self.historical_data, 'T', 'visualise', None)
+        # self.plot_line_all(self.historical_data, 'T', 'visualise', None)
 
-    @staticmethod
-    def date_index_dataset(historical_data, column):
-        df = historical_data.grouping(['Day', 'Month', 'Year'])
+    def date_index_dataset(self, column):
+        """
+        A function that gets the value of the year and put the Date to the index.
+        :param column: The column the user want to visualise
+        :return: Two dataset that has the value of the year based on the column chosen, and the maximum value of it
+        """
+        df = self.historical_data.grouping(['Day', 'Month', 'Year'])
 
         df['Date'] = pd.to_datetime(df[['Day', 'Month', 'Year']]).dt.strftime('%m-%d')
         column_name = ['Date', 'Year'] + [column]
@@ -49,8 +61,14 @@ class HistoricalDataVisualisation:
 
         return final_df, max_value, saved_df
 
-    def animated_line_graph(self, historical_data, column, method):
-        df = historical_data.merged_date_dataset.copy()
+    def animated_line_graph(self, column, method):
+        """
+        A function that is used to visualise the column values in an animated line graph form.
+        :param column: The column the user want to visualise
+        :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+        :return: A matplotlib figure that shows the values on the column chosen using line graph and animation
+        """
+        df = self.historical_data.merged_date_dataset.copy()
         df['Date'] = pd.to_datetime(df.Date.astype(str) + ' ' + df.Time.astype(str))
         column_name = ['Date'] + column
         df = df[column_name]
@@ -69,7 +87,7 @@ class HistoricalDataVisualisation:
                 plt.clf()
                 plt.plot(df[:i].index, df[:i].values, label=column_label)
                 plt.legend()
-                plt.xticks(rotation=45, ha="right", rotation_mode="anchor")
+                plt.xticks(rotation=90, ha="right", rotation_mode="anchor")
                 plt.subplots_adjust(bottom=0.2, top=0.9)
                 plt.xlabel('Dates')
                 plt.ylabel('Values')
@@ -79,8 +97,14 @@ class HistoricalDataVisualisation:
         else:
             return saved_df
 
-    def animated_pie_chart(self, historical_data, column, method):
-        final_df, max_value, saved_df = self.date_index_dataset(historical_data, column)
+    def animated_pie_chart(self, column, method):
+        """
+        A function that is used to visualise the column values in an animated pie chart form.
+        :param column: The column the user want to visualise
+        :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+        :return: A matplotlib figure that shows the values on the column chosen using pie chart and animation
+        """
+        final_df, max_value, saved_df = self.date_index_dataset(column)
 
         if method != 'dataset':
             fig, ax = plt.subplots()
@@ -103,8 +127,14 @@ class HistoricalDataVisualisation:
         else:
             return saved_df
 
-    def animated_bar_graph(self, historical_data, column, method):
-        final_df, max_value, saved_df = self.date_index_dataset(historical_data, column)
+    def animated_bar_graph(self, column, method):
+        """
+        A function that is used to visualise the column values in an animated bar graph form.
+        :param column: The column the user want to visualise
+        :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+        :return: A matplotlib figure that shows the values on the column chosen using bar graph and animation
+        """
+        final_df, max_value, saved_df = self.date_index_dataset(column)
 
         if method != 'dataset':
             fig = plt.figure()
@@ -135,8 +165,15 @@ class HistoricalDataVisualisation:
         else:
             return saved_df
 
-    def plot_line_all(self, historical_data, y_Value, method, file_name):
-        df = historical_data.merged_date_dataset.copy()
+    def plot_line_all(self, y_Value, method, file_name):
+        """
+        A function that is used to visualise the column values using line graph.
+        :param y_Value: The column(s) the user want to visualise
+        :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+        :param file_name: The name of the file that the user want to use to save the visualisation or dataset
+        :return: A plotly HTML figure that shows the value of the column(s) chosen using line graph
+        """
+        df = self.historical_data.merged_date_dataset.copy()
         df['Date'] = pd.to_datetime(df.Date.astype(str) + ' ' + df.Time.astype(str))
 
         if method != 'dataset':
@@ -215,8 +252,15 @@ class HistoricalDataVisualisation:
             df = df[column_used]
             return df
 
-    def plot_Bar_by_Month(self, historical_data, y_Value, method, file_name):
-        month_year_data = historical_data.grouping(['Month', 'Year'])
+    def plot_Bar_by_Month(self, y_Value, method, file_name):
+        """
+        A function that is used to visualise the monthly column values using bar graph.
+        :param y_Value: The column the user want to visualise
+        :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+        :param file_name: The name of the file that the user want to use to save the visualisation or dataset
+        :return: A plotly HTML figure that shows the value of the column chosen using bar graph
+        """
+        month_year_data = self.historical_data.grouping(['Month', 'Year'])
         month_year_data['Year'] = month_year_data['Year'].astype(str)
 
         if method != 'dataset':
@@ -233,8 +277,15 @@ class HistoricalDataVisualisation:
             month_year_data = month_year_data[column_used]
             return month_year_data
 
-    def plot_Bar_by_Day(self, historical_data, y_Value, method, file_name):
-        month_year_data = historical_data.grouping(['Day', 'Month', 'Year'])
+    def plot_Bar_by_Day(self, y_Value, method, file_name):
+        """
+        A function that is used to visualise the daily column values using bar graph.
+        :param y_Value: The column the user want to visualise
+        :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+        :param file_name: The name of the file that the user want to use to save the visualisation or dataset
+        :return: A plotly HTML figure that shows the value of the column chosen using bar graph
+        """
+        month_year_data = self.historical_data.grouping(['Day', 'Month', 'Year'])
         month_year_data['Year'] = month_year_data['Year'].astype(str)
 
         if method != 'dataset':

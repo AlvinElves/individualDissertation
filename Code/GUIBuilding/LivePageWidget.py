@@ -2,10 +2,22 @@ from Code.GUIBuilding.LivePageFunction import *
 
 
 class LivePageWidget:
+    """
+    LivePageWidget Class to be imported into GUI files. This class contains the tkinter widgets like button, label etc.
+    """
+
     def __init__(self):
+        """
+        LivePageWidget Class Constructor that calls the LivePageFunction Class.
+        """
         self.livePageFunction = LivePageFunction()
 
     def inner_livepage_widget(self, right_inside_frame):
+        """
+        A function that creates the inner right side of the GUI that contains all the tkinter widgets.
+        :param right_inside_frame: Right inner frame that puts the tkinter widgets
+        :return: The labels, buttons and frame on the frame
+        """
         self.pop_up_visualisation(row=0, frame=right_inside_frame)
         self.draw_line(row=1, frame=right_inside_frame)
         self.graph_on_map_visualisation(row=2, frame=right_inside_frame)
@@ -25,20 +37,28 @@ class LivePageWidget:
         self.visualise_button(row=10, frame=right_inside_frame)
 
     def pop_up_visualisation(self, row, frame):
+        """
+        A function that creates the button and label to allow the user to choose the type of pop-up visualisation.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: The label and buttons on the frame
+        """
         # Pop Up Vis Buttons and Text
         pop_up_text = tk.Label(frame, text="Pop Up Map\nVisualisation: ", width=21, height=3,
                                font=('Raleway', 10, 'bold'), bg='lightskyblue')
         pop_up_text.grid(row=row, column=0)
 
         normal_button = tk.Button(frame, text="NORMAL MAP", width=22, height=2,
-                                     font=('Raleway', 10, 'bold'), bg='lightskyblue',
-                                     activebackground='cornflowerblue',
-                                    command=lambda: self.livePageFunction.choose_method('normal',
-                                                                                        self.vis_chosen_label,
-                                                                                        self.graph_type_label,
-                                                                                        self.type_chosen_label, self.pollutant_label,
-                                                                                        self.list_box, self.last_updated_button,
-                                                                                        self.most_frequent_button))
+                                  font=('Raleway', 10, 'bold'), bg='lightskyblue',
+                                  activebackground='cornflowerblue',
+                                  command=lambda: self.livePageFunction.choose_method('normal',
+                                                                                      self.vis_chosen_label,
+                                                                                      self.graph_type_label,
+                                                                                      self.type_chosen_label,
+                                                                                      self.pollutant_label,
+                                                                                      self.list_box,
+                                                                                      self.last_updated_button,
+                                                                                      self.most_frequent_button))
         normal_button.grid(row=row, column=1, pady=(10, 0), padx=(5, 5))
 
         enhanced_button = tk.Button(frame, text="ENHANCED MAP", width=22, height=2,
@@ -47,12 +67,20 @@ class LivePageWidget:
                                     command=lambda: self.livePageFunction.choose_method('enhanced',
                                                                                         self.vis_chosen_label,
                                                                                         self.graph_type_label,
-                                                                                        self.type_chosen_label, self.pollutant_label,
-                                                                                        self.list_box, self.last_updated_button,
+                                                                                        self.type_chosen_label,
+                                                                                        self.pollutant_label,
+                                                                                        self.list_box,
+                                                                                        self.last_updated_button,
                                                                                         self.most_frequent_button))
         enhanced_button.grid(row=row, column=2, pady=(10, 0), padx=(5, 5))
 
     def graph_on_map_visualisation(self, row, frame):
+        """
+        A function that creates the button and label to allow the user to choose the type of graph on map visualisation.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: The label and buttons on the frame
+        """
         # Graph On Map Vis Buttons and Text
         graph_on_text = tk.Label(frame, text="Graph On Map\nVisualisation: ", width=21, height=3,
                                  font=('Raleway', 10, 'bold'), bg='lightskyblue')
@@ -64,8 +92,10 @@ class LivePageWidget:
                                       command=lambda: self.livePageFunction.choose_method('bubble',
                                                                                           self.vis_chosen_label,
                                                                                           self.graph_type_label,
-                                                                                          self.type_chosen_label, self.pollutant_label,
-                                                                                          self.list_box, self.last_updated_button,
+                                                                                          self.type_chosen_label,
+                                                                                          self.pollutant_label,
+                                                                                          self.list_box,
+                                                                                          self.last_updated_button,
                                                                                           self.most_frequent_button))
         bubble_map_button.grid(row=row, column=1, pady=(10, 0), padx=(5, 5))
 
@@ -74,8 +104,10 @@ class LivePageWidget:
                                      activebackground='cornflowerblue',
                                      command=lambda: self.livePageFunction.choose_method('bar', self.vis_chosen_label,
                                                                                          self.graph_type_label,
-                                                                                         self.type_chosen_label, self.pollutant_label,
-                                                                                         self.list_box, self.last_updated_button,
+                                                                                         self.type_chosen_label,
+                                                                                         self.pollutant_label,
+                                                                                         self.list_box,
+                                                                                         self.last_updated_button,
                                                                                          self.most_frequent_button))
         bar_graph_button.grid(row=row, column=2, pady=(10, 0), padx=(5, 5))
 
@@ -84,23 +116,37 @@ class LivePageWidget:
                                      activebackground='cornflowerblue',
                                      command=lambda: self.livePageFunction.choose_method('pie', self.vis_chosen_label,
                                                                                          self.graph_type_label,
-                                                                                         self.type_chosen_label, self.pollutant_label,
-                                                                                         self.list_box, self.last_updated_button,
+                                                                                         self.type_chosen_label,
+                                                                                         self.pollutant_label,
+                                                                                         self.list_box,
+                                                                                         self.last_updated_button,
                                                                                          self.most_frequent_button))
         pie_chart_button.grid(row=row, column=3, pady=(10, 0), padx=(5, 5))
 
     @staticmethod
     def draw_line(row, frame):
+        """
+        A function that creates a horizontal line on the frame.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: A horizontal line across the frame
+        """
         # Draw line
         top_canvas = tk.Canvas(frame, width=767, height=20, bg='lightskyblue', highlightthickness=0)
         top_canvas.grid(row=row, columnspan=5)
         top_canvas.create_line(5, 15, 762, 15, fill="black", width=5)
 
     def choose_pollutant(self, row, frame):
+        """
+        A function that creates the label and listbox for the user choose the pollutant the user want to visualisation.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: A label that ask the user to choose the pollutant and a listbox for the user to choose from
+        """
         # Choose Pollutant Label & Listbox
         self.pollutant_label = tk.Label(frame, text=self.livePageFunction.choose_pollutant_text, width=21,
-                                       height=3,
-                                       font=('Raleway', 10, 'bold'), bg='lightskyblue')
+                                        height=3,
+                                        font=('Raleway', 10, 'bold'), bg='lightskyblue')
         self.pollutant_label.grid(row=row, column=0)
 
         self.list_box = tk.Listbox(frame, height=11, width=25, selectmode='single', highlightthickness=0,
@@ -110,6 +156,13 @@ class LivePageWidget:
         self.list_box.grid(row=row + 1, column=0, rowspan=4)
 
     def choose_graph_type_label(self, row, frame):
+        """
+        A function that creates the label and buttons for the user choose the graph type the user want to visualisation
+        for on graph map.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: A label that ask the user to choose and two buttons for the user to click
+        """
         # Choose graph on map type Label
         self.graph_type_label = tk.Label(frame, text=self.livePageFunction.choose_type_text, width=21,
                                          height=3,
@@ -133,6 +186,12 @@ class LivePageWidget:
         self.most_frequent_button.grid(row=row + 3, column=0, padx=(5, 0), pady=20, rowspan=2)
 
     def show_chosen_info(self, row, frame):
+        """
+        A function that creates the label and show the information about the live dataset
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: The labels to let the user know what they chose and the information about the live dataset
+        """
         # Show all the button pressed
         chosen_title_text = tk.Label(frame, text="Chosen Visualisation & \nMap Type", width=25, height=3,
                                      font=('Raleway', 10, 'bold'), bg='lightskyblue')
@@ -157,11 +216,11 @@ class LivePageWidget:
         self.type_chosen_label.grid(row=row + 2, column=3)
 
         last_updated_text = tk.Label(frame, text="Dataset Last Updated", width=21, height=3,
-                             font=('Raleway', 10, 'bold'), bg='lightskyblue')
-        last_updated_text.grid(row=row + 3, column=2,)
+                                     font=('Raleway', 10, 'bold'), bg='lightskyblue')
+        last_updated_text.grid(row=row + 3, column=2, )
 
         self.last_updated_label = tk.Label(frame, text=self.livePageFunction.last_updated_text, width=21, height=2,
-                                     font=('Raleway', 10, 'bold'), bg='royalblue')
+                                           font=('Raleway', 10, 'bold'), bg='royalblue')
         self.last_updated_label.grid(row=row + 3, column=3)
 
         website_text = tk.Label(frame, text="Dataset Website", width=21, height=2,
@@ -180,18 +239,26 @@ class LivePageWidget:
         self.save_entry.grid(row=row + 5, column=3)
 
     def visualise_button(self, row, frame):
+        """
+        A function that creates buttons for the user to choose between visualise and save the files
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: The buttons on the frame for the user to click
+        """
         download_dataset_button = tk.Button(frame, text="Download Dataset\nUsed in Visualisation",
                                             width=21,
                                             height=2, font=('Raleway', 10, 'bold'), bg='dodgerblue',
                                             activebackground='cornflowerblue',
-                                            command=lambda: self.livePageFunction.save_dataset(frame, self.save_entry, self.list_box))
+                                            command=lambda: self.livePageFunction.save_dataset(frame, self.save_entry,
+                                                                                               self.list_box))
         download_dataset_button.grid(row=row, column=3, padx=(2, 2), pady=(5, 3))
 
         clear_button = tk.Button(frame, text="Clear All", width=21, height=2,
                                  font=('Raleway', 10, 'bold'), bg='dodgerblue', activebackground='cornflowerblue',
                                  command=lambda: self.livePageFunction.clear(self.vis_chosen_label,
                                                                              self.graph_type_label,
-                                                                             self.type_chosen_label, self.pollutant_label,
+                                                                             self.type_chosen_label,
+                                                                             self.pollutant_label,
                                                                              self.list_box, self.last_updated_button,
                                                                              self.most_frequent_button))
         clear_button.grid(row=row + 1, column=2, padx=(4, 2), pady=(5, 5))
