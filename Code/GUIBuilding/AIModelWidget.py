@@ -16,7 +16,7 @@ class AIModelWidget:
         """
         A function that creates the inner right side of the GUI that contains all the tkinter widgets.
         :param right_inside_frame: Right inner frame that puts the tkinter widgets
-        :return: The labels, buttons and frame on the frame
+        :return: The labels, buttons, entry, treeviews and frame on the frame
         """
         top_frame = tk.Frame(right_inside_frame, width=767, height=268, bg='lightskyblue')
         top_frame.grid(row=0, column=0, columnspan=5, rowspan=3)

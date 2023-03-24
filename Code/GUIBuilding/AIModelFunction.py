@@ -42,7 +42,7 @@ class AIModelFunction:
 
     def button_config(self, method, t_Button, ah_Button, rh_Button):
         """
-        A function that show or hide the buttons when called
+        A function that show or hide the buttons when called.
         :param method: To either disable or enable the buttons
         :param t_Button: The button for dependent variable T
         :param ah_Button: The button for dependent variable AH
@@ -67,7 +67,7 @@ class AIModelFunction:
     def change_input(self, method, frame, input_func, canvas, independent_label, dependent_label, result_label, file_entry,
                      entry_input, label_input, file_input, result, t_Button, ah_Button, rh_Button):
         """
-        A function that changes the user's view when being clicked
+        A function that changes the user's view when being clicked.
         :param method: The user's input chosen from the input buttons
         :param frame: The frame of the tkinter widgets
         :param input_func: The function to create the tkinter widgets
@@ -139,7 +139,7 @@ class AIModelFunction:
 
     def save_file(self, frame, entry):
         """
-        A function that saves the prediction to the user's computer
+        A function that saves the prediction to the user's computer.
         :param frame: The frame that puts the tkinter widgets
         :param entry: The file entry for the user to enter the filename
         :return: An Excel file that has the predicted result
@@ -169,7 +169,7 @@ class AIModelFunction:
 
     def single_destroy(self, entry_input, label_input):
         """
-        A function that destroy the tkinter widget for the single page viewing
+        A function that destroy the tkinter widget for the single page viewing.
         :param entry_input: The list of input entry for single point prediction
         :param label_input: The list of label for single point prediction
         :return: Clears the tkinter widget for single page viewing
@@ -183,7 +183,7 @@ class AIModelFunction:
 
     def file_destroy(self, file_input):
         """
-        A function that destroy the tkinter widget for the file page viewing
+        A function that destroy the tkinter widget for the file page viewing.
         :param file_input: The list of widgets like buttons, label etc, for file prediction
         :return: Clears the tkinter widget for file page viewing
         """
@@ -194,7 +194,7 @@ class AIModelFunction:
 
     def result_destroy(self, result):
         """
-        A function that destroy the tkinter widget for the result frame
+        A function that destroy the tkinter widget for the result frame.
         :param result: The list of widgets like treeview for the prediction result
         :return: Clears the tkinter widget for result frame
         """
@@ -203,7 +203,7 @@ class AIModelFunction:
 
     def get_file_data(self, frame, file_path, tree):
         """
-        A function that gets the file inputs and show to the input treeview
+        A function that gets the file inputs and show to the input treeview.
         :param frame: The frame that puts the tkinter widgets
         :param file_path: The file path for the file inputted
         :param tree: The input treeview that will show the input value
@@ -241,7 +241,7 @@ class AIModelFunction:
 
     def empty_check_entry(self, entry_list):
         """
-        A function that checks if all the input entry are filled
+        A function that checks if all the input entry are filled.
         :param entry_list: The list of input entry
         :return: A boolean that checks all the input entry
         """
@@ -255,7 +255,7 @@ class AIModelFunction:
 
     def numeric_check_entry(self, entry_list):
         """
-        A function that checks if all the input entry are numerical only
+        A function that checks if all the input entry are numerical only.
         :param entry_list: The list of input entry
         :return: A boolean that checks all the values of input entry and the input entry the user's inputted
         """
@@ -276,7 +276,7 @@ class AIModelFunction:
 
     def check_file(self):
         """
-        A function that checks if the user has inputted the file for prediction
+        A function that checks if the user has inputted the file for prediction.
         :return: A boolean that checks the file
         """
         file_input = True
@@ -288,7 +288,7 @@ class AIModelFunction:
 
     def check_dependent_var(self):
         """
-        A function that checks if the user has chose the dependent variable for prediction
+        A function that checks if the user has chose the dependent variable for prediction.
         :return: A boolean that checks if any of the dependent variable is chosen
         """
         if self.t_variable.get() == 0 and self.ah_variable.get() == 0 and self.rh_variable.get() == 0:
@@ -300,7 +300,7 @@ class AIModelFunction:
 
     def check_prediction(self, frame, entry_list):
         """
-        A function that checks if the user has inputted and chose the variables correctly
+        A function that checks if the user has inputted and chose the variables correctly.
         :param frame: The frame that puts the tkinter widgets
         :param entry_list: The list of input entry
         :return: A label for the user to know if any input fails, if passed, then give the input dataframe
@@ -337,7 +337,7 @@ class AIModelFunction:
 
     def do_prediction(self, input_df):
         """
-        A function that process the inputted dataframe and predicts the inputs
+        A function that process the inputted dataframe and predicts the inputs.
         :param input_df: A dataframe that the user inputted for prediction
         :return: The length of the dataframe and the result of the prediction
         """
@@ -406,7 +406,7 @@ class AIModelFunction:
 
     def prediction(self, frame, result_label, prediction_func):
         """
-        A function that shows the user the software is predicting and show the heading for the result
+        A function that shows the user the software is predicting and show the heading for the result.
         :param frame: The frame that puts the tkinter widgets
         :param result_label: The heading for the result
         :param prediction_func: The function to create the prediction tkinter widgets
@@ -423,7 +423,7 @@ class AIModelFunction:
     def clear_all(self, frame, canvas, canvas_func, independent_label, dependent_label, result_label,
                   file_entry, entry_input, label_input, file_input, result, t_Button, ah_Button, rh_Button):
         """
-        A function that clears all the user's input and prediction, set the page back to the initial page view
+        A function that clears all the user's input and prediction, set the page back to the initial page view.
         :param frame: The frame that puts the tkinter widgets
         :param canvas: The canvas created for the frame
         :param canvas_func: The function to create the tkinter widgets

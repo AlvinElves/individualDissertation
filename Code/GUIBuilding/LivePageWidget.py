@@ -16,7 +16,7 @@ class LivePageWidget:
         """
         A function that creates the inner right side of the GUI that contains all the tkinter widgets.
         :param right_inside_frame: Right inner frame that puts the tkinter widgets
-        :return: The labels, buttons and frame on the frame
+        :return: The labels, buttons, listbox and entry on the frame
         """
         self.pop_up_visualisation(row=0, frame=right_inside_frame)
         self.draw_line(row=1, frame=right_inside_frame)

@@ -4,7 +4,7 @@ from Code.LiveData.LiveDataVis import *
 
 class LivePageFunction:
     """
-    LivePageFunction Class to be imported into LivePageWidget files. This class contains the tkinter widgets functions..
+    LivePageFunction Class to be imported into LivePageWidget files. This class contains the tkinter widgets functions.
     """
     def __init__(self):
         """
@@ -24,7 +24,7 @@ class LivePageFunction:
 
     def save_dataset(self, frame, entry, listbox):
         """
-        A function that checks the filename inputted by the user and saves the dataset to the user's computer
+        A function that checks the filename inputted by the user and saves the dataset to the user's computer.
         :param frame: The frame that puts the tkinter widgets
         :param entry: The file entry for the user to enter the filename
         :param listbox: The listbox for the type of pollutant
@@ -72,7 +72,7 @@ class LivePageFunction:
 
     def visualise(self, frame, listbox):
         """
-        A function that shows the visualisation that the user chose
+        A function that shows the visualisation that the user chose.
         :param frame: The frame that puts the tkinter widgets
         :param listbox: The listbox for the type of pollutant
         :return: A matplotlib or plotly figure that shows the visualisation
@@ -127,7 +127,7 @@ class LivePageFunction:
 
     def check_visualise(self, right_inside_frame, listbox):
         """
-        A function that checks if the user had choose a type of visualisation to visualise
+        A function that checks if the user had choose a type of visualisation to visualise.
         :param right_inside_frame: The frame that puts the tkinter widgets
         :param listbox: The listbox for the type of pollutant
         :return: A list of listbox item, a boolean that checks if any of the visualisation is chosen
@@ -168,7 +168,7 @@ class LivePageFunction:
 
     def get_listbox(self, listbox):
         """
-        A function that gets the item chose from the listbox
+        A function that gets the item chose from the listbox.
         :param listbox: The listbox for the type of pollutant
         :return: A list of item the user clicked
         """
@@ -183,15 +183,15 @@ class LivePageFunction:
 
     def choose_method(self, method, visualisation_label, choose_type_label, type_label, pollutant_label, listbox, button1, button2):
         """
-        A function that changes the user's view when being clicked
+        A function that changes the user's view when being clicked.
         :param method: The visualisation button that the user clicked
         :param visualisation_label: The label that shows the type of visualisation chose
-        :param choose_type_label: The label that tells the user to choose the type of on graph map
-        :param type_label: The label that shows the type of on graph map chose
+        :param choose_type_label: The label that tells the user to choose the type of graph on map
+        :param type_label: The label that shows the type of graph on map chose
         :param pollutant_label: The label that tells the user to choose the type of pollutant
         :param listbox: The listbox for the type of pollutant
-        :param button1: The button for most frequent on graph map type
-        :param button2: The button for last updated on graph map type
+        :param button1: The button for most frequent graph on map type
+        :param button2: The button for last updated graph on map type
         :return: Change the user's view based on the method the user chose
         """
         listbox.delete(0, 'end')
@@ -240,6 +240,12 @@ class LivePageFunction:
         pollutant_label.config(text=self.choose_pollutant_text)
 
     def choose_type(self, type_var, type_label):
+        """
+        A function that show the user's input information for the type graph on map to visualise.
+        :param type_var: The type of graph on map visualisation the user clicked
+        :param type_label: The label that shows the type of graph on map chose
+        :return:
+        """
         if type_var == 'last':
             self.map_text = 'Last Updated'
         elif type_var == 'most':
@@ -249,14 +255,14 @@ class LivePageFunction:
 
     def clear(self, visualisation_label, choose_type_label, type_label, pollutant_label, listbox, button1, button2):
         """
-        A function that clears all the user's input, set the page back to the initial page view
+        A function that clears all the user's input, set the page back to the initial page view.
         :param visualisation_label: The label that shows the type of visualisation chose
-        :param choose_type_label: The label that tells the user to choose the type of on graph map
-        :param type_label: The label that shows the type of on graph map chose
+        :param choose_type_label: The label that tells the user to choose the type of graph on map
+        :param type_label: The label that shows the type of graph on map chose
         :param pollutant_label: The label that tells the user to choose the type of pollutant
         :param listbox: The listbox for the type of pollutant
-        :param button1: The button for most frequent on graph map type
-        :param button2: The button for last updated on graph map type
+        :param button1: The button for most frequent graph on map type
+        :param button2: The button for last updated graph on map type
         :return: A clean initial page view that does not have any inputs
         """
         self.choose_type_text = ''

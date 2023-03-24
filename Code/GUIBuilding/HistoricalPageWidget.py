@@ -2,10 +2,21 @@ from Code.GUIBuilding.HistoricalPageFunction import *
 
 
 class HistoricalPageWidget:
+    """
+    HistoricalPageWidget Class to be imported into GUI files. This class contains the tkinter widgets like button, label etc.
+    """
     def __init__(self):
+        """
+        HistoricalPageWidget Class Constructor that calls the HistoricalPageFunction Class.
+        """
         self.historicalPageFunction = HistoricalPageFunction()
 
     def inner_historicalpage_widget(self, right_inside_frame):
+        """
+        A function that creates the inner right side of the GUI that contains all the tkinter widgets.
+        :param right_inside_frame: Right inner frame that puts the tkinter widgets
+        :return: The labels, buttons, listbox and entry on the frame
+        """
         self.normal_visualisation(row=0, frame=right_inside_frame)
         self.draw_line(row=1, frame=right_inside_frame)
         self.animated_visualisation(row=2, frame=right_inside_frame)
@@ -15,6 +26,12 @@ class HistoricalPageWidget:
         self.download_visualise_button(row=9, frame=right_inside_frame)
 
     def normal_visualisation(self, row, frame):
+        """
+        A function that creates the button and label to allow the user to choose the type of normal visualisation.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: The label and buttons on the frame
+        """
         # Normal Vis Buttons and Text
         normal_vis_text = tk.Label(frame, text="Normal Visualisation: ", width=21, height=3,
                                    font=('Raleway', 10, 'bold'), bg='lightskyblue')
@@ -51,6 +68,12 @@ class HistoricalPageWidget:
         monthly_button.grid(row=row, column=3, pady=(10, 0), padx=(5, 5))
 
     def animated_visualisation(self, row, frame):
+        """
+        A function that creates the button and label to allow the user to choose the type of animated visualisation.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: The label and buttons on the frame
+        """
         # Animated Vis Buttons and Text
         animated_vis_text = tk.Label(frame, text="Animated Visualisation: ", width=21, height=3,
                                      font=('Raleway', 10, 'bold'), bg='lightskyblue')
@@ -88,12 +111,24 @@ class HistoricalPageWidget:
 
     @staticmethod
     def draw_line(row, frame):
+        """
+        A function that creates a horizontal line on the frame.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: A horizontal line across the frame
+        """
         # Draw line
         top_canvas = tk.Canvas(frame, width=767, height=20, bg='lightskyblue', highlightthickness=0)
         top_canvas.grid(row=row, columnspan=5, pady=5)
         top_canvas.create_line(5, 15, 762, 15, fill="black", width=5)
 
     def choose_vis_variable(self, row, frame):
+        """
+        A function that creates the listbox and label to allow the user to click and choose the type of variable.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: The listbox and label on the frame
+        """
         # Choose Variable Label and Listbox
         self.variable_label = tk.Label(frame, text=self.historicalPageFunction.variable_text, width=21,
                                        height=3, font=('Raleway', 10, 'bold'), bg='lightskyblue')
@@ -106,6 +141,12 @@ class HistoricalPageWidget:
         self.variable_box.grid(row=row + 1, column=0, rowspan=4)
 
     def show_chosen(self, row, frame):
+        """
+        A function that creates the label and entry to show the user what they have chose and to let them enter the filename.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: The label and entry on the frame
+        """
         # Show all the button pressed
         chosen_title_text = tk.Label(frame, text="Chosen Visualisation & Variable", width=25, height=3,
                                      font=('Raleway', 10, 'bold'), bg='lightskyblue')
@@ -140,6 +181,12 @@ class HistoricalPageWidget:
         self.save_entry.grid(row=row + 3, column=3, pady=(10, 10))
 
     def download_visualise_button(self, row, frame):
+        """
+        A function that creates buttons for the user to choose between visualise and save the files.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: The buttons on the frame for the user to click
+        """
         download_dataset_button = tk.Button(frame, text="Download Dataset\nUsed in Visualisation",
                                             width=21,
                                             height=2, font=('Raleway', 10, 'bold'), bg='dodgerblue',

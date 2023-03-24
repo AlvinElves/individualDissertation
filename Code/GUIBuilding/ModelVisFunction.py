@@ -3,7 +3,14 @@ from Code.AIModel.AIModelVis import *
 
 
 class ModelVisFunction:
+    """
+    ModelVisFunction Class to be imported into ModelVisWidget files. This class contains the tkinter widgets functions.
+    """
     def __init__(self):
+        """
+        ModelVisFunction Class Constructor that calls the AIModelVis Class and creates the list and variables used
+        for the page.
+        """
         self.aiModelVis = AIModelVis()
         self.aiModel = self.aiModelVis.ai_model
 
@@ -20,6 +27,21 @@ class ModelVisFunction:
     def visualise(self, right_inside_frame, model_label, visualisation_label, variable_label, model_choose_label,
                   listbox, button1,
                   button2, button3, entry, method):
+        """
+        A function that shows the visualisation that the user chose or saves the visualisation/dataset based on what the user clicks.
+        :param right_inside_frame: The frame that puts the tkinter widgets
+        :param model_label: The label that shows the dependent variable chose
+        :param visualisation_label: The label that shows the type fo visualisation chose
+        :param variable_label: The label that tells the user to choose the item from the listbox
+        :param model_choose_label: The label that tells the user to choose the dependent variable
+        :param listbox: The listbox for the independent variable to visualise
+        :param button1: The button for dependent variable T
+        :param button2: The button for dependent variable AH
+        :param button3: The button for dependent variable RH
+        :param entry: The file entry for the user to enter the filename
+        :param method: The type of saving the user wants, save dataset or visualisation
+        :return: A matplotlib or plotly figure that shows the visualisation
+        """
         listbox_index, features, checked_passed, file_name, file_passed = self.check_filename(right_inside_frame,
                                                                                               listbox, entry,
                                                                                               method)
@@ -142,6 +164,14 @@ class ModelVisFunction:
                            button2, button3, entry)
 
     def check_filename(self, right_inside_frame, listbox, entry, method):
+        """
+        A function that checks the filename inputted by the user and saves the file to the user's computer.
+        :param right_inside_frame: The frame that puts the tkinter widgets
+        :param listbox: The listbox for the independent variable to visualise
+        :param entry: The file entry for the user to enter the filename
+        :param method: The type of saving the user wants, save dataset or visualisation
+        :return: A list of listbox item, a boolean that checks if the filename is entered correctly for the saving buttons
+        """
         listbox_index, features, checked_passed = self.check_visualise(right_inside_frame, listbox)
         file_name = entry.get()
         file_passed = False
@@ -163,6 +193,12 @@ class ModelVisFunction:
         return listbox_index, features, checked_passed, file_name, file_passed
 
     def check_visualise(self, right_inside_frame, listbox):
+        """
+        A function that checks if the user had choose a type of visualisation to visualise.
+        :param right_inside_frame: The frame that puts the tkinter widgets
+        :param listbox: The listbox for the independent variable to visualise
+        :return: A list of listbox item, a boolean that checks if any of the visualisation is chosen
+        """
         listbox_index, variables = self.get_listbox(listbox)
         if self.visualisation_text == '':
             label = tk.Label(right_inside_frame, text='Please Choose the\ntype of Visualisation', foreground='red',
@@ -197,6 +233,11 @@ class ModelVisFunction:
         return listbox_index, variables, checked
 
     def get_listbox(self, listbox):
+        """
+        A function that gets the item chose from the listbox.
+        :param listbox: The listbox for the independent variable to visualise
+        :return: A list of item the user clicked and the index of the listbox
+        """
         items = []
         index = listbox.curselection()
         for i in index:
@@ -212,8 +253,20 @@ class ModelVisFunction:
 
         return index, items
 
-    def choose_method(self, method, visualisation_label, variable_label, model_label, listbox, button1, button2,
+    def choose_method(self, method, visualisation_label, variable_label, model_choose_label, listbox, button1, button2,
                       button3):
+        """
+        A function that changes the page view based on what the user chose from the buttons.
+        :param method: The type of visualisation the user clicked
+        :param visualisation_label: The label that shows the type fo visualisation chose
+        :param variable_label: The label that tells the user to choose the item from the listbox
+        :param model_choose_label: The label that tells the user to choose the dependent variable
+        :param listbox: The listbox for the independent variable to visualise
+        :param button1: The button for dependent variable T
+        :param button2: The button for dependent variable AH
+        :param button3: The button for dependent variable RH
+        :return: A page view based on the user inputs
+        """
         listbox.delete(0, 'end')
         if method == 'normalised':
             self.visualisation_text = 'Normalised Data'
@@ -293,12 +346,19 @@ class ModelVisFunction:
 
         visualisation_label.config(text=self.visualisation_text)
         variable_label.config(text=self.choose_variable_text)
-        model_label.config(text=self.choose_model_text)
+        model_choose_label.config(text=self.choose_model_text)
         button1.config(text='T Variable\n(TEMPERATURE)', state='normal', bd=2)
         button2.config(text='AH Variable\n(ABSOLUTE HUMIDITY)', state='normal', bd=2)
         button3.config(text='RH Variable\n(RELATIVE HUMIDITY)', state='normal', bd=2)
 
     def choose_model(self, model_var, model_label, listbox):
+        """
+        A function that changes the page view for the dependent variable based on what the user chose from the buttons.
+        :param model_var: The type of dependent variable the user clicked
+        :param model_label: The label that shows the dependent variable chose
+        :param listbox: The listbox for the independent variable to visualise
+        :return: A page view based on the user inputs for the dependent variable
+        """
         if model_var == 't':
             self.model_text = 'T Variable'
             if self.visualisation_text == 'Normalised Data':
@@ -327,6 +387,19 @@ class ModelVisFunction:
 
     def clear(self, model_label, visualisation_label, variable_label, model_choose_label, listbox, button1,
               button2, button3, entry):
+        """
+        A function that clears all the user's input, set the page back to the initial page view.
+        :param model_label: The label that shows the dependent variable chose
+        :param visualisation_label: The label that shows the type fo visualisation chose
+        :param variable_label: The label that tells the user to choose the item from the listbox
+        :param model_choose_label: The label that tells the user to choose the dependent variable
+        :param listbox: The listbox for the independent variable to visualise
+        :param button1: The button for dependent variable T
+        :param button2: The button for dependent variable AH
+        :param button3: The button for dependent variable RH
+        :param entry: The entry for the name of the file that want to be saved
+        :return: A clean initial page view that does not have any inputs
+        """
         self.visualisation_text = ''
         self.model_text = ''
         self.choose_variable_text = ''

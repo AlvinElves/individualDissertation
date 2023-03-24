@@ -2,10 +2,21 @@ from Code.GUIBuilding.ModelVisFunction import *
 
 
 class ModelVisWidget:
+    """
+    ModelVisWidget Class to be imported into GUI files. This class contains the tkinter widgets like button, label etc.
+    """
     def __init__(self):
+        """
+        ModelVisWidget Class Constructor that calls the ModelVisFunction Class.
+        """
         self.modelVisFunction = ModelVisFunction()
 
     def inner_modelvis_widget(self, right_inside_frame):
+        """
+        A function that creates the inner right side of the GUI that contains all the tkinter widgets.
+        :param right_inside_frame: Right inner frame that puts the tkinter widgets
+        :return: The labels, buttons, listbox and entry on the frame
+        """
         self.data_preprocessing(row=0, frame=right_inside_frame)
         self.draw_line(row=1, frame=right_inside_frame)
         self.ai_model(row=2, frame=right_inside_frame)
@@ -18,6 +29,12 @@ class ModelVisWidget:
         self.download_visualise_button(row=8, frame=right_inside_frame)
 
     def data_preprocessing(self, row, frame):
+        """
+        A function that creates the button and label to allow the user to choose the type of data preprocessing visualisation.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: The label and buttons on the frame
+        """
         # Data Preprocessing Buttons and Text
         data_preprocessing_text = tk.Label(frame, text="Data Preprocessing: ", width=21, height=3,
                                            font=('Raleway', 10, 'bold'), bg='lightskyblue')
@@ -60,6 +77,12 @@ class ModelVisWidget:
         feature_button.grid(row=row, column=3, pady=(10, 0), padx=(5, 5))
 
     def ai_model(self, row, frame):
+        """
+        A function that creates the button and label to allow the user to choose the type of AI Model visualisation.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: The label and buttons on the frame
+        """
         # Visualise AI Model Buttons and Text
         ai_model_text = tk.Label(frame, text="Model Visualisation: ", width=21, height=3,
                                  font=('Raleway', 10, 'bold'), bg='lightskyblue')
@@ -145,12 +168,24 @@ class ModelVisWidget:
 
     @staticmethod
     def draw_line(row, frame):
+        """
+        A function that creates a horizontal line on the frame.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: A horizontal line across the frame
+        """
         # Draw line
         top_canvas = tk.Canvas(frame, width=767, height=20, bg='lightskyblue', highlightthickness=0)
         top_canvas.grid(row=row, columnspan=5)
         top_canvas.create_line(5, 15, 762, 15, fill="black", width=5)
 
     def choose_visualise_label(self, row, frame):
+        """
+        A function that creates the labels that tells the user to choose the type of Variable and AI Model they want to visualise.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: The label on the frame
+        """
         # Choose Variable Label
         self.variable_label = tk.Label(frame, text=self.modelVisFunction.choose_variable_text, width=21,
                                        height=3,
@@ -163,6 +198,12 @@ class ModelVisWidget:
         self.ai_model_label.grid(row=row, column=1)
 
     def choose_visualise_variable(self, row, frame):
+        """
+        A function that creates the listbox and buttons to allow the user to click and choose from.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: The listbox and buttons on the frame
+        """
         # Choose Variable Button and ListBox
         self.list_box = tk.Listbox(frame, height=19, width=25, selectmode='single', highlightthickness=0,
                                    activestyle='none', justify='center', bg='lightskyblue',
@@ -192,6 +233,12 @@ class ModelVisWidget:
         self.rh_button.grid(row=row + 3, column=1)
 
     def show_chosen(self, row, frame):
+        """
+        A function that creates the label and entry to show the user what they have chose and to let them enter the filename.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: The label and entry on the frame
+        """
         # Show all the button pressed
         chosen_title_text = tk.Label(frame, text="Chosen Visualisation & Model", width=25, height=3,
                                      font=('Raleway', 10, 'bold'), bg='lightskyblue')
@@ -224,6 +271,12 @@ class ModelVisWidget:
         self.save_entry.grid(row=row + 2, column=3, pady=(50, 0))
 
     def download_visualise_button(self, row, frame):
+        """
+        A function that creates buttons for the user to choose between visualise and save the files.
+        :param row: The row of frame to put the widgets
+        :param frame: The frame that puts the tkinter widgets
+        :return: The buttons on the frame for the user to click
+        """
         download_dataset_button = tk.Button(frame, text="Download Dataset\nUsed in Visualisation", width=21,
                                             height=2,
                                             font=('Raleway', 10, 'bold'), bg='dodgerblue',

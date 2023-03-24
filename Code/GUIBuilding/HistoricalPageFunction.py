@@ -3,7 +3,14 @@ from Code.HistoricalData.HistoricalDataVis import *
 
 
 class HistoricalPageFunction:
+    """
+    HistoricalPageFunction Class to be imported into HistoricalPageWidget files. This class contains the tkinter widgets functions.
+    """
     def __init__(self):
+        """
+        HistoricalPageFunction Class Constructor that calls the HistoricalDataVisualisation Class and creates the list and variables
+        used for the page.
+        """
         self.historicalVis = HistoricalDataVisualisation()
 
         self.variable_text = ''
@@ -13,6 +20,11 @@ class HistoricalPageFunction:
                                    'C6H6(GT)', 'PT08.S2(NMHC)', 'NOx(GT)', 'PT08.S3(NOx)', 'NO2(GT)', 'PT08.S4(NO2)', 'PT08.S5(O3)']
 
     def get_listbox(self, listbox):
+        """
+        A function that gets the item chose from the listbox.
+        :param listbox: The listbox for the independent variable to visualise
+        :return: A list of item the user clicked
+        """
         items = []
         index = listbox.curselection()
         for i in index:
@@ -29,6 +41,17 @@ class HistoricalPageFunction:
         return items
 
     def visualise(self, right_inside_frame, variable_label, visualisation_label, vis_type_label, listbox, entry, method):
+        """
+        A function that shows the visualisation that the user chose or saves the visualisation/dataset based on what the user clicks.
+        :param right_inside_frame: The frame that puts the tkinter widgets
+        :param variable_label: The label that tells the user to choose the item from the listbox
+        :param visualisation_label: The label that shows the type fo visualisation chose
+        :param vis_type_label: The label that tells the user the type of visualisation chose, normal or animated
+        :param listbox: The listbox for the independent variable to visualise
+        :param entry: The file entry for the user to enter the filename
+        :param method: The type of saving the user wants, save dataset or visualisation
+        :return: A matplotlib or plotly figure that shows the visualisation
+        """
         features, checked_passed, file_name, file_passed = self.check_filename(right_inside_frame, listbox, entry, method)
 
         if checked_passed:
@@ -84,6 +107,14 @@ class HistoricalPageFunction:
                     self.clear(variable_label, visualisation_label, vis_type_label, listbox, entry)
 
     def check_filename(self, right_inside_frame, listbox, entry, method):
+        """
+        A function that checks the filename inputted by the user and saves the file to the user's computer.
+        :param right_inside_frame: The frame that puts the tkinter widgets
+        :param listbox: The listbox for the independent variable to visualise
+        :param entry: The file entry for the user to enter the filename
+        :param method: The type of saving the user wants, save dataset or visualisation
+        :return: A list of listbox item, a boolean that checks if the filename is entered correctly for the saving buttons
+        """
         features, checked_passed = self.check_visualise(right_inside_frame, listbox)
         file_name = entry.get()
         file_passed = False
@@ -111,6 +142,12 @@ class HistoricalPageFunction:
         return features, checked_passed, file_name, file_passed
 
     def check_visualise(self, right_inside_frame, listbox):
+        """
+        A function that checks if the user had choose a type of visualisation to visualise.
+        :param right_inside_frame: The frame that puts the tkinter widgets
+        :param listbox: The listbox for the independent variable to visualise
+        :return: A list of listbox item, a boolean that checks if any of the visualisation is chosen
+        """
         variables = self.get_listbox(listbox)
         if self.visualisation_text == '':
             label = tk.Label(right_inside_frame, text='Please Choose the\ntype of Visualisation', foreground='red',
@@ -132,6 +169,17 @@ class HistoricalPageFunction:
         return variables, checked
 
     def choose_method(self, vis_type, method, variable_label, visualisation_label, vis_type_label, listbox, entry):
+        """
+        A function that changes the page view based on what the user chose from the buttons.
+        :param vis_type: The type of visualisation the user clicked, normal or animated
+        :param method: The type of visualisation the user clicked
+        :param variable_label: The label that tells the user to choose the item from the listbox
+        :param visualisation_label: The label that shows the type fo visualisation chose
+        :param vis_type_label: The label that tells the user the type of visualisation chose, normal or animated
+        :param listbox: The listbox for the independent variable to visualise
+        :param entry: The entry for the name of the file that want to be saved
+        :return: A page view based on the user inputs
+        """
         listbox.delete(0, 'end')
         entry.delete(0, 'end')
 
@@ -179,6 +227,15 @@ class HistoricalPageFunction:
         vis_type_label.config(text=self.visualisation_type_text)
 
     def clear(self, variable_label, visualisation_label, vis_type_label, listbox, entry):
+        """
+        A function that clears all the user's input, set the page back to the initial page view.
+        :param variable_label: The label that tells the user to choose the item from the listbox
+        :param visualisation_label: The label that shows the type fo visualisation chose
+        :param vis_type_label: The label that tells the user the type of visualisation chose, normal or animated
+        :param listbox: The listbox for the independent variable to visualise
+        :param entry: The entry for the name of the file that want to be saved
+        :return: A clean initial page view that does not have any inputs
+        """
         self.visualisation_text = ''
         self.variable_text = ''
         self.visualisation_type_text = ''
