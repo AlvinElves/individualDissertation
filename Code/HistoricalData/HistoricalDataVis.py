@@ -2,6 +2,7 @@ from Code.HistoricalData.HistoricalData import *
 import plotly.express as px
 import matplotlib.animation as animate
 import matplotlib.pyplot as plt
+from matplotlib.dates import DateFormatter
 
 
 class HistoricalDataVisualisation:
@@ -11,13 +12,14 @@ class HistoricalDataVisualisation:
     """
     def __init__(self):
         """
-        HistoricalDataVisualisation Class Constructor that calls the HistoricalData Class.
+        HistoricalDataVisualisation Class Constructor that calls the HistoricalData Class and remove the matplotlib toolbar.
         """
         self.historical_data = HistoricalData()
 
-        self.animated_line_graph(['T'], 'visualise')
-        # self.path = self.model_vis.create_Folder()
-        # self.plot_line_all(self.historical_data, 'T', 'visualise', None)
+        # Remove the matplotlib toolbar
+        plt.rcParams['toolbar'] = 'None'
+
+        self.animated_bar_graph('T', 'visualise')
 
     def date_index_dataset(self, column):
         """
@@ -69,11 +71,15 @@ class HistoricalDataVisualisation:
         :return: A matplotlib figure that shows the values on the column chosen using line graph and animation
         """
         df = self.historical_data.merged_date_dataset.copy()
+
         df['Date'] = pd.to_datetime(df.Date.astype(str) + ' ' + df.Time.astype(str))
         column_name = ['Date'] + column
         df = df[column_name]
+
         saved_df = df.copy()
+
         df = df.set_index('Date')
+
         if len(df.columns) < 2:
             column_label = df.columns[0]
         else:
@@ -87,8 +93,9 @@ class HistoricalDataVisualisation:
                 plt.clf()
                 plt.plot(df[:i].index, df[:i].values, label=column_label)
                 plt.legend()
-                plt.xticks(rotation=90, ha="right", rotation_mode="anchor")
+                plt.xticks(rotation=45, ha="right", rotation_mode="anchor")
                 plt.subplots_adjust(bottom=0.2, top=0.9)
+                plt.gca().xaxis.set_major_formatter(DateFormatter("%Y-%m-%d"))
                 plt.xlabel('Dates')
                 plt.ylabel('Values')
 
@@ -137,30 +144,55 @@ class HistoricalDataVisualisation:
         final_df, max_value, saved_df = self.date_index_dataset(column)
 
         if method != 'dataset':
-            fig = plt.figure()
+            fig = plt.figure(figsize=(10, 7))
             fig.canvas.manager.set_window_title('Animated Bar Graph Visualisation')
 
             def buildbar(i=int):
                 plt.clf()
 
-                number = min(i, len(final_df.index) - 1)
-                objects = final_df.max().index
-                y_pos = np.arange(len(objects))
-                performance = final_df.iloc[[number]].values.tolist()[0]
+                if i > 10:
+                    x = np.arange(len(saved_df[i-10:i]))
+                    plt.bar(x - 0.2, saved_df[i-10:i][saved_df.columns[1]], 0.4, label=saved_df.columns[1], color='green')
+                    plt.bar(x + 0.2, saved_df[i-10:i][saved_df.columns[2]], 0.4, label=saved_df.columns[2], color='orange')
+                    plt.legend()
+                    plt.xlim(-0.5, len(saved_df[i-10:i]) - 0.5)
+                    plt.xticks(x, saved_df[i - 10:i][saved_df.columns[0]])
 
-                plt.bar(y_pos, performance, align='center', label=final_df.columns.values, color=['blue', 'orange'])
-                plt.legend()
+                    for j in range(len(x)):
+                        if not np.isnan(round(saved_df.iloc[i - 10 + j][saved_df.columns[1]], 2)):
+                            plt.text(j - 0.2, saved_df.iloc[i - 10 + j][saved_df.columns[1]] / 2,
+                                     round(saved_df.iloc[i - 10 + j][saved_df.columns[1]], 2), ha='center', fontsize=8)
 
-                plt.xticks(y_pos, objects)
-                plt.ylabel(column + ' Values')
-                plt.xlabel('Year')
+                        if not np.isnan(round(saved_df.iloc[i - 10 + j][saved_df.columns[2]], 2)):
+                            plt.text(j + 0.2, saved_df.iloc[i - 10 + j][saved_df.columns[2]] / 2,
+                                     round(saved_df.iloc[i - 10 + j][saved_df.columns[2]], 2), ha='center', fontsize=8)
 
-                plt.xlim(-0.5, 1.5)
+                else:
+                    if len(saved_df[:i]) > 0:
+                        x = np.arange(len(saved_df[:i]))
+                        plt.bar(x - 0.2, saved_df[:i][saved_df.columns[1]], 0.4, label=saved_df.columns[1], color='green')
+                        plt.bar(x + 0.2, saved_df[:i][saved_df.columns[2]], 0.4, label=saved_df.columns[2], color='orange')
+                        plt.legend()
+                        plt.xlim(-0.5, len(saved_df[:i]) - 0.5)
+                        plt.xticks(x, saved_df[:i][saved_df.columns[0]])
+
+                        for j in range(len(x)):
+                            if not np.isnan(round(saved_df.iloc[j][saved_df.columns[1]], 2)):
+                                plt.text(j - 0.2, saved_df.iloc[j][saved_df.columns[1]] / 2,
+                                         round(saved_df.iloc[j][saved_df.columns[1]], 2), ha='center', fontsize=8)
+
+                            if not np.isnan(round(saved_df.iloc[j][saved_df.columns[2]], 2)):
+                                plt.text(j + 0.2, saved_df.iloc[j][saved_df.columns[2]] / 2,
+                                         round(saved_df.iloc[j][saved_df.columns[2]], 2), ha='center', fontsize=8)
+
                 plt.ylim(0, max_value + 0.5)
+                plt.ylabel(column + ' Values')
+                plt.xlabel('Date')
+                plt.xticks(rotation=45, ha="right", rotation_mode="anchor")
 
-                plt.title('Date of the year: ' + str(final_df.index[number]))
+                plt.title('2004 VS 2005, Daily Value for feature ' + column)
 
-            animator = animate.FuncAnimation(fig, buildbar, interval=100)
+            animator = animate.FuncAnimation(fig, buildbar, interval=50)
             plt.show()
         else:
             return saved_df
