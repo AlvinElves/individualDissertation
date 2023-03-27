@@ -646,7 +646,7 @@ class AIModelVis:
         :param variable: The dependent variable that the user want to predict with the AI Model
         :param file_name: The name of the file that the user want to use to save the visualisation or dataset
         :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
-        :return: A matplotlib figure that shows the decision tree using a tree plot
+        :return: A plotly HTML figure that shows the decision tree using a tree map
         """
         if method != 'dataset':
             if variable == 'T':

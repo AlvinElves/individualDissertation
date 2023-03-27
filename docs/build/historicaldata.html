@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Historical Data Code Documentation &#8212; Smart City Visualisation 10/10/2023 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Live Data Code Documentation" href="livedata.html" />
+    <link rel="prev" title="Software Code Documentation" href="software.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-HistoricalData.HistoricalData">
+<span id="historical-data-code-documentation"></span><h1>Historical Data Code Documentation<a class="headerlink" href="#module-HistoricalData.HistoricalData" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="HistoricalData.HistoricalData.HistoricalData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">HistoricalData.HistoricalData.</span></span><span class="sig-name descname"><span class="pre">HistoricalData</span></span><a class="headerlink" href="#HistoricalData.HistoricalData.HistoricalData" title="Permalink to this definition">¶</a></dt>
+<dd><p>HistoricalData Class to be imported into GUI files. This class contains the Air Quality (Historical Data) that can be called for
+AIModel class and HistoricalDataVis class. This class read the dataset from the Excel file and clean the dataset.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="HistoricalData.HistoricalData.HistoricalData.create_folder">
+<span class="sig-name descname"><span class="pre">create_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#HistoricalData.HistoricalData.HistoricalData.create_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that is used to create a folder in the user’s computer.
+:param name: The name of the created folder
+:return: Creates the folder and return the path of the folder</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="HistoricalData.HistoricalData.HistoricalData.data_cleaning">
+<span class="sig-name descname"><span class="pre">data_cleaning</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#HistoricalData.HistoricalData.HistoricalData.data_cleaning" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that clean the data by preprocessing it, removing null values, unwanted column, and redundant values.
+:return: A dataset that is cleaned and not redundant from the Air Quality Data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="HistoricalData.HistoricalData.HistoricalData.get_data_from_excel">
+<span class="sig-name descname"><span class="pre">get_data_from_excel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#HistoricalData.HistoricalData.HistoricalData.get_data_from_excel" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that read the Air Quality Excel File and save it into a pandas dataframe.
+:return: A dataset that contains the Air Quality Data from Excel File</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="HistoricalData.HistoricalData.HistoricalData.grouping">
+<span class="sig-name descname"><span class="pre">grouping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group_by_column</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#HistoricalData.HistoricalData.HistoricalData.grouping" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that group the dataset based on the column chosen.
+:param group_by_column: The column from the dataset the user want to visualise
+:return: A dataset that is grouped by the column chosen</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="HistoricalData.HistoricalData.HistoricalData.merge_date">
+<span class="sig-name descname"><span class="pre">merge_date</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#HistoricalData.HistoricalData.HistoricalData.merge_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that merge the Day, Month, and Year column into one column, Date.
+:return: A dataset that has Date as column only</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="HistoricalData.HistoricalData.HistoricalData.split_date">
+<span class="sig-name descname"><span class="pre">split_date</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#HistoricalData.HistoricalData.HistoricalData.split_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that split the Date column into several column, Day, Month, and Year column.
+:return: A dataset that has Day, Month, Year as column</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-HistoricalData.HistoricalDataVis"></span><dl class="py class">
+<dt class="sig sig-object py" id="HistoricalData.HistoricalDataVis.HistoricalDataVisualisation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">HistoricalData.HistoricalDataVis.</span></span><span class="sig-name descname"><span class="pre">HistoricalDataVisualisation</span></span><a class="headerlink" href="#HistoricalData.HistoricalDataVis.HistoricalDataVisualisation" title="Permalink to this definition">¶</a></dt>
+<dd><p>HistoricalDataVisualisation Class to be imported into GUI files. This class contains all Historical Data Visualisation functions
+that can be called in the GUI file easily.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="HistoricalData.HistoricalDataVis.HistoricalDataVisualisation.animated_bar_graph">
+<span class="sig-name descname"><span class="pre">animated_bar_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#HistoricalData.HistoricalDataVis.HistoricalDataVisualisation.animated_bar_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that is used to visualise the column values in an animated bar graph form.
+:param column: The column the user want to visualise
+:param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+:return: A matplotlib figure that shows the values on the column chosen using bar graph and animation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="HistoricalData.HistoricalDataVis.HistoricalDataVisualisation.animated_line_graph">
+<span class="sig-name descname"><span class="pre">animated_line_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#HistoricalData.HistoricalDataVis.HistoricalDataVisualisation.animated_line_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that is used to visualise the column values in an animated line graph form.
+:param column: The column the user want to visualise
+:param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+:return: A matplotlib figure that shows the values on the column chosen using line graph and animation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="HistoricalData.HistoricalDataVis.HistoricalDataVisualisation.animated_pie_chart">
+<span class="sig-name descname"><span class="pre">animated_pie_chart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#HistoricalData.HistoricalDataVis.HistoricalDataVisualisation.animated_pie_chart" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that is used to visualise the column values in an animated pie chart form.
+:param column: The column the user want to visualise
+:param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+:return: A matplotlib figure that shows the values on the column chosen using pie chart and animation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="HistoricalData.HistoricalDataVis.HistoricalDataVisualisation.date_index_dataset">
+<span class="sig-name descname"><span class="pre">date_index_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#HistoricalData.HistoricalDataVis.HistoricalDataVisualisation.date_index_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that gets the value of the year and put the Date to the index.
+:param column: The column the user want to visualise
+:return: Two dataset that has the value of the year based on the column chosen, and the maximum value of it</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="HistoricalData.HistoricalDataVis.HistoricalDataVisualisation.plot_Bar_by_Day">
+<span class="sig-name descname"><span class="pre">plot_Bar_by_Day</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_Value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#HistoricalData.HistoricalDataVis.HistoricalDataVisualisation.plot_Bar_by_Day" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that is used to visualise the daily column values using bar graph.
+:param y_Value: The column the user want to visualise
+:param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+:param file_name: The name of the file that the user want to use to save the visualisation or dataset
+:return: A plotly HTML figure that shows the value of the column chosen using bar graph</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="HistoricalData.HistoricalDataVis.HistoricalDataVisualisation.plot_Bar_by_Month">
+<span class="sig-name descname"><span class="pre">plot_Bar_by_Month</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_Value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#HistoricalData.HistoricalDataVis.HistoricalDataVisualisation.plot_Bar_by_Month" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that is used to visualise the monthly column values using bar graph.
+:param y_Value: The column the user want to visualise
+:param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+:param file_name: The name of the file that the user want to use to save the visualisation or dataset
+:return: A plotly HTML figure that shows the value of the column chosen using bar graph</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="HistoricalData.HistoricalDataVis.HistoricalDataVisualisation.plot_line_all">
+<span class="sig-name descname"><span class="pre">plot_line_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_Value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#HistoricalData.HistoricalDataVis.HistoricalDataVisualisation.plot_line_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that is used to visualise the column values using line graph.
+:param y_Value: The column(s) the user want to visualise
+:param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
+:param file_name: The name of the file that the user want to use to save the visualisation or dataset
+:return: A plotly HTML figure that shows the value of the column(s) chosen using line graph</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Smart City Visualisation</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="software.html">Software Code Documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Historical Data Code Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#HistoricalData.HistoricalData.HistoricalData"><code class="docutils literal notranslate"><span class="pre">HistoricalData</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#HistoricalData.HistoricalDataVis.HistoricalDataVisualisation"><code class="docutils literal notranslate"><span class="pre">HistoricalDataVisualisation</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="livedata.html">Live Data Code Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aimodel.html">AI Model Code Documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="software.html" title="previous chapter">Software Code Documentation</a></li>
+      <li>Next: <a href="livedata.html" title="next chapter">Live Data Code Documentation</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Lim Yi Hong.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/historicaldata.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
