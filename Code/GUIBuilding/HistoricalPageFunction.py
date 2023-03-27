@@ -62,23 +62,20 @@ class HistoricalPageFunction:
 
             if self.visualisation_type_text == 'Animated' and file_passed:
                 if self.visualisation_text == 'Line Graph':
-                    dataset = self.historicalVis.animated_line_graph(self.historicalVis.historical_data, features, method)
+                    dataset = self.historicalVis.animated_line_graph(features, method)
 
                 elif self.visualisation_text == 'Bar Graph':
-                    dataset = self.historicalVis.animated_bar_graph(self.historicalVis.historical_data, features[0], method)
-
-                elif self.visualisation_text == 'Pie Chart':
-                    dataset = self.historicalVis.animated_pie_chart(self.historicalVis.historical_data, features[0], method)
+                    dataset = self.historicalVis.animated_bar_graph(features[0], method)
 
             elif self.visualisation_type_text == 'Normal' and file_passed:
                 if self.visualisation_text == 'All Data':
-                    dataset = self.historicalVis.plot_line_all(self.historicalVis.historical_data, features, method, file)
+                    dataset = self.historicalVis.plot_line_all(features, method, file)
 
                 elif self.visualisation_text == 'Daily Data':
-                    dataset = self.historicalVis.plot_Bar_by_Day(self.historicalVis.historical_data, features[0], method, file)
+                    dataset = self.historicalVis.plot_Bar_by_Day(features[0], method, file)
 
                 elif self.visualisation_text == 'Monthly Data':
-                    dataset = self.historicalVis.plot_Bar_by_Month(self.historicalVis.historical_data, features[0], method, file)
+                    dataset = self.historicalVis.plot_Bar_by_Month(features[0], method, file)
 
             if file_passed:
                 if method == 'dataset':
@@ -196,11 +193,6 @@ class HistoricalPageFunction:
 
         elif method == 'bar':
             self.visualisation_text = 'Bar Graph'
-            self.variable_text = 'Choose the Variable\nto Visualise'
-            listbox.config(state='normal', bg='white', highlightbackground='white', selectmode='single')
-
-        elif method == 'pie':
-            self.visualisation_text = 'Pie Chart'
             self.variable_text = 'Choose the Variable\nto Visualise'
             listbox.config(state='normal', bg='white', highlightbackground='white', selectmode='single')
 

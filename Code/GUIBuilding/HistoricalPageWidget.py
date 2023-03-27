@@ -99,16 +99,6 @@ class HistoricalPageWidget:
                                                                                                self.variable_box, self.save_entry))
         bar_graph_button.grid(row=row, column=2, pady=(10, 0), padx=(5, 5))
 
-        pie_chart_button = tk.Button(frame, text="DAY COMPARISON\n(PIE CHART)", width=22, height=2,
-                                     font=('Raleway', 10, 'bold'), bg='lightskyblue',
-                                     activebackground='cornflowerblue',
-                                     command=lambda: self.historicalPageFunction.choose_method('animated', 'pie',
-                                                                                               self.variable_label,
-                                                                                               self.visualisation_chosen_label,
-                                                                                               self.vis_type_chosen_label,
-                                                                                               self.variable_box, self.save_entry))
-        pie_chart_button.grid(row=row, column=3, pady=(10, 0), padx=(5, 5))
-
     @staticmethod
     def draw_line(row, frame):
         """

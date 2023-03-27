@@ -5,7 +5,6 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import plotly.graph_objects as go
-import plotly.express as px
 
 from sklearn import tree
 from yellowbrick.model_selection import ValidationCurve, LearningCurve
@@ -33,8 +32,8 @@ class AIModelVis:
 
         # self.visualise_feature_importance(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 'T', None, 'visualise')
         # self.visualise_actual_and_predicted(self.ai_model.T_actual, self.ai_model.T_prediction, 'T', None, 'visualise')
-        self.generate_tree(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 0, 'T', 'testing',
-                           'visualise')
+        # self.generate_tree(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 2, 'T', 'testing',
+        #                   'visualise')
 
         # self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, self.ai_model.T_test, 'T',
         #                              'max_features', None, 'normal')
@@ -658,6 +657,7 @@ class AIModelVis:
                 variable = 'RH (Relative Humidity)'
 
             nodes = tree.plot_tree(AI_model.estimators_[tree_number], feature_names=dataset.columns, filled=True)
+            plt.close()
 
             list_of_node = []
             current_decision = 0
@@ -721,12 +721,11 @@ class AIModelVis:
             node_df = pd.DataFrame(list_of_node, columns=['PreviousLeafDecision', 'Parents', 'Decision',
                                                           'Criterion', 'Samples', 'Value'])
 
-            fig = go.Figure(go.Treemap(labels=node_df['Decision'], parents=node_df['Parents'], root_color="lightgrey",
-                                       ))
-
+            fig = go.Figure()
+            fig.add_trace(go.Treemap(labels=node_df['Decision'], parents=node_df['Parents'], root_color="lightgrey"))
             fig.update_layout(title='Decision Tree Number ' + str(tree_number + 1) + ' for feature ' + variable)
-            fig.update_traces(hovertext=criterion + ' = ' + node_df.Criterion + '<br>Samples = ' +
-                              node_df.Samples + '<br>Value = ' + node_df.Value)
+            fig.update_traces(hovertext='<br>' + criterion + ' = ' + node_df.Criterion + '<br>Samples = ' +
+                                        node_df.Samples + '<br>Value = ' + node_df.Value)
 
             if method == 'save':
                 fig.write_html(file_name)
