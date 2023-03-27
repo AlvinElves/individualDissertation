@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import plotly.graph_objects as go
+import plotly.express as px
 
 from sklearn import tree
 from yellowbrick.model_selection import ValidationCurve, LearningCurve
@@ -17,6 +18,7 @@ class AIModelVis:
     AIModelVis Class to be imported into GUI files. This class contains all the AI (RandomForestRegressor) Model Visualisation
     functions that can be called in the GUI file easily.
     """
+
     def __init__(self):
         """
         AIModelVis Class Constructor that calls the AIModel Class and Matplotlib Interaction Class and remove the matplotlib toolbar.
@@ -31,7 +33,8 @@ class AIModelVis:
 
         # self.visualise_feature_importance(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 'T', None, 'visualise')
         # self.visualise_actual_and_predicted(self.ai_model.T_actual, self.ai_model.T_prediction, 'T', None, 'visualise')
-        # self.generate_tree(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 0, 'T', None, 'visualise')
+        self.generate_tree(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 0, 'T', 'testing',
+                           'visualise')
 
         # self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, self.ai_model.T_test, 'T',
         #                              'max_features', None, 'normal')
@@ -584,11 +587,14 @@ class AIModelVis:
             # Create figure with secondary y-axis
             fig = make_subplots(specs=[[{"secondary_y": True}]])
 
-            fig.add_trace(go.Scatter(x=combined.index, y=combined[variable + " (Actual)"], name="Actual Value"), secondary_y=False)
-            fig.add_trace(go.Scatter(x=combined.index, y=combined[variable + " (Predicted)"], name="Predicted Value"), secondary_y=False)
-            fig.add_trace(go.Bar(x=combined.index, y=combined['Percentage'], name="Percentage Difference", marker_color='grey',
-                                 opacity=0.5),
-                          secondary_y=True)
+            fig.add_trace(go.Scatter(x=combined.index, y=combined[variable + " (Actual)"], name="Actual Value"),
+                          secondary_y=False)
+            fig.add_trace(go.Scatter(x=combined.index, y=combined[variable + " (Predicted)"], name="Predicted Value"),
+                          secondary_y=False)
+            fig.add_trace(
+                go.Bar(x=combined.index, y=combined['Percentage'], name="Percentage Difference", marker_color='grey',
+                       opacity=0.5),
+                secondary_y=True)
 
             if variable == 'T':
                 variable = 'T (Temperature)'
@@ -597,7 +603,8 @@ class AIModelVis:
             else:
                 variable = 'RH (Relative Humidity)'
 
-            fig.update_layout(xaxis_range=[-0.5, 50], yaxis_range=[0, combined[column_name].max() + 1], yaxis2_range=[0, 200],
+            fig.update_layout(xaxis_range=[-0.5, 50], yaxis_range=[0, combined[column_name].max() + 1],
+                              yaxis2_range=[0, 200],
                               title="Actual vs Predicted for feature " + variable, hovermode='x unified')
             fig.update_xaxes(title_text="Prediction #", rangeslider_visible=True)
 
@@ -612,8 +619,26 @@ class AIModelVis:
         else:
             return combined
 
-    @staticmethod
-    def generate_tree(AI_model, dataset, tree_number, variable, file_name, method):
+    def check_decision(self, current_decision, number, decision):
+        """
+        A function that checks the decision of the tree
+        :param current_decision: The current decision number for the node
+        :param number: The node number
+        :param decision: Decision of the node
+        :return: A boolean that indicates the decision and the current decision number
+        """
+        if current_decision == number:
+            if decision == 'True':
+                decision = 'False'
+
+                current_decision -= 1
+
+            else:
+                decision = 'True'
+
+        return decision, current_decision
+
+    def generate_tree(self, AI_model, dataset, tree_number, variable, file_name, method):
         """
         A function that is used to visualise the decision tree used for prediction.
         :param AI_model: The AI Model that the user want to visualise
@@ -632,16 +657,81 @@ class AIModelVis:
             else:
                 variable = 'RH (Relative Humidity)'
 
-            fig, ax = plt.subplots(figsize=(12, 6), dpi=800)
-            fig.canvas.manager.set_window_title('Tree ' + str(tree_number + 1) + ' Estimator Visualisation')
+            nodes = tree.plot_tree(AI_model.estimators_[tree_number], feature_names=dataset.columns, filled=True)
 
-            tree.plot_tree(AI_model.estimators_[tree_number], feature_names=dataset.columns, ax=ax, filled=True)
-            plt.title('Decision Tree Number ' + str(tree_number + 1) + ' for feature ' + variable, fontsize=2)
+            list_of_node = []
+            current_decision = 0
+
+            decisions = ['False', 'False', 'False', 'False', 'False', 'False']
+            node_parents = []
+
+            for i in range(len(nodes)):
+                node_information = str(nodes[i]).split("'")[1]
+                decision_information = node_information.split('\\n')
+
+                if len(decision_information) == 3:
+                    decision_information = [''] + decision_information
+
+                criterion = decision_information[1].split('= ')[0]
+                decision_information[1] = decision_information[1].split('= ')[1]
+                decision_information[2] = decision_information[2].split('= ')[1]
+                decision_information[3] = decision_information[3].split('= ')[1]
+
+                if decision_information[0] == '':
+                    if current_decision == 0:
+                        decision_information = ['', ''] + decision_information
+                    else:
+                        decision_information = [decisions[current_decision - 1], node_parents[current_decision - 1]] + \
+                                               decision_information
+
+                        decision_information[2] = decision_information[0] + '<br>Value = ' + decision_information[5]
+
+                    decisions[5], current_decision = self.check_decision(current_decision, 6, decisions[5])
+                    decisions[4], current_decision = self.check_decision(current_decision, 5, decisions[4])
+                    decisions[3], current_decision = self.check_decision(current_decision, 4, decisions[3])
+                    decisions[2], current_decision = self.check_decision(current_decision, 3, decisions[2])
+                    decisions[1], current_decision = self.check_decision(current_decision, 2, decisions[1])
+                    decisions[0], current_decision = self.check_decision(current_decision, 1, decisions[0])
+
+                else:
+                    if current_decision == 0:
+                        decision_information = ['', ''] + decision_information
+                        decision_information[2] = decision_information[2] + '?'
+
+                        if len(node_parents) == 0:
+                            node_parents.insert(0, decision_information[2])
+                        else:
+                            node_parents[0] = decision_information[2]
+
+                    else:
+                        decision_information = [decisions[current_decision - 1], node_parents[current_decision - 1]] + \
+                                               decision_information
+
+                        decision_information[2] = decision_information[0] + '<br>' + decision_information[2] + '?'
+
+                        if len(node_parents) == current_decision:
+                            node_parents.insert(current_decision, decision_information[2])
+                        else:
+                            node_parents[current_decision] = decision_information[2]
+
+                    current_decision += 1
+
+                list_of_node.append(decision_information)
+
+            node_df = pd.DataFrame(list_of_node, columns=['PreviousLeafDecision', 'Parents', 'Decision',
+                                                          'Criterion', 'Samples', 'Value'])
+
+            fig = go.Figure(go.Treemap(labels=node_df['Decision'], parents=node_df['Parents'], root_color="lightgrey",
+                                       ))
+
+            fig.update_layout(title='Decision Tree Number ' + str(tree_number + 1) + ' for feature ' + variable)
+            fig.update_traces(hovertext=criterion + ' = ' + node_df.Criterion + '<br>Samples = ' +
+                              node_df.Samples + '<br>Value = ' + node_df.Value)
 
             if method == 'save':
-                plt.savefig(file_name)
+                fig.write_html(file_name)
             else:
-                plt.show()
+                fig.show()
 
 
 if __name__ == '__main__':

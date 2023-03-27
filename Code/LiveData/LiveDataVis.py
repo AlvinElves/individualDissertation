@@ -33,8 +33,8 @@ class LiveDataVisualisation:
 
         self.create_Folder('LiveDataVisualisation', True)
 
-        self.pop_up_graph(self.live_data)
-        self.create_Map(self.live_data)
+        self.pop_up_graph()
+        self.create_Map()
 
         # Remove the matplotlib toolbar
         plt.rcParams['toolbar'] = 'None'

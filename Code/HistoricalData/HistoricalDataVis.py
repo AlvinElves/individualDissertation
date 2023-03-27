@@ -19,8 +19,6 @@ class HistoricalDataVisualisation:
         # Remove the matplotlib toolbar
         plt.rcParams['toolbar'] = 'None'
 
-        self.animated_bar_graph('T', 'visualise')
-
     def date_index_dataset(self, column):
         """
         A function that gets the value of the year and put the Date to the index.
