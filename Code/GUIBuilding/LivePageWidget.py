@@ -227,9 +227,18 @@ class LivePageWidget:
                                 font=('Raleway', 10, 'bold'), bg='lightskyblue')
         website_text.grid(row=row + 4, column=2, pady=(0, 5))
 
+        def callback(url):
+            """
+            A function that open the URL link when clicks
+            :param url: Link to open the website
+            :return: The website based on the URL
+            """
+            webbrowser.open_new(url)
+
         website_label = tk.Label(frame, text='https://public.\nopendatasoft.com/\nexplore/dataset/openaq',
-                                 width=21, height=3, font=('Raleway', 10, 'bold'), bg='royalblue')
+                                 width=21, height=3, font=('Raleway', 10, 'bold'), bg='royalblue', cursor="hand2")
         website_label.grid(row=row + 4, column=3, pady=(0, 5))
+        website_label.bind("<Button-1>", lambda e: callback("https://public.opendatasoft.com/explore/dataset/openaq"))
 
         save_text = tk.Label(frame, text="Name of File to Save: ", width=21, height=3,
                              font=('Raleway', 10, 'bold'), bg='lightskyblue')
@@ -266,5 +275,11 @@ class LivePageWidget:
         visualise_button = tk.Button(frame, text="Visualise the\nLive Data", width=21, height=2,
                                      font=('Raleway', 10, 'bold'), bg='dodgerblue',
                                      activebackground='cornflowerblue',
-                                     command=lambda: self.livePageFunction.visualise(frame, self.list_box))
+                                     command=lambda: self.livePageFunction.visualise(frame, self.vis_chosen_label,
+                                                                                     self.graph_type_label,
+                                                                                     self.type_chosen_label,
+                                                                                     self.pollutant_label,
+                                                                                     self.list_box,
+                                                                                     self.last_updated_button,
+                                                                                     self.most_frequent_button))
         visualise_button.grid(row=row + 1, column=3, padx=(2, 2), pady=(5, 5))

@@ -102,7 +102,7 @@ class HistoricalData:
         A function that read the Air Quality Excel File and save it into a pandas dataframe.
         :return: A dataset that contains the Air Quality Data from Excel File
         """
-        self.historical_dataset = pd.read_excel(r"C:\Users\hong3\PycharmProjects\individualDissertation\Dataset\AirQualityUCI.xlsx")
+        self.historical_dataset = pd.read_excel("../Dataset/AirQualityUCI.xlsx")
         self.original_dataset = self.historical_dataset.copy()
 
 

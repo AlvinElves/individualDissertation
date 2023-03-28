@@ -102,36 +102,6 @@ class HistoricalDataVisualisation:
         else:
             return saved_df
 
-    def animated_pie_chart(self, column, method):
-        """
-        A function that is used to visualise the column values in an animated pie chart form.
-        :param column: The column the user want to visualise
-        :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
-        :return: A matplotlib figure that shows the values on the column chosen using pie chart and animation
-        """
-        final_df, max_value, saved_df = self.date_index_dataset(column)
-
-        if method != 'dataset':
-            fig, ax = plt.subplots()
-            explode = [0.01, 0.01]
-            fig.canvas.manager.set_window_title('Animated Pie Chart Visualisation')
-
-            def buildpie(i):
-                def absolute_value(val):  # turn % back to the value
-                    a = np.round(val / 100. * final_df.iloc[[i]].squeeze().sum(), 3)
-                    if a > 0:
-                        return a
-
-                ax.clear()
-                plot = final_df.iloc[[i]].squeeze().plot.pie(y=final_df.columns, label='',
-                                                             autopct=absolute_value, explode=explode, shadow=True)
-                plot.set_title('Date of the year: ' + str(final_df.index[i]), fontsize=12)
-
-            animator = animate.FuncAnimation(fig, buildpie, interval=200)
-            plt.show()
-        else:
-            return saved_df
-
     def animated_bar_graph(self, column, method):
         """
         A function that is used to visualise the column values in an animated bar graph form.
@@ -190,7 +160,7 @@ class HistoricalDataVisualisation:
 
                 plt.title('2004 VS 2005, Daily Value for feature ' + column)
 
-            animator = animate.FuncAnimation(fig, buildbar, interval=50)
+            animator = animate.FuncAnimation(fig, buildbar, interval=300)
             plt.show()
         else:
             return saved_df

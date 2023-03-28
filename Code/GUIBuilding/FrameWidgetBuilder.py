@@ -1,4 +1,5 @@
 import tkinter as tk
+from PIL import Image,ImageTk
 
 
 # Create function for button hovers
@@ -40,7 +41,7 @@ def check_page(page, currentPage):
 
 def left_frame_widget(left_frame, page, command1, command2, command3, command4, command5):
     """
-    A function that creates the left side of the GUI that contains the page buttons.
+    A function that creates the left side of the GUI that contains the page buttons and logo.
     :param left_frame: Left frame that puts the tkinter widgets
     :param page: The GUI page that is being built
     :param command1: Home Page button command function
@@ -51,8 +52,15 @@ def left_frame_widget(left_frame, page, command1, command2, command3, command4, 
     :return: The page buttons and frame in GUI
     """
     # Left_Frame
-    label = tk.Label(left_frame, text="LOGO", width=7, font=('Raleway', 35, 'bold'), bg='royalblue')
-    label.grid(row=0, column=0, pady=75)
+    canvas = tk.Canvas(left_frame, width=208, height=191, bg='royalblue', highlightthickness=0)
+    canvas.grid(row=0, column=0, pady=10)
+
+    photo = Image.open('../Icon/Logo.png')
+    resize_image = photo.resize((150, 100))
+    photo = ImageTk.PhotoImage(resize_image)
+
+    canvas.create_image(30, 30, image=photo, anchor='nw', state='normal')
+    canvas.image = photo
 
     background_colour, active_colour = check_page(page, 'home')
     home_button = tk.Button(left_frame, text="HOME", fg='lightsteelblue', bg=background_colour, width=25,

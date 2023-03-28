@@ -70,7 +70,7 @@ class LivePageFunction:
                     label.grid(row=11, column=1)
                     label.after(3000, lambda: label.destroy())
 
-    def visualise(self, frame, listbox):
+    def visualise(self, frame, visualisation_label, choose_type_label, type_label, pollutant_label, listbox, button1, button2):
         """
         A function that shows the visualisation that the user chose.
         :param frame: The frame that puts the tkinter widgets
@@ -86,13 +86,13 @@ class LivePageFunction:
 
         if vis_passed:
             if self.visualisation_text == 'Bubble Map':
-                self.liveDataVis.bubble_map(self.liveDataVis.live_data, variables)
+                self.liveDataVis.bubble_map(variables)
 
             elif self.visualisation_text == 'Bar Graph On Map':
-                self.liveDataVis.bar_graph_on_map(self.liveDataVis.live_data, variables, map_type)
+                self.liveDataVis.bar_graph_on_map(map_type)
 
             elif self.visualisation_text == 'Pie Chart On Map':
-                self.liveDataVis.pie_chart_on_map(self.liveDataVis.live_data, variables, map_type)
+                self.liveDataVis.pie_chart_on_map(map_type)
 
             elif self.visualisation_text == 'Normal Map':
                 if variables == self.pollutant_type[0]:
@@ -124,6 +124,7 @@ class LivePageFunction:
             label = tk.Label(frame, text='Loading, Please wait', foreground='green', bg='lightskyblue')
             label.grid(row=11, column=1)
             label.after(3000, lambda: label.destroy())
+            self.clear(visualisation_label, choose_type_label, type_label, pollutant_label, listbox, button1, button2)
 
     def check_visualise(self, right_inside_frame, listbox):
         """
