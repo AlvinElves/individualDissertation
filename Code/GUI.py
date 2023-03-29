@@ -23,7 +23,7 @@ class GUI(tk.Tk):
         # creating a container
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
-        # self.resizable(False, False)
+        self.resizable(False, False)
         self.title('Smart City Visualisation')
         window_Width = self.winfo_screenwidth()
         window_Height = self.winfo_screenheight()

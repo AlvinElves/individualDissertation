@@ -25,10 +25,12 @@ class HomePageWidget:
                      "are shown at the bottom right of the screen.\n\n" \
                      "The AI Prediction page allows the user to input the data either using\n" \
                      "single point entry or file entry. The predicted result will be shown in\n" \
-                     "a treeview and is able to be downloaded."
-        introduction_text = tk.Label(frame, text=intro_text, width=58, height=18,
+                     "a treeview and is able to be downloaded.\n\n" \
+                     "The two link below talks about the aim and the function of the software\n" \
+                     "in a more detailed manner."
+        introduction_text = tk.Label(frame, text=intro_text, width=58, height=20,
                                      font=('Raleway', 15, 'bold'), bg='lightskyblue', anchor='nw')
-        introduction_text.grid(row=0, column=0, padx=(33, 32), pady=(24, 0), sticky='w')
+        introduction_text.grid(row=0, column=0, padx=(33, 32), pady=(5, 0), sticky='w')
 
         def callback(url):
             """
@@ -38,12 +40,12 @@ class HomePageWidget:
             """
             webbrowser.open_new(url)
 
-        feature_text = tk.Label(frame, text='Feature: ', width=58, height=2,
-                                     font=('Raleway', 15, 'bold'), bg='lightskyblue', anchor='nw', cursor="hand2")
-        feature_text.grid(row=1, column=0, padx=(33, 32), pady=(5, 3), sticky='w')
+        feature_text = tk.Label(frame, text='Feature: ', width=58, height=1,
+                                font=('Raleway', 15, 'bold'), bg='lightskyblue', anchor='nw', cursor="hand2")
+        feature_text.grid(row=1, column=0, padx=(33, 32), pady=(8, 8), sticky='w')
         feature_text.bind("<Button-1>", lambda e: callback("https://public.opendatasoft.com/explore/dataset/openaq"))
 
-        demo_text = tk.Label(frame, text='Demo: ', width=58, height=2,
-                                     font=('Raleway', 15, 'bold'), bg='lightskyblue', anchor='nw', cursor="hand2")
-        demo_text.grid(row=2, column=0, padx=(33, 32), pady=(0, 5), sticky='w')
+        demo_text = tk.Label(frame, text='Demo: ', width=58, height=1,
+                             font=('Raleway', 15, 'bold'), bg='lightskyblue', anchor='nw', cursor="hand2")
+        demo_text.grid(row=2, column=0, padx=(33, 32), pady=(8, 8),  sticky='w')
         demo_text.bind("<Button-1>", lambda e: callback("https://public.opendatasoft.com/explore/dataset/openaq"))
