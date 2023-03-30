@@ -63,7 +63,10 @@ class ModelVisFunction:
 
             if method == 'save':
                 path = self.aiModel.historical_data.create_folder('SavedVisualisation')
-                file = path + '/' + file_name + '.png'
+                if self.visualisation_text == 'Decision Tree' or self.visualisation_text == 'Actual VS Predicted':
+                    file = path + '/' + file_name + '.html'
+                else:
+                    file = path + '/' + file_name + '.png'
 
             # Then show the visualisation
             if self.model_text == 'T Variable':

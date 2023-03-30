@@ -727,10 +727,10 @@ class AIModelVis:
                 if decision_information[0] == '':
                     # If the level of the decision tree is 0
                     if current_decision == 0:
-                        decision_information = ['', ''] + decision_information
+                        decision_information = ['', ''] + decision_information + [current_decision]
                     else:
                         decision_information = [decisions[current_decision - 1], node_parents[current_decision - 1]] + \
-                                               decision_information
+                                               decision_information + [current_decision]
 
                         decision_information[2] = decision_information[0] + '<br>Value = ' + decision_information[5]
 
@@ -745,7 +745,7 @@ class AIModelVis:
                 else:  # If the node is not a leaf node
                     # If the level of the decision tree is 0
                     if current_decision == 0:
-                        decision_information = ['', ''] + decision_information
+                        decision_information = ['', ''] + decision_information + [current_decision]
                         decision_information[2] = decision_information[2] + '?'
 
                         # If the list of node_parents is empty
@@ -758,7 +758,7 @@ class AIModelVis:
 
                     else:
                         decision_information = [decisions[current_decision - 1], node_parents[current_decision - 1]] + \
-                                               decision_information
+                                               decision_information + [current_decision]
 
                         decision_information[2] = decision_information[0] + '<br>' + decision_information[2] + '?'
 
@@ -776,16 +776,52 @@ class AIModelVis:
 
             # Create a dataframe with the node information
             node_df = pd.DataFrame(list_of_node, columns=['PreviousLeafDecision', 'Parents', 'Decision',
-                                                          'Criterion', 'Samples', 'Value'])
+                                                          'Criterion', 'Samples', 'Value', 'Level'])
+
+            frame0 = None
+            frames = []
+
+            # Loop through the level of the decision tree and create the treemap based on the level
+            for i in range(0, node_df['Level'].max() + 1):
+                treemap = go.Treemap(labels=node_df[node_df['Level'] <= i]['Decision'],
+                                     parents=node_df[node_df['Level'] <= i]['Parents'], root_color="lightgrey")
+
+                if frame0 is None:
+                    frame0 = treemap
+
+                frames.append(go.Frame(name=f"frame-{i}", data=treemap))
+
+            # Create the slider that change the treemap frame based on the level of slider
+            sliders = [
+                dict(
+                    steps=[
+                        dict(
+                            method="animate",
+                            args=[
+                                [f"frame-{i}"],
+                                dict(mode="e", frame=dict(redraw=True), transition=dict(duration=200))],
+                            label=f"{i}")
+                        for i in range(0, node_df['Level'].max() + 1)
+                    ],
+                    transition=dict(duration=0),
+                    x=0,
+                    y=0,
+                    currentvalue=dict(
+                        font=dict(size=12), prefix="Level: ", visible=True, xanchor="center"
+                    ),
+                    len=1.0,
+                    active=0,
+                )
+            ]
+
+            # Create the layout of the figure
+            layout = {"title": 'Decision Tree Number ' + str(tree_number + 1) + ' for feature ' + variable,
+                      "sliders": sliders}
 
             # Create figure
-            fig = go.Figure()
+            fig = go.Figure(data=frame0, layout=layout, frames=frames)
 
-            # Add the traces for the decision tree nodes using a tree map
-            fig.add_trace(go.Treemap(labels=node_df['Decision'], parents=node_df['Parents'], root_color="lightgrey"))
-
-            # Set the plot title and the hover text
-            fig.update_layout(title='Decision Tree Number ' + str(tree_number + 1) + ' for feature ' + variable)
+            # Update the figure hover text
             fig.update_traces(hovertext='<br>' + criterion + ' = ' + node_df.Criterion + '<br>Samples = ' +
                                         node_df.Samples + '<br>Value = ' + node_df.Value)
 
