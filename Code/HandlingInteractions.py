@@ -6,6 +6,7 @@ class HandlingInteractions:
     """
     HandlingInteractions Class to be imported into fils that allows the user to pan and zoom using a mouse.
     """
+    # Matplotlib figure zooming with a mouse
     @staticmethod
     def zoom_factory(ax, base_scale=2.):
         """

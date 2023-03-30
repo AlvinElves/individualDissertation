@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 from sklearn import tree
 from yellowbrick.model_selection import ValidationCurve, LearningCurve
@@ -28,20 +29,6 @@ class AIModelVis:
         # Remove the matplotlib toolbar
         plt.rcParams['toolbar'] = 'None'
 
-        # self.visualise_variable('normalised', ['CO(GT) (Original)', 'CO(GT) (Processed)'], 'T', self.ai_model.T_normalise)
-
-        # self.visualise_feature_importance(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 'T', None, 'visualise')
-        # self.visualise_actual_and_predicted(self.ai_model.T_actual, self.ai_model.T_prediction, 'T', None, 'visualise')
-        # self.generate_tree(self.ai_model.T_model, self.ai_model.T_train.drop(['T'], axis=1), 2, 'T', 'testing',
-        #                   'visualise')
-
-        # self.visualise_hyperparameter(self.ai_model.T_model, self.ai_model.T_train, self.ai_model.T_test, 'T',
-        #                              'max_features', None, 'normal')
-        # self.visualise_learning_rate(self.ai_model.T_model, self.ai_model.T_train, 'T')
-
-        # self.visualise_tree_result(self.ai_model.T_model, self.ai_model.T_test.drop(['T'], axis=1),
-        #                           self.ai_model.T_actual, 'T', 0, None, 'visualise')
-
     def visualise_tree_result(self, ai_model, dataset, actual_dataset, variable, prediction_number, file_name, method):
         """
         A function that is used to visualise the predicted result for all the decision tree.
@@ -54,9 +41,11 @@ class AIModelVis:
         :param method: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
         :return: A matplotlib figure that shows the predicted result on all the decision tree using line graph and bar graph
         """
+        # Get the predicted value for each tree
         tree_prediction = [decision_tree.predict(dataset) for decision_tree in ai_model.estimators_]
         result = [element[prediction_number] for element in tree_prediction]
 
+        # Put the predicted value in a dataframe and get the average predicted value and the actual dataset value
         result_df = pd.DataFrame(result, columns=['Predicted Result'])
         mean = result_df['Predicted Result'].mean()
         actual_df = actual_dataset[prediction_number]
@@ -69,6 +58,7 @@ class AIModelVis:
             else:
                 y_label = 'RH (Relative Humidity) '
 
+            # Create a figure and set the window title
             fig, ax = plt.subplots()
             fig.canvas.manager.set_window_title('All Decision Tree Prediction')
 
@@ -76,9 +66,11 @@ class AIModelVis:
             pan_handler = panhandler(fig, 1)
             self.interact.zoom_factory(ax, base_scale=1.2)
 
+            # Plot the result using a bar chart and put the value of each bar
             visualise = result_df.plot(kind="bar", ax=ax, color='g', figsize=(12, 7))
             visualise.bar_label(ax.containers[0], fontsize=8)
 
+            # Set the title, X and Y labels for the figure
             plt.minorticks_on()
             ax.set_xticklabels(ax.get_xticks(), rotation=0)
             ax.tick_params(axis='x', which='minor', bottom='off')
@@ -86,23 +78,29 @@ class AIModelVis:
             ax.set_ylabel(y_label + " Feature Value")
             ax.set_title("Every Decision Tree Prediction VS Average Value VS Actual Value\nfor feature " + y_label)
 
+            # Limit the X and Y axis
             plt.xlim([-0.5, 20.5])
             plt.ylim([min(result_df['Predicted Result']) - 2, max(result_df['Predicted Result']) + 2])
 
+            # Plot the average and actual value using a horizontal dotted line
             ax.axhline(mean, linestyle='--', label='Average Result')
             ax.axhline(actual_df, linestyle='--', color='red', label='Actual Result')
 
+            # Put the value of the line
             yticks = [*ax.get_yticks(), mean, actual_df]
             yticklabels = [*ax.get_yticklabels(), format(mean, ".2f"), format(actual_df, ".2f")]
             ax.set_yticks(yticks, labels=yticklabels)
 
+            # Set the figure legend
             plt.legend()
 
             if method == 'save':
+                # Save the figure
                 plt.savefig(file_name)
 
             plt.show()
         else:
+            # Concat the result dataframe with the average and actual value
             mean = pd.DataFrame([mean], columns=['Average Value'])
             actual_df = pd.DataFrame([actual_df], columns=['Actual Value'])
             df = pd.concat([result_df, mean, actual_df], axis=1)
@@ -147,6 +145,7 @@ class AIModelVis:
             variable = 'RH (Relative Humidity)'
 
         if method != 'dataset':
+            # Create a figure and set the window title
             fig, ax = plt.subplots(figsize=(10, 5))
             fig.canvas.manager.set_window_title('Hyperparameter Tuning Visualisation')
 
@@ -155,13 +154,16 @@ class AIModelVis:
             self.interact.zoom_factory(ax, base_scale=1.2)
 
             if param_name == 'n_estimators' or param_name == 'max_depth':
+                # Create a validation curve using a line chart
                 visualiser = ValidationCurve(ai_model, param_name=param_name, n_jobs=-1,
                                              param_range=param_range, cv=5, scoring="r2",
                                              title=title + variable)
 
+                # Set the X and Y labels for the figure
                 plt.xlabel(param_name)
                 plt.ylabel("R2 Score (Scoring)")
 
+                # Fit the dataset to the validation curve
                 visualiser.fit(x, y)
 
                 if method == 'save':
@@ -174,6 +176,8 @@ class AIModelVis:
                     accuracy = []
                     cross_val = []
 
+                    # Loop through all hyperparameter and set the model to each hyperparameter and output the accuracy and cross
+                    # validation
                     for param in param_range:
                         params = {"max_features": param}
                         ai_model.set_params(**params)
@@ -183,10 +187,12 @@ class AIModelVis:
                         accuracy.append(r2_score(y_test, predicted))
                         cross_val.append(np.average(cross_val_score(ai_model, x_test, y_test, cv=5)))
 
+                    # Set the hyperparameter back to the initial hyperparameter
                     params = {"max_features": 1.0}
                     ai_model.set_params(**params)
                     ai_model.fit(x, y)
 
+                    # Concatenate the hyper-parameters and the result
                     parameter = pd.DataFrame(param_range, columns=['Hyperparameter'])
                     accuracy_df = pd.DataFrame(accuracy, columns=['Training Score'])
                     cv_df = pd.DataFrame(cross_val, columns=['Cross Validation Score'])
@@ -199,6 +205,8 @@ class AIModelVis:
                     accuracy = []
                     cross_val = []
 
+                    # Loop through all hyperparameter and set the model to each hyperparameter and output the accuracy and cross
+                    # validation
                     for param in param_range:
                         params = {"criterion": param}
                         ai_model.set_params(**params)
@@ -208,6 +216,7 @@ class AIModelVis:
                         accuracy.append(r2_score(y_test, predicted))
                         cross_val.append(np.average(cross_val_score(ai_model, x_test, y_test, cv=5)))
 
+                    # Set the hyperparameter back to the initial hyperparameter
                     if variable == 'AH':
                         params = {"criterion": 'squared_error'}
                     else:
@@ -216,6 +225,7 @@ class AIModelVis:
                     ai_model.set_params(**params)
                     ai_model.fit(x, y)
 
+                    # Concatenate the hyper-parameters and the result
                     parameter = pd.DataFrame(param_range, columns=['Hyperparameter'])
                     accuracy_df = pd.DataFrame(accuracy, columns=['Training Score'])
                     cv_df = pd.DataFrame(cross_val, columns=['Cross Validation Score'])
@@ -224,14 +234,17 @@ class AIModelVis:
 
                     result_df = pd.concat([parameter, result_df], axis=1)
 
+                # Plot the hyperparameter result using a bar chart
                 result_df.plot(x='Hyperparameter', kind='bar', stacked=False,
                                title=title + variable, ax=ax)
 
+                # Limit Y axis and set the Y axis label
                 plt.ylim(0, 1)
                 plt.ylabel("R2 Score (Scoring)")
                 plt.xticks(rotation=360)
 
                 if method == 'save':
+                    # Save the figure
                     plt.savefig(file_name)
 
                 plt.show()
@@ -250,6 +263,7 @@ class AIModelVis:
         y = dataset[variable]
 
         if method != 'dataset':
+            # Create a figure and set the window title
             fig, ax = plt.subplots(figsize=(10, 5))
             fig.canvas.manager.set_window_title('Learning Rate Visualisation')
 
@@ -264,19 +278,24 @@ class AIModelVis:
             else:
                 variable = 'RH (Relative Humidity)'
 
+            # Create a learning curve using a line chart
             visualiser = LearningCurve(ai_model, n_jobs=-1, cv=10, scoring="r2",
                                        title='Number of data Learning Curve\nfor feature ' + variable)
 
+            # Set the X and Y labels for the figure
             plt.xlabel("Number of Data")
             plt.ylabel("R2 Score (Scoring)")
 
+            # Fit the dataset to the learning curve
             visualiser.fit(x, y)
 
             if method == 'save':
+                # Save the figure
                 plt.savefig(file_name)
 
             visualiser.show()
         else:
+            # Concat the x and y dataset
             df = pd.concat([y, x], axis=1)
             return df
 
@@ -291,12 +310,14 @@ class AIModelVis:
         :param guimethod: The method that the user chose to do with in GUI, can choose between visualise, save visualise and save dataset
         :return: A matplotlib figure that the user had chose
         """
+        # Get the AI model dataset and clean/preprocess it
         original_dataset = self.ai_model.model_dataset.copy()
         original_dataset[original_dataset == -200] = np.NaN
         original_dataset = original_dataset.dropna(subset=['T']).reset_index(drop=True)
         original_df = original_dataset.drop(['Date', 'Time', 'T', 'RH', 'AH'], axis=1)
         y_value = original_dataset[variable]
 
+        # Do normalisation to the preprocessed dataset with the normaliser
         normalised_dataset = original_df.copy()
         features_list = list(normalised_dataset.columns)
         normalised_df = normaliser.transform(normalised_dataset)
@@ -307,11 +328,14 @@ class AIModelVis:
 
         normalised = pd.concat([y_value, normalised_dataset], axis=1)
 
+        # Deal with the outliers to the normalised dataset
         original_normalised_dataset = normalised.copy()
         outliers_dataset = self.ai_model.outliers('delete', original_normalised_dataset)
 
+        # Deal with the null value to the outliers dataset
         feature_dataset, _ = self.ai_model.null_value('delete', outliers_dataset, pd.DataFrame())
 
+        # Visualise the before and after based on the method chosen
         if method == 'normalised':
             df = self.visualise_normalised_data(original_dataset, normalised_dataset, column, variable, file_name,
                                                 guimethod)
@@ -368,6 +392,7 @@ class AIModelVis:
             correlation_map.set_xticklabels(correlation_map.get_xmajorticklabels(), fontsize=7)
 
             if method == 'save':
+                # Save the figure
                 plt.savefig(file_name)
 
             plt.show()
@@ -435,14 +460,17 @@ class AIModelVis:
 
         combined_visualise_dataset = combined_visualise_dataset[column_name]
         if method != 'dataset':
+            # Plot the before and after outliers dataset using a box plot
             combined_visualise_dataset.plot(kind='box', subplots=True, layout=(1, 2), sharex=False, sharey=True,
                                             fontsize=12, figsize=(10, 6))
 
+            #  Set the window title, plot title and Y labels for the figure
             plt.get_current_fig_manager().canvas.manager.set_window_title('Outliers Visualisation')
             plt.ylabel(column_name[0] + " VS " + column_name[1] + " Values")
             plt.title('Outliers Visualisation for\nfeature ' + variable)
 
             if method == 'save':
+                # Save the figure
                 plt.savefig(file_name)
 
             plt.show()
@@ -497,6 +525,7 @@ class AIModelVis:
             maximum = max(visualise[column_name[0]])
             minimum = min(visualise[column_name[1]])
 
+            # Create a figure and set the window title
             fig, ax = plt.subplots(figsize=(12, 7))
             fig.canvas.manager.set_window_title('Normalisation Visualisation')
 
@@ -510,9 +539,11 @@ class AIModelVis:
             plt.ylabel(column_name[0] + " VS " + column_name[1] + " Values")
             plt.title('Normalised Visualisation for feature ' + variable)
 
+            # Plot the before and after normalised dataset using a line chart
             visualise.plot(kind='line', fontsize=10, ax=ax, ylim=(minimum - 1, maximum))
 
             if method == 'save':
+                # Save the figure
                 plt.savefig(file_name)
 
             plt.show()
@@ -540,19 +571,25 @@ class AIModelVis:
             variable = 'RH (Relative Humidity)'
 
         if method != 'dataset':
+
+            # Create a figure and set the window title
             fig, ax = plt.subplots(figsize=(12, 6))
             plt.title('Relative Importance between the features\nused for feature ' + variable)
             fig.canvas.manager.set_window_title('Relative Importance Visualisation')
 
+            # Plot the feature importance using a horizontal bar chart
             feature_importance = pd.Series(AI_model.feature_importances_, index=dataset.columns)
             visualise = feature_importance.plot(kind='barh', ax=ax)
 
+            # put the value of each bar
             visualise.bar_label(ax.containers[0], fontsize=8)
 
+            # Creating axis limits and title
             plt.xlabel('Relative Importance')
             plt.xlim(0, max(feature_importance) + 0.1)
 
             if method == 'save':
+                # Save the figure
                 plt.savefig(file_name)
 
             plt.show()
@@ -577,19 +614,22 @@ class AIModelVis:
         column_name = [variable + " (Actual)"] + [variable + " (Predicted)"]
         combined.columns = column_name
 
+        # Calculate the percentage difference between the actual and predicted value
         combined['Percentage'] = (abs(combined[variable + " (Actual)"] - combined[variable + " (Predicted)"]) /
                                   combined[variable + " (Actual)"]) * 100
 
         if method != 'dataset':
-            from plotly.subplots import make_subplots
 
             # Create figure with secondary y-axis
             fig = make_subplots(specs=[[{"secondary_y": True}]])
 
+            # Add the traces for the actual and predicted values using a line chart
             fig.add_trace(go.Scatter(x=combined.index, y=combined[variable + " (Actual)"], name="Actual Value"),
                           secondary_y=False)
             fig.add_trace(go.Scatter(x=combined.index, y=combined[variable + " (Predicted)"], name="Predicted Value"),
                           secondary_y=False)
+
+            # Add the traces for the percentage difference between the two values using a bar chart
             fig.add_trace(
                 go.Bar(x=combined.index, y=combined['Percentage'], name="Percentage Difference", marker_color='grey',
                        opacity=0.5),
@@ -602,15 +642,16 @@ class AIModelVis:
             else:
                 variable = 'RH (Relative Humidity)'
 
+            # Set the axis limit, axis label and the plot title
             fig.update_layout(xaxis_range=[-0.5, 50], yaxis_range=[0, combined[column_name].max() + 1],
                               yaxis2_range=[0, 200],
                               title="Actual vs Predicted for feature " + variable, hovermode='x unified')
             fig.update_xaxes(title_text="Prediction #", rangeslider_visible=True)
-
             fig.update_yaxes(title_text="Feature Value for feature " + variable, secondary_y=False)
             fig.update_yaxes(title_text="Difference between Actual and Predicted (%)", secondary_y=True)
 
             if method == 'save':
+                # Save the figure
                 fig.write_html(file_name)
 
             fig.show()
@@ -656,6 +697,7 @@ class AIModelVis:
             else:
                 variable = 'RH (Relative Humidity)'
 
+            # Get the text for list of node from the decision tree
             nodes = tree.plot_tree(AI_model.estimators_[tree_number], feature_names=dataset.columns, filled=True)
             plt.close()
 
@@ -665,19 +707,25 @@ class AIModelVis:
             decisions = ['False', 'False', 'False', 'False', 'False', 'False']
             node_parents = []
 
+            # Loop through all the node from the decision tree
             for i in range(len(nodes)):
+                # Split the node into smaller element to put them in a list
                 node_information = str(nodes[i]).split("'")[1]
                 decision_information = node_information.split('\\n')
 
+                # If the node is the leaf node, add empty string to the first element of the list
                 if len(decision_information) == 3:
                     decision_information = [''] + decision_information
 
+                # Split the list of element to contain the value instead of string and value
                 criterion = decision_information[1].split('= ')[0]
                 decision_information[1] = decision_information[1].split('= ')[1]
                 decision_information[2] = decision_information[2].split('= ')[1]
                 decision_information[3] = decision_information[3].split('= ')[1]
 
+                # If the node is a leaf node
                 if decision_information[0] == '':
+                    # If the level of the decision tree is 0
                     if current_decision == 0:
                         decision_information = ['', ''] + decision_information
                     else:
@@ -686,6 +734,7 @@ class AIModelVis:
 
                         decision_information[2] = decision_information[0] + '<br>Value = ' + decision_information[5]
 
+                    # Check the level of the decision tree
                     decisions[5], current_decision = self.check_decision(current_decision, 6, decisions[5])
                     decisions[4], current_decision = self.check_decision(current_decision, 5, decisions[4])
                     decisions[3], current_decision = self.check_decision(current_decision, 4, decisions[3])
@@ -693,14 +742,18 @@ class AIModelVis:
                     decisions[1], current_decision = self.check_decision(current_decision, 2, decisions[1])
                     decisions[0], current_decision = self.check_decision(current_decision, 1, decisions[0])
 
-                else:
+                else:  # If the node is not a leaf node
+                    # If the level of the decision tree is 0
                     if current_decision == 0:
                         decision_information = ['', ''] + decision_information
                         decision_information[2] = decision_information[2] + '?'
 
+                        # If the list of node_parents is empty
                         if len(node_parents) == 0:
+                            # Insert the parent node at position 0
                             node_parents.insert(0, decision_information[2])
                         else:
+                            # Change the element value at position 0
                             node_parents[0] = decision_information[2]
 
                     else:
@@ -709,25 +762,35 @@ class AIModelVis:
 
                         decision_information[2] = decision_information[0] + '<br>' + decision_information[2] + '?'
 
+                        # If the list of node_parents is empty
                         if len(node_parents) == current_decision:
+                            # Insert the parent node at position 'current_decision'
                             node_parents.insert(current_decision, decision_information[2])
                         else:
+                            # Change the element value at position 'current_decision'
                             node_parents[current_decision] = decision_information[2]
 
                     current_decision += 1
 
                 list_of_node.append(decision_information)
 
+            # Create a dataframe with the node information
             node_df = pd.DataFrame(list_of_node, columns=['PreviousLeafDecision', 'Parents', 'Decision',
                                                           'Criterion', 'Samples', 'Value'])
 
+            # Create figure
             fig = go.Figure()
+
+            # Add the traces for the decision tree nodes using a tree map
             fig.add_trace(go.Treemap(labels=node_df['Decision'], parents=node_df['Parents'], root_color="lightgrey"))
+
+            # Set the plot title and the hover text
             fig.update_layout(title='Decision Tree Number ' + str(tree_number + 1) + ' for feature ' + variable)
             fig.update_traces(hovertext='<br>' + criterion + ' = ' + node_df.Criterion + '<br>Samples = ' +
                                         node_df.Samples + '<br>Value = ' + node_df.Value)
 
             if method == 'save':
+                # Save the figure
                 fig.write_html(file_name)
             else:
                 fig.show()

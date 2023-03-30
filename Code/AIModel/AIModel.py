@@ -29,10 +29,12 @@ class AIModel:
         self.RH_dataset = dataset.copy()
         self.model_dataset = dataset.copy()
 
+        # Get the training and testing dataset
         self.T_normalise, self.T_scaling, self.T_features, self.T_train, self.T_test = self.train_test_data(self.T_dataset, 'T', 'delete', 'delete', 'lasso')
         self.AH_normalise, self.AH_train, self.AH_test = self.train_test_data(self.AH_dataset, 'AH', 'delete', 'delete', 'none')
         self.RH_normalise, self.RH_scaling, self.RH_features, self.RH_train, self.RH_test = self.train_test_data(self.RH_dataset, 'RH', 'none', 'delete', 'lasso')
 
+        # Create the AI Model for all dependent features
         self.T_model = RandomForestRegressor(n_estimators=20, max_features=1.0, criterion='friedman_mse', max_depth=6,
                                              random_state=5, n_jobs=5)
         self.T_model.fit(self.T_train.drop(['T'], axis=1), self.T_train['T'])
@@ -45,9 +47,12 @@ class AIModel:
                                               random_state=5, n_jobs=5)
         self.RH_model.fit(self.RH_train.drop(['RH'], axis=1), self.RH_train['RH'])
 
+        # Predict the testing dataset
         self.T_prediction = self.T_model.predict(self.T_test.drop(['T'], axis=1))
         self.AH_prediction = self.AH_model.predict(self.AH_test.drop(['AH'], axis=1))
         self.RH_prediction = self.RH_model.predict(self.RH_test.drop(['RH'], axis=1))
+
+        # Get the actual result from testing dataset
         self.T_actual = self.T_test['T']
         self.AH_actual = self.AH_test['AH']
         self.RH_actual = self.RH_test['RH']
@@ -63,6 +68,7 @@ class AIModel:
         :return: A normaliser that is used during normalisation and scaling model which is used for feature scaling, in addition to
         training and testing dataset that has been split
         """
+        # Data preprocess and feature scaling the dataset
         normalise, train, test = self.data_preprocessing(dataset, variable)
         train, test = self.null_value(null_method, self.outliers(outlier_method, train), test)
         if scaling_method == 'lasso':
@@ -80,6 +86,7 @@ class AIModel:
         :param variable: The dependent variable that want to be split for the AI Model
         :return: A normaliser that is used during normalisation, in addition to training and testing dataset that has been split
         """
+        # Change the value with -200 (Null value) to nan value and drop the dependent ones
         dataset[dataset == -200] = np.NaN
         dataset = dataset.dropna(subset=['T']).reset_index(drop=True)
 
@@ -122,6 +129,7 @@ class AIModel:
         :param dataset: The dataset that is used for the AI Model
         :return: A dataset that is from the function parameter, which the outliers value has been dealt with based on the method chosen
         """
+        # Get the quantile of the dataset
         q1 = dataset.quantile(0.25)
         q3 = dataset.quantile(0.75)
         iqr = q3 - q1
@@ -131,6 +139,7 @@ class AIModel:
             return dataset
 
         elif method == 'delete':
+            # Drop the dataset that is bigger than the upper quantile or smaller than the lower quantile
             dataset = dataset[
                 ~((dataset < (q1 - factor * iqr)) | (dataset > (q3 + factor * iqr))).any(axis=1)].reset_index(drop=True)
             return dataset
@@ -150,6 +159,7 @@ class AIModel:
         based on the method chosen
         """
         if method == "delete":
+            # Drop the rows with null value
             train_dataset = train_dataset.dropna(axis=0, how='any').reset_index(drop=True)
             test_dataset = test_dataset.dropna(axis=0, how='any').reset_index(drop=True)
 
@@ -181,7 +191,7 @@ class AIModel:
             X_test = test_dataset.drop([variable], axis=1)
             y_test = test_dataset[variable]
 
-            # Lasso Model
+            # Lasso Model that scales the features for training and testing dataset
             lasso = linear_model.Lasso(max_iter=50, random_state=5, alpha=0.1).fit(X_train, y_train.values)
             scaling_model = SelectFromModel(lasso, prefit=True)
             features_output = scaling_model.get_support(indices=True)

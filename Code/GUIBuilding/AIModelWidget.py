@@ -126,6 +126,7 @@ class AIModelWidget:
         :param text: The title of the heading
         :return: The page subtitle on the frame
         """
+        # A label that shows the heading for each section
         input_type_label = tk.Label(frame, text=text, width=55, height=1,
                                     font=('Raleway', 12, 'bold'), bg='lightskyblue')
         input_type_label.grid(row=row, column=0, columnspan=5, pady=(1, 0))
@@ -139,6 +140,7 @@ class AIModelWidget:
         :param frame: The frame that puts the tkinter widgets
         :return: The label and buttons on the frame
         """
+        # Entry and Label that allows the user to enter the input for prediction
         self.single_independent_feature_label(row=row, frame=frame)
         self.single_independent_feature_input(row=row + 1, frame=frame)
 
@@ -253,6 +255,7 @@ class AIModelWidget:
         :param frame2: The second frame that puts the tkinter widgets
         :return: The input treeview, label and buttons on the frame
         """
+        # Button and Label that allows the user to enter the file for prediction
         self.browse_file = tk.Button(frame, text="Browse File", width=10, height=1,
                                      font=('Raleway', 10, 'bold'), bg='lightskyblue',
                                      activebackground='cornflowerblue',
@@ -291,6 +294,7 @@ class AIModelWidget:
         :param frame: The frame that puts the tkinter widgets
         :return: The check buttons on the frame
         """
+        # Checkbuttons that let the user choose the dependent variables for prediction
         self.t_Button = tk.Checkbutton(frame, text='', bd=0, indicatoron=False,
                                        font=('Raleway', 10, 'bold'), bg='lightskyblue',
                                        variable=self.aiModelFunction.t_variable, onvalue=1, offvalue=0,
@@ -318,6 +322,7 @@ class AIModelWidget:
         :param result_df: The prediction result from the AI Model
         :return: The result treeview on the frame
         """
+        # Treeview that shows the prediction result
         self.result_view = ttk.Treeview(frame, selectmode='browse', height=5,
                                         show='headings',
                                         columns=['test'])
@@ -386,6 +391,7 @@ class AIModelWidget:
         :param frame: The frame that puts the tkinter widgets
         :return: The buttons, label and entry on the frame
         """
+        # Buttons that let the user clear the inputs, do prediction or save the result
         clear_button = tk.Button(frame, text="Clear All", width=16,
                                  height=2, font=('Raleway', 10, 'bold'), bg='dodgerblue',
                                  activebackground='cornflowerblue',
@@ -420,6 +426,7 @@ class AIModelWidget:
         :param result_label: The label for result heading
         :return: The result treeview and label on the frame
         """
+        # Do prediction if the user has entered the inputs correctly
         if self.aiModelFunction.view_options != 'initial':
             if self.aiModelFunction.prediction_options is False:
                 passed, input_df = self.aiModelFunction.check_prediction(frame, self.entry)
@@ -452,6 +459,7 @@ class AIModelWidget:
         :param method: The user's input chosen from the input buttons
         :return: The type of viewing frame based on the method chosen
         """
+        # Change the page based on what the user has chosen
         if method == 'file':
             if self.aiModelFunction.view_options != 'file':
                 self.aiModelFunction.change_input('file', self.frame, self.file_input(row=4, frame=self.frame,
@@ -473,6 +481,7 @@ class AIModelWidget:
         A function that clear the current page viewing and change to the initial page view.
         :return: Clear the inputs and go back to the initial page view
         """
+        # Clear the inputs and results
         if self.aiModelFunction.view_options != 'initial':
             self.aiModelFunction.clear_all(self.frame, self.canvas, self.draw_canvas(row=4, frame=self.frame),
                                            self.independent_label, self.dependent_label, self.result_label, self.filename_entry,

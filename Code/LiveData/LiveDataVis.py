@@ -22,14 +22,10 @@ class LiveDataVisualisation:
         toolbar and creates all the pop-up maps.
         """
         self.interact = HandlingInteractions()
+        self.live_data = LiveData()
 
-        self.path = None
-        self.live_path = None
-        self.update_text = None
         self.dataset_in_pollutant_order = pd.DataFrame()
         self.pop_up_df = pd.DataFrame(columns=['City', 'html_file', 'Latitude', 'Longitude'])
-
-        self.live_data = LiveData()
 
         self.create_Folder('LiveDataVisualisation', True)
 
@@ -39,10 +35,6 @@ class LiveDataVisualisation:
         # Remove the matplotlib toolbar
         plt.rcParams['toolbar'] = 'None'
 
-        #self.bubble_map(self.live_data, 'CO')
-        #self.bar_graph_on_map(self.live_data, 'CO', 'most_frequent')
-        #self.pie_chart_on_map(self.live_data, 'BC', 'last_updated')
-
     # Use scatter map to produce a bubble map
     def bubble_map(self, pollutant_type):
         """
@@ -50,6 +42,7 @@ class LiveDataVisualisation:
         :param pollutant_type: The type of air pollutant the user want to visualise
         :return: A matplotlib figure that shows the bubble map on the pollutant chosen using a scatter plot
         """
+        # Get the world map from reading the file online
         worldmap = gpd.read_file(gpd.datasets.get_path("naturalearth_lowres"))
 
         # Creating axes and plotting world map
@@ -60,6 +53,7 @@ class LiveDataVisualisation:
         pan_handler = panhandler(fig, 1)
         self.interact.zoom_factory(ax, base_scale=1.2)
 
+        # Plot the world map on ax
         worldmap.plot(ax=ax)
 
         data = self.live_data.split_data_based_on_pollutant(self.live_data.live_dataset, pollutant_type)
@@ -69,9 +63,11 @@ class LiveDataVisualisation:
         y = data['latitude']
         z = data['measurements_value']
 
+        # Create how size of each scatter point
         s = 10 * z
         s[s > 200] = 200
 
+        # Plot the data using a scatter plot
         plt.scatter(x, y, s=s, c=z, alpha=0.6, vmin=min(z), vmax=max(z), cmap='autumn_r')
         plt.colorbar(label='measurements_value')
 
@@ -79,10 +75,10 @@ class LiveDataVisualisation:
         plt.xlim([-180, 180])
         plt.ylim([-90, 90])
 
+        # Set the title, X and Y labels for the figure
         plt.title(pollutant_type + " Pollutant Bubblemap")
         plt.xlabel("Longitude")
         plt.ylabel("Latitude")
-        # mplcursors.cursor(hover=True)
 
         plt.show()
 
@@ -109,35 +105,41 @@ class LiveDataVisualisation:
         pan_handler = panhandler(fig, 1)
         self.interact.zoom_factory(ax, base_scale=1.2)
 
+        # Plot the world map on ax
         world.plot(ax=ax)
 
         # Creating axis limits and title
         plt.xlim([-180, 180])
         plt.ylim([-90, 90])
 
+        # Set the X and Y labels for the figure
         plt.xlabel("Longitude")
         plt.ylabel("Latitude")
 
-        # Plotting the measurements data with a color map
         data = self.live_data.split_data_based_on_pollutant(self.live_data.all_live_dataset, pollutant_type)
 
         if visual_type == 'most_frequent':
+            # Get the most frequent city data
             frequent_city = data['city'].value_counts().index.values
             visual_city = frequent_city[:80]
 
             visual_data = self.live_data.on_map_data(pollutant_type, 'most_frequent')
             unique_time = visual_data['Time'].unique()
 
+            # Set the title for the figure
             plt.title("Most Frequent Bar Graph on map for " + pollutant_type + " Pollutant")
         elif visual_type == 'last_updated':
+            # Get the last updated city data
             unique_city = data['city'].unique()
             visual_city = unique_city[:80]
 
             visual_data = self.live_data.on_map_data(pollutant_type, 'last_updated')
             unique_time = visual_data['Time'].unique()
 
+            # Set the title for the figure
             plt.title("Last Updated Bar Graph on map for " + pollutant_type + " Pollutant")
 
+        # Create the plot legend based on the unique time in the dataset
         for i in range(len(unique_time)):
             colour_number += 1
             time.append(unique_time[i])
@@ -150,11 +152,14 @@ class LiveDataVisualisation:
 
         for i in range(0, len(visual_city)):
             measurements = []
+            # Get the row of the data based on the value of the city
             city_data = data.loc[data['city'] == visual_city[i]].reset_index(drop=True)
 
+            # Get the latitude and longitude of the data
             latitude = city_data['latitude'].median()
             longitude = city_data['longitude'].median()
 
+            # Make the value of the data to be in correct position as the unique time used
             for j in unique_time:
                 for time in city_data['Time']:
                     if time != j:
@@ -169,6 +174,7 @@ class LiveDataVisualisation:
             if all(num == 0 for num in measurements) and len(measurements) > 0:
                 continue
 
+            # Plot the bar chart on the world map
             ax_bar = inset_axes(ax, width=0.6, height=0.4, loc=10, bbox_to_anchor=(longitude, latitude),
                                 bbox_transform=ax.transData)
 
@@ -199,12 +205,14 @@ class LiveDataVisualisation:
         pan_handler = panhandler(fig, 1)
         self.interact.zoom_factory(ax, base_scale=1.2)
 
+        # Plot the world map on ax
         world.plot(ax=ax)
 
         # Creating axis limits and title
         plt.xlim([-180, 180])
         plt.ylim([-90, 90])
 
+        # Set the X and Y labels for the figure
         plt.xlabel("Longitude")
         plt.ylabel("Latitude")
 
@@ -216,12 +224,17 @@ class LiveDataVisualisation:
         if visual_type == 'most_frequent':
             frequent_city = data['city'].value_counts().index.values
             visual_city = frequent_city[:80]
+
+            # Set the title for the figure
             plt.title("Most Frequent Pie Chart on map for " + pollutant_type + " Pollutant")
         elif visual_type == 'last_updated':
             unique_city = data['city'].unique()
             visual_city = unique_city[:80]
+
+            # Set the title for the figure
             plt.title("Last Updated Pie Chart on map for " + pollutant_type + " Pollutant")
 
+        # Create the plot legend based on the unique time in the dataset
         for i in range(len(unique_time)):
             colour_number += 1
             time.append(unique_time[i])
@@ -234,11 +247,14 @@ class LiveDataVisualisation:
 
         for i in range(0, len(visual_city)):
             measurements = []
+            # Get the row of the data based on the value of the city
             city_data = data.loc[data['city'] == visual_city[i]].reset_index(drop=True)
 
+            # Get the latitude and longitude of the data
             latitude = city_data['latitude'].median()
             longitude = city_data['longitude'].median()
 
+            # Make the value of the data to be in correct position as the unique time used
             for j in unique_time:
                 for time in city_data['Time']:
                     if time != j:
@@ -251,6 +267,7 @@ class LiveDataVisualisation:
             if all(num == 0 for num in measurements) and len(measurements) > 0:
                 continue
 
+            # Plot the pie chart on the world map
             ax_pie = inset_axes(ax, width=0.6, height=0.4, loc=10, bbox_to_anchor=(longitude, latitude),
                                 bbox_transform=ax.transData)
 
@@ -268,26 +285,44 @@ class LiveDataVisualisation:
         # Get the name of unique country in an array
         unique_country = self.live_data.all_live_dataset['country_name_en'].unique()
 
+        # Loop through the number of unique country
         for a in range(0, len(unique_country)):
+            # Get the row of data based on the value of the country
             enhanced_data = self.live_data.all_live_dataset.loc[
                 self.live_data.all_live_dataset['country_name_en'] == unique_country[a]].reset_index(drop=True)
+
+            # Get the latitude and longitude of the data
             median_latitude = enhanced_data['latitude'].median()
             median_longitude = enhanced_data['longitude'].median()
 
+            # Create figure
             fig = go.Figure()
             number_of_time = []
+
+            # Get the air pollutant for the country
             parameters = enhanced_data['measurements_parameter'].unique()
+
+            # Group the data based on the air pollutant, city and time, then get the average value of the data
             enhanced_data = enhanced_data.groupby(['city', 'measurements_parameter', 'Time']).mean(
                 numeric_only=True).reset_index()
+
+            # Loop through the number of air pollutant
             for i in range(0, len(parameters)):
+                # Get the row of data based on the value of the air pollutant from the country dataset
                 individual_data = enhanced_data.loc[
                     enhanced_data['measurements_parameter'] == parameters[i]].reset_index(drop=True)
+
+                # Get the unique time from the dataset previously
                 time_parameter = individual_data['Time'].unique()
                 time_parameter = np.sort(time_parameter, axis=0)
                 number_of_time.append(len(time_parameter))
 
+                # Loop through the number of unique time
                 for j in range(0, len(time_parameter)):
+                    # Get the row of data based on the value of the time from the individual dataset
                     time_data = individual_data.loc[individual_data['Time'] == time_parameter[j]].reset_index(drop=True)
+
+                    # Add the traces for the row of data using a bar chart
                     fig.add_trace(go.Bar(x=time_data['city'], y=time_data['measurements_value'], name=time_parameter[j],
                                          hovertemplate='City: %{x} <br>Value: %{y} <br>Country: ' + unique_country[a] +
                                                        '<br>Pollutant: ' + parameters[i] + '<br>' + 'Time: ' +
@@ -295,23 +330,31 @@ class LiveDataVisualisation:
 
             minimum_total = 0
             maximum_total = 0
+
+            # List of button that used to change the type of the air pollutant
             button_list = [dict(label='All', method='update',
                                 args=[{'visible': True}, {'title': 'Pollutant Values for all types of pollutant'}])]
+
+            # Loop through the number of air pollutant
             for i in range(0, len(parameters)):
                 maximum_total += number_of_time[i]
                 visible = [minimum_total <= k < maximum_total for k in list(range(0, sum(number_of_time)))]
                 minimum_total += number_of_time[i]
+                # Button that allows the user to change the view on the parameters
                 button_list.append(dict(label=parameters[i], method='update',
                                         args=[{'visible': visible},
                                               {'title': 'Pollutant Values for ' + str(parameters[i])}]))
 
+            # Set the plot title and axis label
             fig.update_xaxes(title_text=str(unique_country[a]) + ' Cities')
             fig.update_yaxes(title_text='Pollutant Values (µg/m³)')
             fig.update_layout(barmode='group', title='Pollutant Values for all types of pollutant', legend_title='Time',
                               updatemenus=[dict(active=0, buttons=button_list)])
             text = "fig" + str(a) + ".html"
+            # Save the figure as html
             fig.write_html(self.path + "/" + text, config={'displayModeBar': False})
 
+            # Put the list of data, country information into the pop_up_df
             self.pop_up_df.loc[len(self.pop_up_df)] = [unique_country[a], text, median_latitude, median_longitude]
 
     # Markers for each type basic map
@@ -352,6 +395,7 @@ class LiveDataVisualisation:
         :param folium_Map: The map that want the pop-up to be inputted
         :return: A folium map that has all the pop-up inputted
         """
+        # Loop through all the pop_up dataframe for enhanced map and put them in Enhanced map pop-up
         for i in range(0, len(self.pop_up_df)):
             html = """
             <iframe src=\"""" + "EnhancedLiveMapPopUp/" + self.pop_up_df['html_file'][i] + """\" width="1000" height="750"  frameborder="0">    

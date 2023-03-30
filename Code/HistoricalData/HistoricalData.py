@@ -39,10 +39,11 @@ class HistoricalData:
 
     def grouping(self, group_by_column):
         """
-        A function that group the dataset based on the column chosen.
+        A function that group the dataset based on the column chosen and get the average value of the group.
         :param group_by_column: The column from the dataset the user want to visualise
-        :return: A dataset that is grouped by the column chosen
+        :return: A dataset that is grouped by the column chosen and the average value of the group
         """
+        # Group the dataset by the column chosen and get the average value from the groups
         return self.historical_dataset.groupby(group_by_column, as_index=False).mean(numeric_only=True).reset_index(
             drop=True)
 
@@ -68,6 +69,7 @@ class HistoricalData:
         A function that merge the Day, Month, and Year column into one column, Date.
         :return: A dataset that has Date as column only
         """
+        # Change the column Date to datetime format
         self.merged_date_dataset['Date'] = pd.to_datetime(self.merged_date_dataset['Date']).dt.date
 
     def data_cleaning(self):
@@ -91,18 +93,14 @@ class HistoricalData:
 
         self.split_date()
 
-        data_path = self.create_folder('CleanedDataset')
-
-        # Put it into an Excel file to visualise using tableau or excel
-        self.historical_dataset.to_excel(data_path + '/CleanedHistoricalData.xlsx', index=False)
-        self.merged_date_dataset.to_excel(data_path + '/MergedHistoricalData.xlsx', index=False)
-
     def get_data_from_excel(self):
         """
         A function that read the Air Quality Excel File and save it into a pandas dataframe.
         :return: A dataset that contains the Air Quality Data from Excel File
         """
-        self.historical_dataset = pd.read_excel("../Dataset/AirQualityUCI.xlsx")
+        # Read the dataset from Excel file
+        #self.historical_dataset = pd.read_excel("../Dataset/AirQualityUCI.xlsx")
+        self.historical_dataset = pd.read_excel(r"C:\Users\hong3\PycharmProjects\individualDissertation\Dataset\AirQualityUCI.xlsx")
         self.original_dataset = self.historical_dataset.copy()
 
 

@@ -27,36 +27,51 @@ class HistoricalDataVisualisation:
         """
         df = self.historical_data.grouping(['Day', 'Month', 'Year'])
 
+        # Create a new column for Date using datetime format
         df['Date'] = pd.to_datetime(df[['Day', 'Month', 'Year']]).dt.strftime('%m-%d')
         column_name = ['Date', 'Year'] + [column]
         df = df[column_name]
 
+        # Get the year from the dataset
         unique_year = df['Year'].unique()
+
+        # Get the dataset based on the value of unique year
         df1 = df.loc[df['Year'] == unique_year[1]]
         df2 = df.loc[df['Year'] == unique_year[0]]
+
+        # Merge the two dataset using left and right join
         merged_df = pd.merge(df1, df2, on='Date', how='left')
         merged_df2 = pd.merge(df1, df2, on='Date', how='right')
 
+        # Drop the row that has null value on the first column
         column_str = column + '_x'
         merged_df2 = merged_df2[merged_df2[column_str].isnull()].reset_index(drop=True)
 
+        # Concatenate the two dataset
         final_df = pd.concat([merged_df, merged_df2], ignore_index=True)
 
+        # Get the useful column from the dataset
         column_use = ['Date'] + [column + '_x'] + [column + '_y']
         final_df = final_df[column_use]
         final_df.columns = ['Date', '2004', '2005']
 
+        # Sort the dataset based on the Date column
         final_df = final_df.sort_values(by='Date')
 
+        # Change the date column to the format (April 01)
         final_df[['Month', 'Day']] = final_df.Date.str.split("-", expand=True)
         final_df['Year'] = 2002
         final_df['Date'] = pd.to_datetime(final_df[['Day', 'Month', 'Year']]).dt.strftime('%b-%d')
+
+        # Get the column needed for visualisation
         final_df = final_df[['Date', '2004', '2005']]
 
         saved_df = final_df.copy()
 
+        # Set the index of the dataset based on the Date column
         final_df = final_df.set_index('Date')
 
+        # Get the maximum value from the dataset
         max_value = max(final_df[['2004', '2005']].max(axis=1))
 
         return final_df, max_value, saved_df
@@ -70,33 +85,47 @@ class HistoricalDataVisualisation:
         """
         df = self.historical_data.merged_date_dataset.copy()
 
+        # Create a new column for Date using datetime format
         df['Date'] = pd.to_datetime(df.Date.astype(str) + ' ' + df.Time.astype(str))
         column_name = ['Date'] + column
         df = df[column_name]
 
         saved_df = df.copy()
 
+        # Set the index of the dataset based on the Date column
         df = df.set_index('Date')
 
+        # If the user chose 1 variable to visualise
         if len(df.columns) < 2:
+            # Dataframe column for visualisation
             column_label = df.columns[0]
-        else:
+        else:  # If the user chose more than 1 variable to visualise
+            # Dataframe column for visualisation
             column_label = df.columns
 
         if method != 'dataset':
+            # Create a figure and set the window title
             fig = plt.figure()
             fig.canvas.manager.set_window_title('Animated Line Graph Visualisation')
 
             def build(i=int):
+                # Clear the plot
                 plt.clf()
+
+                # Plot the dataset using a line chart
                 plt.plot(df[:i].index, df[:i].values, label=column_label)
+
+                # Set the plot legend
                 plt.legend()
+
+                # Set the axis label
                 plt.xticks(rotation=45, ha="right", rotation_mode="anchor")
                 plt.subplots_adjust(bottom=0.2, top=0.9)
                 plt.gca().xaxis.set_major_formatter(DateFormatter("%Y-%m-%d"))
                 plt.xlabel('Dates')
                 plt.ylabel('Values')
 
+            # Create the animated chart
             animator = animate.FuncAnimation(fig, build, interval=50)
             plt.show()
         else:
@@ -112,20 +141,31 @@ class HistoricalDataVisualisation:
         final_df, max_value, saved_df = self.date_index_dataset(column)
 
         if method != 'dataset':
+            # Create a figure and set the window title
             fig = plt.figure(figsize=(10, 7))
             fig.canvas.manager.set_window_title('Animated Bar Graph Visualisation')
 
             def buildbar(i=int):
+                # Clear the plot
                 plt.clf()
 
+                # If the history of the animated bar chart is more than or equal to 10
                 if i > 10:
+                    # Get the X axis value based on the rows of dataset
                     x = np.arange(len(saved_df[i-10:i]))
+
+                    # Plot the dataset based on i variable using two bar chart
                     plt.bar(x - 0.2, saved_df[i-10:i][saved_df.columns[1]], 0.4, label=saved_df.columns[1], color='green')
                     plt.bar(x + 0.2, saved_df[i-10:i][saved_df.columns[2]], 0.4, label=saved_df.columns[2], color='orange')
+
+                    # Set the plot legend
                     plt.legend()
+
+                    # Set the X axis limit
                     plt.xlim(-0.5, len(saved_df[i-10:i]) - 0.5)
                     plt.xticks(x, saved_df[i - 10:i][saved_df.columns[0]])
 
+                    # Loop through the number of bar, set the value of each bar onto the middle of each plotted bar
                     for j in range(len(x)):
                         if not np.isnan(round(saved_df.iloc[i - 10 + j][saved_df.columns[1]], 2)):
                             plt.text(j - 0.2, saved_df.iloc[i - 10 + j][saved_df.columns[1]] / 2,
@@ -135,15 +175,25 @@ class HistoricalDataVisualisation:
                             plt.text(j + 0.2, saved_df.iloc[i - 10 + j][saved_df.columns[2]] / 2,
                                      round(saved_df.iloc[i - 10 + j][saved_df.columns[2]], 2), ha='center', fontsize=8)
 
+                # If the history of the animated bar chart is less than 10
                 else:
+                    # If the row of dataset is more than 0, then start plot
                     if len(saved_df[:i]) > 0:
+                        # Get the X axis value based on the rows of dataset
                         x = np.arange(len(saved_df[:i]))
+
+                        # Plot the dataset based on i variable using two bar chart
                         plt.bar(x - 0.2, saved_df[:i][saved_df.columns[1]], 0.4, label=saved_df.columns[1], color='green')
                         plt.bar(x + 0.2, saved_df[:i][saved_df.columns[2]], 0.4, label=saved_df.columns[2], color='orange')
+
+                        # Set the plot legend
                         plt.legend()
+
+                        # Set the X axis limit
                         plt.xlim(-0.5, len(saved_df[:i]) - 0.5)
                         plt.xticks(x, saved_df[:i][saved_df.columns[0]])
 
+                        # Loop through the number of bar, set the value of each bar onto the middle of each plotted bar
                         for j in range(len(x)):
                             if not np.isnan(round(saved_df.iloc[j][saved_df.columns[1]], 2)):
                                 plt.text(j - 0.2, saved_df.iloc[j][saved_df.columns[1]] / 2,
@@ -153,13 +203,16 @@ class HistoricalDataVisualisation:
                                 plt.text(j + 0.2, saved_df.iloc[j][saved_df.columns[2]] / 2,
                                          round(saved_df.iloc[j][saved_df.columns[2]], 2), ha='center', fontsize=8)
 
+                # Set the axis label and Y axis limit
                 plt.ylim(0, max_value + 0.5)
                 plt.ylabel(column + ' Values')
                 plt.xlabel('Date')
                 plt.xticks(rotation=45, ha="right", rotation_mode="anchor")
 
+                # Set the plot title
                 plt.title('2004 VS 2005, Daily Value for feature ' + column)
 
+            # Create the animated chart
             animator = animate.FuncAnimation(fig, buildbar, interval=300)
             plt.show()
         else:
@@ -191,7 +244,10 @@ class HistoricalDataVisualisation:
             else:
                 title = 'Date VS Multiple Features'
 
+            # Plot the dataset using a line chart
             fig = px.line(df, x='Date', y=y_Value, title=title, render_mode='webg1')
+
+            # Set the X axis label and create a slider and buttons for the user to use
             fig.update_xaxes(
                 rangeslider_visible=True,
                 rangeselector=dict(
@@ -214,8 +270,9 @@ class HistoricalDataVisualisation:
                 ]
             )
 
+            # List of button that shows all the features
             button_list = [dict(label='All', method='update',
-                                args=[{'visible': [True, True, True]}, {'title': 'Date VS Multiple Attributes'}])]
+                                args=[{'visible': [True, True, True]}, {'title': 'Date VS Multiple Features'}])]
             for i in range(0, len(y_Value)):
                 visible = [j == i for j in list(range(0, len(y_Value)))]
 
@@ -228,9 +285,11 @@ class HistoricalDataVisualisation:
                 else:
                     variable = str(y_Value[i])
 
+                # List of button that used to change the type of the visualisation features
                 button_list.append(dict(label=variable, method='update',
                                         args=[{'visible': visible}, {'title': 'Date VS Feature ' + variable}]))
 
+            # Set the Y axis label, legend title and button menus
             fig.update_layout(
                 updatemenus=[
                     dict(
@@ -239,15 +298,17 @@ class HistoricalDataVisualisation:
                     )
                 ],
                 legend=dict(
-                    title="Attributes"
+                    title="Features"
                 ),
                 yaxis_title="Feature Values"
             )
             if method == 'save':
+                # Save the figure
                 fig.write_html(file_name)
 
             fig.show()
         else:
+            # Get the dataset based on the column used in the visualisation
             column_used = ['Date'] + y_Value
             df = df[column_used]
             return df
@@ -264,15 +325,20 @@ class HistoricalDataVisualisation:
         month_year_data['Year'] = month_year_data['Year'].astype(str)
 
         if method != 'dataset':
+            # Plot the dataset showing visualisation average value from each month using a bar chart
             fig = px.bar(month_year_data, x="Month", y=y_Value,
                          color='Year', title="Monthly Bar Graph on " + y_Value + " value")
+
+            # Set the Y axis label
             fig.update_layout(barmode='group', yaxis_title=y_Value + " Values")
 
             if method == 'save':
+                # Save the figure
                 fig.write_html(file_name)
 
             fig.show()
         else:
+            # Get the dataset based on the column used in the visualisation
             column_used = ['Month', 'Year'] + [y_Value]
             month_year_data = month_year_data[column_used]
             return month_year_data
@@ -289,14 +355,19 @@ class HistoricalDataVisualisation:
         month_year_data['Year'] = month_year_data['Year'].astype(str)
 
         if method != 'dataset':
+            # Plot the dataset showing visualisation value from the year using a bar chart
             fig = px.bar(month_year_data, x='Day', y=y_Value, facet_col="Month", facet_col_wrap=4,
                          color='Year', title="Daily Bar Graph on " + y_Value + " value")
+
+            # Set the Y axis label
             fig.update_layout(barmode='group', yaxis_title=y_Value + " Values")
             if method == 'save':
+                # Save the figure
                 fig.write_html(file_name)
 
             fig.show()
         else:
+            # Get the dataset based on the column used in the visualisation
             column_used = ['Month', 'Year'] + [y_Value]
             month_year_data = month_year_data[column_used]
             return month_year_data

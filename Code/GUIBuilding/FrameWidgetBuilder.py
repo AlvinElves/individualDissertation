@@ -1,8 +1,8 @@
 import tkinter as tk
-from PIL import Image,ImageTk
+from PIL import Image, ImageTk
 
 
-# Create function for button hovers
+# Create function for button hovers when mouse is over the button
 def on_enter(e):
     """
     A function that changes the background colour of widget when mouse arrow hovers.
@@ -12,6 +12,7 @@ def on_enter(e):
     e.widget['background'] = 'slateblue'
 
 
+# Create function for button hovers when mouse leaves the button
 def on_leave(e):
     """
     A function that changes the background colour of widget when mouse arrow leaves.
@@ -39,6 +40,7 @@ def check_page(page, currentPage):
     return background_colour, active_colour
 
 
+# The widgets for the left side of the software
 def left_frame_widget(left_frame, page, command1, command2, command3, command4, command5):
     """
     A function that creates the left side of the GUI that contains the page buttons and logo.
@@ -51,10 +53,11 @@ def left_frame_widget(left_frame, page, command1, command2, command3, command4, 
     :param command5: Model Vis Page button command function
     :return: The page buttons and frame in GUI
     """
-    # Left_Frame
+    # Create the left frame widget that has the logo and page buttons
     canvas = tk.Canvas(left_frame, width=208, height=191, bg='royalblue', highlightthickness=0)
     canvas.grid(row=0, column=0, pady=10)
 
+    # Read the image logo and resize it to a suitable size
     photo = Image.open('../Icon/Logo.png')
     resize_image = photo.resize((150, 100))
     photo = ImageTk.PhotoImage(resize_image)
@@ -118,6 +121,7 @@ def left_frame_widget(left_frame, page, command1, command2, command3, command4, 
         model_vis_button.bind("<Leave>", on_leave)
 
 
+# The widgets for the right side of the software
 def right_frame_widget(right_frame, title_name):
     """
     A function that creates the right side of the GUI that contains the title and the inner frame's widget.
@@ -125,6 +129,8 @@ def right_frame_widget(right_frame, title_name):
     :param title_name: The title of the page that wants to be put in the page
     :return: The page title and frame in GUI
     """
+
+    # A label that shows the page title
     title_label = tk.Label(right_frame, text=title_name, width=26,
                            font=('Raleway', 35, 'bold'), bg='deepskyblue')
     title_label.grid(row=0, column=0, padx=51, pady=15)

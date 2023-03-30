@@ -277,6 +277,7 @@ class ModelVisWidget:
         :param frame: The frame that puts the tkinter widgets
         :return: The buttons on the frame for the user to click
         """
+        # Buttons that let the user clear the inputs, visualise, save visualisation or dataset
         download_dataset_button = tk.Button(frame, text="Download Dataset\nUsed in Visualisation", width=21,
                                             height=2,
                                             font=('Raleway', 10, 'bold'), bg='dodgerblue',

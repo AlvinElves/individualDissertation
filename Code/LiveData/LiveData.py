@@ -58,6 +58,7 @@ class LiveData:
         :param name: The type of air pollutant the user want to visualise
         :return: A dataset that only contains the air pollutant chosen
         """
+        # Get the rows of data based on the value of the measurements_parameter
         return dataset.loc[dataset['measurements_parameter'] == name].reset_index(drop=True)
 
     def on_map_data(self, pollutant_type, visual_type):
@@ -69,14 +70,16 @@ class LiveData:
         """
         data = self.split_data_based_on_pollutant(self.all_live_dataset, pollutant_type)
 
+        # If user chose most frequent data, then top 80 city that has the most information
         if visual_type == 'most_frequent':
             frequent_city = data['city'].value_counts().index.values
             visual_city = frequent_city[:80]
-
+        # If user chose last updated data, then top 80 city that has been newly updated
         elif visual_type == 'last_updated':
             unique_city = data['city'].unique()
             visual_city = unique_city[:80]
 
+        # Get the row of the data based on the city
         visual_data = data.loc[data['city'].isin(visual_city)].reset_index(drop=True)
 
         return visual_data
@@ -118,8 +121,11 @@ class LiveData:
         A function that clean the data by preprocessing it, removing null values.
         :return: A dataset that does not have null values
         """
+        # Change the dataset with N/A value to nan value
         self.live_dataset[self.live_dataset == 'N/A'] = np.NaN
+        self.all_live_dataset[self.all_live_dataset == 'N/A'] = np.NaN
 
+        # Drop the nan value
         self.live_dataset = self.live_dataset.dropna(axis=0, how='any').reset_index(drop=True)
         self.all_live_dataset = self.all_live_dataset.dropna(axis=0, how='any').reset_index(drop=True)
 
