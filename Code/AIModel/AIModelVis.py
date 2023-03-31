@@ -828,8 +828,8 @@ class AIModelVis:
             if method == 'save':
                 # Save the figure
                 fig.write_html(file_name)
-            else:
-                fig.show()
+
+            fig.show()
 
 
 if __name__ == '__main__':
