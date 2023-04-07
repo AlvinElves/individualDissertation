@@ -99,7 +99,7 @@ class HistoricalData:
         :return: A dataset that contains the Air Quality Data from Excel File
         """
         # Read the dataset from Excel file
-        self.historical_dataset = pd.read_excel("../../Dataset/AirQualityUCI.xlsx")
+        self.historical_dataset = pd.read_excel("../Dataset/AirQualityUCI.xlsx")
         self.original_dataset = self.historical_dataset.copy()
 
 
