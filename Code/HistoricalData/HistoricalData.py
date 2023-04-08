@@ -89,8 +89,10 @@ class HistoricalData:
         # Copy to another dataset
         self.merged_date_dataset = self.historical_dataset.copy()
 
+        # Call the function to create a Dataframe that merge the date into a single column
         self.merge_date()
 
+        # Call the function to create a Dataframe that split the date into a multiple column
         self.split_date()
 
     def get_data_from_excel(self):

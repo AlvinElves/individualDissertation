@@ -10,12 +10,13 @@ by utilising the predicted values for optimisation.
 
 
 ## How to run the Software
-The software codes are saved in the 'Code' folder. There are some
-subfolders inside the 'Code' folder to clean up the codes and 
-files. The data visualisation is divided into two categories: live
-data and historical data. Data pre-processing and visualisation 
-for each type of data are saved in separate subfolders, 'LiveData'
-and 'HistoricalData'. <br><br>
+The software requires an internet connection to access live data via 
+the API format. The software codes are saved in the 'Code' folder.
+There are some subfolders inside the 'Code' folder to clean up the
+codes and files. The data visualisation is divided into two 
+categories: live data and historical data. Data pre-processing 
+and visualisation for each type of data are saved in separate 
+subfolders, 'LiveData' and 'HistoricalData'. <br><br>
 The GUI.py file contains the main class used to run the software.
 If you are running for the first time, you will need to import the
 necessary library packages into the environment.
