@@ -462,12 +462,12 @@ class AIModelVis:
         if method != 'dataset':
             # Plot the before and after outliers dataset using a box plot
             combined_visualise_dataset.plot(kind='box', subplots=True, layout=(1, 2), sharex=False, sharey=True,
-                                            fontsize=12, figsize=(10, 6))
+                                            fontsize=12, figsize=(10, 6),
+                                            ylabel=(column_name[0] + " VS " + column_name[1] + " Values"))
 
             #  Set the window title, plot title and Y labels for the figure
             plt.get_current_fig_manager().canvas.manager.set_window_title('Outliers Visualisation')
-            plt.ylabel(column_name[0] + " VS " + column_name[1] + " Values")
-            plt.title('Outliers Visualisation for\nfeature ' + variable)
+            plt.suptitle('Outliers Visualisation for\nfeature ' + variable)
 
             if method == 'save':
                 # Save the figure

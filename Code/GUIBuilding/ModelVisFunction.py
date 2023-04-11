@@ -275,6 +275,15 @@ class ModelVisFunction:
             self.visualisation_text = 'Normalised Data'
             self.choose_variable_text = 'Choose the Feature(s)'
             listbox.config(state='normal', bg='white', highlightbackground='white')
+            for item in self.visualise_variable:
+                listbox.insert('end', item)
+            self.choose_model_text = 'Choose the AI Model'
+
+        elif method == 'outliers':
+            self.visualisation_text = 'Outliers Data'
+            self.choose_variable_text = 'Choose the Feature(s)'
+            listbox.config(state='normal', bg='white', highlightbackground='white')
+
             if self.model_text == 'T Variable':
                 view_variable = ['T (Temperature)'] + self.visualise_variable
 
@@ -287,14 +296,6 @@ class ModelVisFunction:
                 view_variable = self.visualise_variable
 
             for item in view_variable:
-                listbox.insert('end', item)
-            self.choose_model_text = 'Choose the AI Model'
-
-        elif method == 'outliers':
-            self.visualisation_text = 'Outliers Data'
-            self.choose_variable_text = 'Choose the Feature(s)'
-            listbox.config(state='normal', bg='white', highlightbackground='white')
-            for item in self.visualise_variable:
                 listbox.insert('end', item)
             self.choose_model_text = 'Choose the AI Model'
 
@@ -342,8 +343,15 @@ class ModelVisFunction:
             self.visualisation_text = 'All Decision\nTree Prediction'
             self.choose_variable_text = 'Choose the\nData Row #'
             listbox.config(state='normal', bg='white', highlightbackground='white')
-            for i in range(0, 51):
-                listbox.insert('end', "Data Row " + str(i))
+            if self.model_text == 'T Variable':
+                row_length = len(self.aiModel.T_test)
+            elif self.model_text == 'RH Variable':
+                row_length = len(self.aiModel.RH_test)
+            else:
+                row_length = len(self.aiModel.AH_test)
+
+            for i in range(1, row_length + 1):
+                listbox.insert('end', "Test Data Row " + str(i))
 
             self.choose_model_text = 'Choose the AI Model'
 
@@ -364,27 +372,42 @@ class ModelVisFunction:
         """
         if model_var == 't':
             self.model_text = 'T Variable'
-            if self.visualisation_text == 'Normalised Data':
+            if self.visualisation_text == 'Outliers Data':
                 view_variable = ['T (Temperature)'] + self.visualise_variable
                 listbox.delete(0, 'end')
                 for item in view_variable:
                     listbox.insert('end', item)
 
+            elif self.visualisation_text == 'All Decision\nTree Prediction':
+                listbox.delete(0, 'end')
+                for i in range(1, len(self.aiModel.T_test) + 1):
+                    listbox.insert('end', "Test Data Row " + str(i))
+
         elif model_var == 'ah':
             self.model_text = 'AH Variable'
-            if self.visualisation_text == 'Normalised Data':
+            if self.visualisation_text == 'Outliers Data':
                 view_variable = ['AH (Absolute Humidity)'] + self.visualise_variable
                 listbox.delete(0, 'end')
                 for item in view_variable:
                     listbox.insert('end', item)
 
+            elif self.visualisation_text == 'All Decision\nTree Prediction':
+                listbox.delete(0, 'end')
+                for i in range(1, len(self.aiModel.AH_test) + 1):
+                    listbox.insert('end', "Test Data Row " + str(i))
+
         elif model_var == 'rh':
             self.model_text = 'RH Variable'
-            if self.visualisation_text == 'Normalised Data':
+            if self.visualisation_text == 'Outliers Data':
                 view_variable = ['RH (Relative Humidity)'] + self.visualise_variable
                 listbox.delete(0, 'end')
                 for item in view_variable:
                     listbox.insert('end', item)
+
+            elif self.visualisation_text == 'All Decision\nTree Prediction':
+                listbox.delete(0, 'end')
+                for i in range(1, len(self.aiModel.RH_test) + 1):
+                    listbox.insert('end', "Test Data Row " + str(i))
 
         model_label.config(text=self.model_text)
 

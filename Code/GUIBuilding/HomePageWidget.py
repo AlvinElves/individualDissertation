@@ -52,7 +52,7 @@ class HomePageWidget:
                                       font=('Raleway', 13, 'bold'), bg='lightskyblue', anchor='n')
         functionality_text.grid(row=1, column=0, padx=(10, 0), pady=(2, 3), sticky='n')
 
-        url_text = tk.Label(frame, text='URL ', width=50, height=2,
+        url_text = tk.Label(frame, text='https://drive.google.com/file/d/1JVW7gFTj6_cI_7aOBHMKtKm7O\nG-6aE8q/view?usp=share_link', width=50, height=2,
                             font=('Raleway', 13, 'bold'), bg='lightskyblue', anchor='w', cursor="hand2")
         url_text.grid(row=1, column=1, padx=(0, 70), pady=(2, 3), sticky='w')
-        url_text.bind("<Button-1>", lambda e: callback("https://public.opendatasoft.com/explore/dataset/openaq"))
+        url_text.bind("<Button-1>", lambda e: callback("https://drive.google.com/file/d/1JVW7gFTj6_cI_7aOBHMKtKm7OG-6aE8q/view?usp=share_link"))

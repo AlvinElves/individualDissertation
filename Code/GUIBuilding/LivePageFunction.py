@@ -89,10 +89,10 @@ class LivePageFunction:
                 self.liveDataVis.bubble_map(variables)
 
             elif self.visualisation_text == 'Bar Graph On Map':
-                self.liveDataVis.bar_graph_on_map(map_type)
+                self.liveDataVis.bar_graph_on_map(variables, map_type)
 
             elif self.visualisation_text == 'Pie Chart On Map':
-                self.liveDataVis.pie_chart_on_map(map_type)
+                self.liveDataVis.pie_chart_on_map(variables, map_type)
 
             elif self.visualisation_text == 'Normal Map':
                 if variables == self.pollutant_type[0]:
