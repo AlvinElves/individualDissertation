@@ -368,7 +368,7 @@ class HistoricalDataVisualisation:
             fig.show()
         else:
             # Get the dataset based on the column used in the visualisation
-            column_used = ['Month', 'Year'] + [y_Value]
+            column_used = ['Day', 'Month', 'Year'] + [y_Value]
             month_year_data = month_year_data[column_used]
             return month_year_data
 

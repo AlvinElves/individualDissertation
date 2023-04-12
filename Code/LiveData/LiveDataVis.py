@@ -489,7 +489,21 @@ class LiveDataVisualisation:
         """
         new_directory = directory_name  # New folder name
         current_path = os.path.dirname(os.getcwd())  # Get current file path
-        self.live_path = os.path.join(current_path, new_directory)
+
+        if another:
+            self.live_path = os.path.join(current_path, new_directory)
+
+            # Create new folder
+            if not os.path.exists(self.live_path):
+                os.mkdir(self.live_path)
+        else:
+            path = os.path.join(current_path, new_directory)
+
+            # Create new folder
+            if not os.path.exists(path):
+                os.mkdir(path)
+
+            return path
 
         # Create new folder
         if not os.path.exists(self.live_path):
@@ -503,8 +517,6 @@ class LiveDataVisualisation:
             # Create new folder
             if not os.path.exists(self.path):
                 os.mkdir(self.path)
-
-        return self.live_path
 
 
 if __name__ == '__main__':
