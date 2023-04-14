@@ -156,8 +156,8 @@ class LiveDataVisualisation:
             city_data = data.loc[data['city'] == visual_city[i]].reset_index(drop=True)
 
             # Get the latitude and longitude of the data
-            latitude = city_data['latitude'].median()
-            longitude = city_data['longitude'].median()
+            latitude = city_data['latitude'].iloc[0]
+            longitude = city_data['longitude'].iloc[0]
 
             # Make the value of the data to be in correct position as the unique time used
             for j in unique_time:
@@ -251,8 +251,8 @@ class LiveDataVisualisation:
             city_data = data.loc[data['city'] == visual_city[i]].reset_index(drop=True)
 
             # Get the latitude and longitude of the data
-            latitude = city_data['latitude'].median()
-            longitude = city_data['longitude'].median()
+            latitude = city_data['latitude'].iloc[0]
+            longitude = city_data['longitude'].iloc[0]
 
             # Make the value of the data to be in correct position as the unique time used
             for j in unique_time:
@@ -292,8 +292,8 @@ class LiveDataVisualisation:
                 self.live_data.all_live_dataset['country_name_en'] == unique_country[a]].reset_index(drop=True)
 
             # Get the latitude and longitude of the data
-            median_latitude = enhanced_data['latitude'].median()
-            median_longitude = enhanced_data['longitude'].median()
+            median_latitude = enhanced_data['latitude'].iloc[0]
+            median_longitude = enhanced_data['longitude'].iloc[0]
 
             # Create figure
             fig = go.Figure()
@@ -435,7 +435,7 @@ class LiveDataVisualisation:
             self.dataset_in_pollutant_order = pd.concat([self.dataset_in_pollutant_order, data], ignore_index=True,
                                                         sort=False)
             # Get the average location from the type of pollutant
-            pollutant_location = [data['latitude'].median(), data['longitude'].median()]
+            pollutant_location = [data['latitude'].iloc[0], data['longitude'].iloc[0]]
             location = location + pollutant_location
 
         # Display the map
