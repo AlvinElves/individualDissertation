@@ -27,7 +27,7 @@ class HistoricalData:
         :return: Creates the folder and return the path of the folder
         """
         new_directory = name  # New folder name
-        path = os.path.dirname(os.getcwd())  # Get current file path
+        path = os.getcwd()  # Get current file path
 
         data_path = os.path.join(path, new_directory)
 

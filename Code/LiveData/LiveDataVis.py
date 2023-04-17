@@ -488,7 +488,7 @@ class LiveDataVisualisation:
         :return: Creates the folder and return the path of the folder
         """
         new_directory = directory_name  # New folder name
-        current_path = os.path.dirname(os.getcwd())  # Get current file path
+        current_path = os.getcwd()  # Get current file path
 
         if another:
             self.live_path = os.path.join(current_path, new_directory)
