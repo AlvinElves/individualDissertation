@@ -1,5 +1,5 @@
 import tkinter as tk
-from Code.LiveData.LiveDataVis import *
+from LiveData.LiveDataVis import *
 
 
 class LivePageFunction:

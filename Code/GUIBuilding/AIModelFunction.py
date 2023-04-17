@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 
-from Code.AIModel.AIModel import *
+from AIModel.AIModel import *
 
 
 class AIModelFunction:

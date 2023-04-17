@@ -1,4 +1,4 @@
-from Code.GUIBuilding.ModelVisFunction import *
+from GUIBuilding.ModelVisFunction import *
 
 
 class ModelVisWidget:

@@ -58,7 +58,7 @@ def left_frame_widget(left_frame, page, command1, command2, command3, command4, 
     canvas.grid(row=0, column=0, pady=10)
 
     # Read the image logo and resize it to a suitable size
-    photo = Image.open('../Icon/Logo.png')
+    photo = Image.open('Icon/Logo.png')
     resize_image = photo.resize((150, 100))
     photo = ImageTk.PhotoImage(resize_image)
 

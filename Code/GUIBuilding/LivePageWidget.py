@@ -1,4 +1,4 @@
-from Code.GUIBuilding.LivePageFunction import *
+from GUIBuilding.LivePageFunction import *
 
 
 class LivePageWidget:

@@ -1,5 +1,5 @@
-from Code.AIModel.AIModel import *
-from Code.HandlingInteractions import *
+from AIModel.AIModel import *
+from HandlingInteractions import *
 
 import pandas as pd
 import numpy as np

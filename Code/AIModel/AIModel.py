@@ -1,4 +1,4 @@
-from Code.HistoricalData.HistoricalData import *
+from HistoricalData.HistoricalData import *
 
 # Feature Selection
 from sklearn import linear_model

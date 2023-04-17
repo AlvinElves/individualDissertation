@@ -1,4 +1,4 @@
-from Code.GUIBuilding.AIModelFunction import *
+from GUIBuilding.AIModelFunction import *
 from tkinter import ttk
 
 

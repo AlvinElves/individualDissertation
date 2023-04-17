@@ -1,5 +1,5 @@
-from Code.LiveData.LiveData import *
-from Code.HandlingInteractions import *
+from LiveData.LiveData import *
+from HandlingInteractions import *
 
 import folium
 import webbrowser

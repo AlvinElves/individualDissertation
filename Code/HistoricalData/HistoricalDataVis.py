@@ -1,4 +1,4 @@
-from Code.HistoricalData.HistoricalData import *
+from HistoricalData.HistoricalData import *
 import plotly.express as px
 import matplotlib.animation as animate
 import matplotlib.pyplot as plt

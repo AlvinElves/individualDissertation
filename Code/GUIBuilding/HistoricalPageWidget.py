@@ -1,4 +1,4 @@
-from Code.GUIBuilding.HistoricalPageFunction import *
+from GUIBuilding.HistoricalPageFunction import *
 
 
 class HistoricalPageWidget:

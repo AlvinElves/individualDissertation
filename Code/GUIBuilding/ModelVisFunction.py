@@ -1,5 +1,5 @@
 import tkinter as tk
-from Code.AIModel.AIModelVis import *
+from AIModel.AIModelVis import *
 
 
 class ModelVisFunction:
