@@ -11,9 +11,7 @@ by utilising the predicted values for optimisation.
 
 ## How to run the Software
 The software requires an internet connection to access live data via 
-the API format. The software codes are saved in the 'Code' folder.
-There are some subfolders inside the 'Code' folder to clean up the
-codes and files. The data visualisation is divided into two 
+the API format. The data visualisation is divided into two 
 categories: live data and historical data. Data pre-processing 
 and visualisation for each type of data are saved in separate 
 subfolders, 'LiveData' and 'HistoricalData'. <br><br>
